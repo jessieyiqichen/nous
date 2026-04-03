@@ -46,6 +46,7 @@ interface Props {
   refineRequest?: RefineRequest | null;
   onRefineConsumed?: () => void;
   onModelReady?: (model: CognitiveModel) => void;
+  onValidateModel?: (model: CognitiveModel) => void;
 }
 
 // ── LocalStorage helpers ──────────────────────────────────────
@@ -129,7 +130,7 @@ function applyBlindSpotsOverride(
 
 // ── Component ─────────────────────────────────────────────────
 
-export default function Interview({ refineRequest, onRefineConsumed, onModelReady }: Props) {
+export default function Interview({ refineRequest, onRefineConsumed, onModelReady, onValidateModel }: Props) {
   // Core state — SSR-safe defaults, hydrated from localStorage in useEffect
   const [messages, setMessages] = useState<Message[]>([]);
   const [turn, setTurn] = useState(0);
@@ -652,12 +653,20 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
             </p>
           </div>
           <div className="flex gap-2">
+            {onValidateModel && (
+              <button
+                onClick={() => onValidateModel(model)}
+                className="px-3 py-1.5 text-sm bg-[var(--accent)] text-white rounded-md hover:opacity-90 transition-opacity"
+              >
+                验证模型理解
+              </button>
+            )}
             {onModelReady && (
               <button
                 onClick={() => onModelReady(model)}
-                className="px-3 py-1.5 text-sm bg-[var(--accent)] text-white rounded-md hover:opacity-90 transition-opacity"
+                className="px-3 py-1.5 text-sm border border-[var(--card-border)] rounded-md hover:bg-white/5"
               >
-                用这个模型出题
+                直接出题
               </button>
             )}
             <button
@@ -806,22 +815,15 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
         {/* Next steps */}
         <div className="p-4 rounded-lg bg-[var(--card)] border border-[var(--card-border)] text-sm text-[var(--muted)]">
           <p className="font-medium text-[var(--foreground)] mb-2">下一步</p>
-          {onModelReady ? (
+          {onValidateModel ? (
             <p>
-              点击上方「用这个模型出题」直接进入认知预测，或下载 JSON 手动导入。
+              推荐先点「验证模型理解」确认模型描述是否准确，再用「直接出题」进入认知预测。
             </p>
           ) : (
             <p>
-              下载 JSON → 切换到「认知预测」tab → 导入模型 → 生成预测题 →
-              验证准确率
+              下载 JSON → 切换到「模型验证」tab → 验证准确率 → 修正模型 → 出题
             </p>
           )}
-          <p>
-            CLI：
-            <code className="text-xs bg-white/5 px-1 rounded">
-              python predictor.py predict cognitive_model.json
-            </code>
-          </p>
         </div>
       </div>
     );

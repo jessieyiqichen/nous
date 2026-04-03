@@ -5,9 +5,11 @@ import Analyzer from "./components/Analyzer";
 import Research from "./components/Research";
 import Predictor from "./components/Predictor";
 import Interview from "./components/Interview";
+import Validator from "./components/Validator";
 
 const TABS = [
   { key: "interview", label: "认知访谈" },
+  { key: "validate", label: "模型验证" },
   { key: "analyze", label: "偏差检测" },
   { key: "predict", label: "认知预测" },
   { key: "research", label: "研究数据" },
@@ -33,6 +35,7 @@ export default function Home() {
   const [tab, setTab] = useState<Tab>("interview");
   const [refineRequest, setRefineRequest] = useState<RefineRequest | null>(null);
   const [predictModel, setPredictModel] = useState<CognitiveModelType | null>(null);
+  const [validateModel, setValidateModel] = useState<CognitiveModelType | null>(null);
 
   const handleRequestRefine = useCallback(
     (req: RefineRequest) => {
@@ -57,6 +60,26 @@ export default function Home() {
   const handlePredictModelConsumed = useCallback(() => {
     setPredictModel(null);
   }, []);
+
+  const handleValidateModel = useCallback(
+    (model: CognitiveModelType) => {
+      setValidateModel(model);
+      setTab("validate");
+    },
+    [],
+  );
+
+  const handleValidateModelConsumed = useCallback(() => {
+    setValidateModel(null);
+  }, []);
+
+  const handleGoPredict = useCallback(
+    (model: CognitiveModelType) => {
+      setPredictModel(model);
+      setTab("predict");
+    },
+    [],
+  );
 
   return (
     <main className="min-h-screen">
@@ -94,6 +117,14 @@ export default function Home() {
             refineRequest={refineRequest}
             onRefineConsumed={handleRefineConsumed}
             onModelReady={handleModelReady}
+            onValidateModel={handleValidateModel}
+          />
+        )}
+        {tab === "validate" && (
+          <Validator
+            validateModel={validateModel}
+            onValidateModelConsumed={handleValidateModelConsumed}
+            onGoPredict={handleGoPredict}
           />
         )}
         {tab === "analyze" && <Analyzer />}
