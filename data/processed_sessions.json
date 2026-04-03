@@ -1,0 +1,20 @@
+{
+  "/Users/chenxiaowen/.claude/projects/-Users-chenxiaowen/72f7a4a0-d928-422f-b3e0-a9e4b71f1bbc.jsonl": {
+    "timestamp": "2026-04-03T07:11:40.580874+00:00",
+    "status": "skipped_short",
+    "session_id": "72f7a4a0-d928-422f-b3e0-a9e4b71f1bbc"
+  },
+  "/Users/chenxiaowen/.claude/projects/-Users-chenxiaowen/572b7c8e-5d9d-42ab-ab86-2ed3b3b0390c.jsonl": {
+    "timestamp": "2026-04-03T07:11:40.589290+00:00",
+    "status": "skipped_short",
+    "session_id": "572b7c8e-5d9d-42ab-ab86-2ed3b3b0390c"
+  },
+  "/Users/chenxiaowen/.claude/projects/-Users-chenxiaowen-Desktop-IDEAS-/b646bc07-4e74-404c-bf10-cd2c62b101ca.jsonl": {
+    "timestamp": "2026-04-03T07:24:11.153139+00:00",
+    "status": "extracted",
+    "session_id": "b646bc07-4e74-404c-bf10-cd2c62b101ca",
+    "signals_count": 88,
+    "conflicts_count": 17,
+    "t3_deltas_count": 27
+  }
+}
