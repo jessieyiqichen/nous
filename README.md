@@ -4,7 +4,7 @@
 
 ## The Problem
 
-Current AI avatar systems (e.g. Elys/Natural Selection) model users at the **behavior layer** — expression style, language habits, preferences. They can make a digital twin that *talks like you*, but when it encounters a novel situation, it can't *decide like you* because it doesn't understand your cognitive architecture.
+Current AI avatar and digital twin systems model users at the **behavior layer** — expression style, language habits, preferences. They can make a digital twin that *talks like you*, but when it encounters a novel situation, it can't *decide like you* because it doesn't understand your cognitive architecture.
 
 Nous works at the **cognitive layer** — modeling *why* you make decisions, not just *what* decisions you make. This enables prediction in scenarios the system has never seen before.
 
@@ -33,11 +33,26 @@ The model generates predictions about what you'd do in novel scenarios. You answ
 ### 4. Contradiction Detection
 Dual-track signal analysis compares what you *say about yourself* (stated) vs what you *actually do* (behavioral). Contradictions = objective blind spot evidence, replacing unreliable self-report.
 
+### 5. Passive Signal Collection
+A background collector extracts cognitive signals from daily AI conversations (Claude Code sessions). Local keyword pre-filtering skips low-signal technical sessions without API calls. The flywheel: you work normally, the model improves automatically.
+
 ## Key Insight
 
 > "An accurate model may not exist, but a dynamic model that knows where it's wrong can continuously evolve."
 
-Behavior-layer systems optimize for *looking accurate* (user satisfaction, slot utilization). Nous optimizes for *being accurate* (prediction hit rate, contradiction detection). The difference matters when the digital twin needs to make decisions on your behalf.
+Behavior-layer systems optimize for *looking accurate* (user satisfaction, usage metrics). Nous optimizes for *being accurate* (prediction hit rate, contradiction detection). The difference matters when the digital twin needs to make decisions on your behalf.
+
+## Behavior Layer vs Cognitive Layer
+
+| Dimension | Behavior Layer | Cognitive Layer (Nous) |
+|-----------|---------------|----------------------|
+| Approach | Bottom-up: behavior data → emergence | Top-down: cognitive dimensions → validation |
+| Models | What you do | Why you do it |
+| Strength | Fast, scalable, covers 80% of cases | Generalizes to novel scenarios |
+| Weakness | Fails on unseen situations | Slower, needs iteration |
+| Validation | Internal metrics (usage, satisfaction) | External metrics (prediction accuracy) |
+
+These aren't competing approaches — they're complementary layers. Behavior layer makes the twin *talk like you*, cognitive layer makes it *think like you*.
 
 ## Architecture
 
@@ -46,24 +61,15 @@ Conversation → Signal Extraction (dual-track) → Cognitive Model (9 dims)
                                                         ↓
                                               Behavioral Predictions
                                                         ↓
-                                              User Validation (quiz)
+                                              User Validation (direct judgment)
                                                         ↓
                                               Contradiction Analysis
                                                         ↓
                                               Model Refinement ──→ Loop
+
+Passive Collection (background):
+  Daily AI sessions → Local pre-filter → Signal extraction → Contradiction accumulation
 ```
-
-## Relationship to Elys/Natural Selection
-
-| Dimension | Elys | Nous |
-|-----------|------|------|
-| Approach | Bottom-up: behavior data → emergence | Top-down: cognitive dimensions → validation |
-| Models | What you do (behavior) | Why you do it (cognition) |
-| Representation | 128 memory slots | 9 cognitive dimensions |
-| Validation | Slot utilization (internal) | Prediction accuracy (external) |
-| Complementary | Has data pipeline, no bias awareness | Has bias framework, no data pipeline |
-
-These aren't competing approaches — they're complementary layers. Elys makes the twin *talk like you*, Nous makes it *think like you*. Together: a digital twin that can both communicate naturally AND make decisions you'd actually make.
 
 ## Tech Stack
 
@@ -91,16 +97,19 @@ nous/
 │   ├── bias-taxonomy.md       # 12 cognitive biases classified
 │   └── conversation-insights.md
 ├── scripts/                   # Utility scripts
+│   ├── passive_collector.py   # Background signal collection
 │   ├── batch_analyze.py
 │   └── jsonl_to_conversation.py
 ├── web/                       # Next.js dashboard
 │   ├── app/components/
 │   │   ├── Interview.tsx      # Chat-based cognitive interview
+│   │   ├── Validator.tsx      # Direct model judgment
 │   │   ├── Predictor.tsx      # Prediction quiz + scoring
 │   │   ├── Analyzer.tsx       # Bias detection
 │   │   └── Research.tsx       # Analytics
 │   └── app/api/
 │       ├── interview/         # Chat, analyze, build
+│       ├── validate/          # Direct judgment + model update
 │       ├── predict/           # Model building + questions
 │       ├── score/             # Accuracy evaluation
 │       └── refine/            # Model correction
@@ -123,6 +132,11 @@ python core/predictor.py predict data/cognitive_model.json
 
 # Extract signals from conversation
 python core/signal_extractor.py extract conversation.md --model data/cognitive_model.json
+
+# Passive collection from daily sessions
+python scripts/passive_collector.py collect
+python scripts/passive_collector.py collect --file path/to/session.jsonl
+python scripts/passive_collector.py status
 ```
 
 ### Web
@@ -131,12 +145,16 @@ python core/signal_extractor.py extract conversation.md --model data/cognitive_m
 cd web
 npm install
 npm run dev
-# Open http://localhost:3000
+# Open http://localhost:3999
 ```
 
 ## Current Status
 
-MVP validation phase. Core hypothesis confirmed: cognitive models can improve prediction accuracy through iterative refinement loops. Next: second subject validation and pipeline optimization.
+MVP validation phase. Core hypothesis confirmed: cognitive models can improve prediction accuracy through iterative refinement loops.
+
+- Model understanding accuracy: 85% → 99% (after one round of direct judgment)
+- Behavioral prediction: T1 71%, T2 71% (deterministic scoring, +46pp above random baseline)
+- Passive signal collection operational (101 signals, 20 contradictions accumulated)
 
 ## License
 
