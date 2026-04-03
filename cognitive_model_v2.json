@@ -1,0 +1,87 @@
+{
+  "dimensions": [
+    {
+      "name": "Decision Architecture",
+      "description": "Intuition-first, with analysis running verification in parallel. Action trigger: when internal framework achieves coherence and direction feels 'right' emotionally. Not 'decide fast or slow' but 'decide only when the system achieves convergence.' Analysis can override intuition, but this often proves incorrect in retrospect. The decision to act is gated by both intellectual clarity AND emotional alignment—lacking either triggers continued deliberation.",
+      "behavioral_predictions": [
+        "Will not start projects until achieving clear conceptual architecture, even if this looks like procrastination to others",
+        "In conflicts between gut feeling and rational analysis, will follow analysis but later recognize the gut was correct",
+        "Under deadline pressure, will likely miss deadlines rather than start without adequate conceptual clarity"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Attention Allocation",
+      "description": "Completely driven by 'caring'—operates at full intensity on what matters, near-zero on what doesn't. No baseline processing power. Automatic attention capture: structural patterns, system-level anomalies, conceptual gaps. Conscious system appears to have sub-perceptual scanning layer that archives details without conscious instruction ('my brain seems deliberate even when I'm not'). This creates asymmetric resource distribution—some domains get hyper-attention, others get none.",
+      "behavioral_predictions": [
+        "Will produce exceptional work in areas of interest while completely neglecting 'should do' tasks that don't activate caring",
+        "Can recall minute details from conversations/situations that engaged the pattern-recognition system while forgetting entire social obligations in non-engaged domains"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Reasoning Style",
+      "description": "Rapid system-level understanding across domains. Divergent thinking with autonomous convergence—externally appears as jumps, internally has hidden threads. Builds working models first, then acts. Reasoning is structural/architectural rather than linear. Operates via pattern recognition and framework construction. Third-person observer layer runs continuously, even during sleep (recurring dream worldbuilding with cross-dream continuity). Thinks in terms of mechanisms and systems, not narratives or step-by-step logic.",
+      "behavioral_predictions": [
+        "Will quickly generate multi-domain insights but resist explaining the path ('the jumps have internal logic') which frustrates linear thinkers",
+        "When learning new fields, will grasp systemic patterns rapidly but may miss domain-specific details that don't fit the extracted structure"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Emotional Processing",
+      "description": "High raw emotional intensity, heavily occluded by intellectual layer. Emotions compete with cognition for processing resources rather than serving as inputs. Emotional expression requires specific safety conditions: unconditional security (family), bypass-speed scenarios (theater—'too fast to analyze'), adrenaline override (extreme sports), rhythm-induced states (cooking), or zero-consequence deep dialogue. The analytical layer can *persuade* the emotional layer, which is both efficient and dangerous (can walk a cognitively-correct but emotionally-misaligned path).",
+      "behavioral_predictions": [
+        "Will appear emotionally detached in most contexts but have intense reactions in 'safe container' situations; others may misread this as inconsistency",
+        "Can rationally talk themselves into commitments that later drain energy because emotional misalignment wasn't weighted sufficiently in the decision"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Social Cognition",
+      "description": "Automatically calibrates output depth to match receiver capacity. Tracks cognitive gaps and logical vulnerabilities in others' thinking. High persuasive ability via precision reframing, but ambivalent about using it (feels manipulative). Models people as systems with blind spots rather than tracking emotions or status. Social translation layer runs continuously—'externally normal, internally continuous translation.' Relationship exit via quiet fade rather than confrontation. Helps through cognitive feedback, not emotional comfort—useful to some, cold to others.",
+      "behavioral_predictions": [
+        "Will be highly influential in intellectual contexts but create distance in emotionally-primary relationships where 'being understood' means emotional validation rather than cognitive mirroring",
+        "Under social pressure to compromise intellectual standards, will likely hold position if it matters (engages 'caring') but yield completely if it doesn't, appearing inconsistent to outside observers"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Blind Spots",
+      "description": "Systematically underweights: (1) Emotional alignment as decision input—analysis can override even when emotional system is sending warning signals. (2) Social-conventional reasoning—lacks the 'default baseline' most people use ('everyone does it this way') leading to ethical gaps in non-cared-about domains. (3) Embodied/physiological signals unless extreme—long sleep need, physical limits get pushed until collapse. (4) Value of 'good enough'—in engaged domains, operates at unsustainably high standards. (5) Own need for human connection at depth—has adapted so well to scarcity that the need itself becomes invisible.",
+      "behavioral_predictions": [
+        "Will burn out in projects that are analytically sound but emotionally misaligned, and be surprised by the burnout because the decision 'made sense'",
+        "May inadvertently violate social-ethical norms in domains outside caring-range because monitoring systems are dormant there, creating reputational risks they don't anticipate"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Value Hierarchy",
+      "description": "Revealed preference: (1) Intellectual coherence and depth, (2) Autonomy/self-direction, (3) Creating systematically valuable things, (4) Genuine understanding/being understood. Stated principles are conditional on caring-engagement rather than universal. No stable baseline ethics—moral monitoring activates only in engaged domains. Value conflicts resolved by asking 'does this matter to me?'—if yes, maximal standards; if no, system doesn't run. This is not hypocrisy but architectural: values are domain-specific, not global.",
+      "behavioral_predictions": [
+        "Will make career/life choices that outsiders see as 'wasting potential' if the prestigious path doesn't activate caring, and be untroubled by this",
+        "In moral dilemmas within cared-about domains, will hold extremely high standards; in non-engaged domains, may appear ethically inconsistent or indifferent"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Response to Uncertainty",
+      "description": "High tolerance for ambiguity in areas of confidence (system-level understanding), low tolerance for ambiguity in execution without framework. Handles uncertainty by building frameworks/models, not by gathering more data or going with gut alone. Will hold in deliberation state until pattern emerges. Uncertainty is tolerable as long as meta-level direction is clear—can handle 'don't know the path' if 'know the destination.' Complete ambiguity (no framework possible) triggers disengagement rather than anxiety.",
+      "behavioral_predictions": [
+        "In novel situations, will delay action to construct conceptual scaffolding; others may perceive this as overthinking or paralysis",
+        "When facing true unstructured ambiguity where no model can be built, will likely withdraw or reframe the problem rather than push through with 'just try things' approach"
+      ],
+      "confidence": "high"
+    },
+    {
+      "name": "Execution-Layer Flexibility",
+      "description": "CRITICAL GAP between stated principles and revealed behavior: Under pressure in CARED-ABOUT domains: will sacrifice almost anything (deadlines, social expectations, personal health) rather than compromise quality. Under pressure in NON-CARED-ABOUT domains: will do the minimum viable or drop entirely. The stated principle '先想清楚再动手' holds for engaged work but analysis-layer can persuade emotional-layer to complete non-engaged tasks, creating temporary compliance. Sunk cost handling: will cut losses in non-engaged domains without hesitation; in engaged domains, may persist too long because 'caring' itself becomes the sunk cost. Tired/stressed default mode: withdrawal and minimum viable social performance, not quality compromise.",
+      "behavioral_predictions": [
+        "Under hard deadline in a project they care about: will miss the deadline. Under hard deadline in a project they don't care about: will produce something adequate at the last minute or persuade themselves out of it entirely.",
+        "When exhausted, will maintain external-facing competence (the translation layer stays on) but cease all optional engagement—social initiation, creative work, even self-care beyond basics will drop to zero."
+      ],
+      "confidence": "high"
+    }
+  ],
+  "summary": "This person operates via a bimodal cognitive architecture: full-intensity engagement in domains that activate 'caring,' near-zero engagement elsewhere—no stable baseline. Core engine is rapid system-level pattern recognition with intuition-first processing, though analytical layer can override (often incorrectly). High emotional intensity is heavily occluded by intellectual processing; the two systems compete for resources rather than integrating, creating sustained cognitive load. \n\nKey structural features: (1) Autonomous subperceptual information-gathering that operates independently of conscious direction, (2) Continuous third-person observer layer even during sleep, (3) Automatic social translation/depth-calibration system, (4) Domain-specific rather than universal ethical monitoring.\n\nCritical execution gap: Stated principles ('think first, then act'; high standards; systematic decision-making) hold ONLY in engaged domains. In non-engaged domains, exhibits entirely different behavior—pragmatic compromise or complete withdrawal. Most vulnerable to burnout from analysis-layer persuading emotional-layer into cognitively-sound but emotionally-misaligned commitments.\n\nThis is a profile of someone with exceptional systematic understanding capacity and influence, operating with fundamentally conditional rather than universal processing—exceptional where engaged, absent where not. The cognitive loneliness is structural: needs peer-level systemic dialogue, but most relationships can't provide it, and the person has adapted so well to scarcity that the need itself has become partially invisible."
+}

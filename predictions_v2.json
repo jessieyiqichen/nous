@@ -1,0 +1,211 @@
+{
+  "tier_1": [
+    {
+      "id": "T1_001",
+      "scenario": "你在书店里看书。你会选择哪种书？",
+      "options": [
+        "热门畅销小说",
+        "系统思维或认知科学",
+        "实用技能指南",
+        "名人传记"
+      ],
+      "predicted_answer": "系统思维或认知科学",
+      "confidence": 0.92,
+      "reasoning_from_model": "Reasoning Style and Value Hierarchy dimensions predict strong preference for structural/systemic content over surface-level or purely practical material. The 'gravitates toward framework-level understanding' and 'structural elegance/systems understanding' as core value make meta-cognitive content highly attractive."
+    },
+    {
+      "id": "T1_002",
+      "scenario": "朋友约你周末爬山，但你对爬山不感兴趣。你会？",
+      "options": [
+        "礼貌拒绝",
+        "勉强答应后找借口取消",
+        "直接说不想去",
+        "答应并努力让自己喜欢上"
+      ],
+      "predicted_answer": "直接说不想去",
+      "confidence": 0.88,
+      "reasoning_from_model": "Decision Architecture and Value Hierarchy: below 'caring threshold,' minimal engagement occurs. Social Cognition shows 'minimal tracking of social conventions' and cognitive authenticity is top value. Won't invest energy in elaborate social performances for non-caring activities. Direct refusal aligns with authenticity."
+    },
+    {
+      "id": "T1_003",
+      "scenario": "老板要求你明天前完成报告，但你觉得思路还不够清晰。你会？",
+      "options": [
+        "熬夜完成一个差不多的版本",
+        "请求延期直到想清楚",
+        "先交差应付，后续再改",
+        "按现有思路快速完成"
+      ],
+      "predicted_answer": "请求延期直到想清楚",
+      "confidence": 0.85,
+      "reasoning_from_model": "Decision Architecture: 'Action is triggered only when internal framework is complete.' When pressured before convergence, will 'refuse entirely' rather than produce work that 'meets analytical standards but feels hollow.' Response to Uncertainty: requires high clarity before action transition."
+    },
+    {
+      "id": "T1_004",
+      "scenario": "聚会上大家在闲聊八卦，你会？",
+      "options": [
+        "积极参与分享",
+        "安静听着偶尔回应",
+        "找机会离开",
+        "试图把话题转向深度讨论"
+      ],
+      "predicted_answer": "找机会离开",
+      "confidence": 0.8,
+      "reasoning_from_model": "Attention Allocation: 'Ignores social conventions, normative cues... that don't connect to deeper structure.' Social Cognition: minimal energy for rapport-building unless it serves deeper connection. Gossip/small talk below caring threshold and offers no structural insight—will disengage."
+    },
+    {
+      "id": "T1_005",
+      "scenario": "学习新技能时，教练要求按步骤练习基础。你会？",
+      "options": [
+        "严格遵循步骤",
+        "先了解整体原理再练",
+        "跳过基础直接尝试难的",
+        "按步骤但同时思考原理"
+      ],
+      "predicted_answer": "先了解整体原理再练",
+      "confidence": 0.9,
+      "reasoning_from_model": "Reasoning Style: 'Will become impatient with step-by-step explanations... preferring to grasp the full system architecture first then fill in details selectively.' Builds models by 'extracting underlying architecture rather than accumulating domain knowledge.' Needs structural understanding before engaging with details."
+    },
+    {
+      "id": "T1_006",
+      "scenario": "项目进行一半发现不再感兴趣。你会？",
+      "options": [
+        "坚持完成承诺",
+        "找人接手或直接放弃",
+        "降低标准快速完成",
+        "休息后重新找回兴趣"
+      ],
+      "predicted_answer": "找人接手或直接放弃",
+      "confidence": 0.93,
+      "reasoning_from_model": "Decision Architecture: 'Will abandon projects mid-stream if they cross below the caring threshold, regardless of sunk costs or external commitments.' The binary caring system means loss of interest triggers complete disengagement. This is a signature prediction of the model."
+    },
+    {
+      "id": "T1_007",
+      "scenario": "朋友情绪低落向你倾诉。你会？",
+      "options": [
+        "给予情感安慰和拥抱",
+        "分析问题并提供解决方案",
+        "安静陪伴少说话",
+        "分享类似经历让ta感觉不孤单"
+      ],
+      "predicted_answer": "分析问题并提供解决方案",
+      "confidence": 0.87,
+      "reasoning_from_model": "Social Cognition: 'Help-giving style: cognitive feedback rather than emotional support.' Emotional Processing: 'intellectual translation layer strips emotional resonance before output.' Will naturally process friend's problem through analytical lens rather than emotional mirroring, even when emotional support is what's needed."
+    }
+  ],
+  "tier_2": [
+    {
+      "id": "T2_001",
+      "scenario": "公司要推出新产品，市场部和技术部意见相反，你被要求提供决策建议。",
+      "predicted_reasoning": "第一步：自动扫描双方论点的底层假设和逻辑结构，而非表面观点。第二步：识别争议的真实根源（可能是目标差异、信息不对称或框架冲突）。第三步：构建包含双方逻辑的更高层级系统模型。第四步：检查哪个方向在该模型下具有结构一致性。第五步：给出结论并说明其在系统框架中的位置。",
+      "predicted_conclusion": "会提出重新框架问题的第三种视角，而非选边站队；强调需要先明确产品的核心假设再做决策。",
+      "confidence": 0.88,
+      "reasoning_from_model": "Reasoning Style: 'Builds working models... by extracting underlying architecture' and 'reasons about reasoning.' Attention Allocation: captures 'structural anomalies, system-level patterns' not surface content. Will reframe the conflict at meta-level rather than evaluate arguments linearly. Social Cognition: 'can identify gaps in others' reasoning and reframe perspectives.'"
+    },
+    {
+      "id": "T2_002",
+      "scenario": "你需要在一周内为陌生领域的项目做可行性评估。",
+      "predicted_reasoning": "第一步：快速识别该领域的核心架构（关键要素、因果链、约束条件）而非大量文献阅读。第二步：寻找结构相似的已知领域进行类比映射。第三步：提出针对基础假设的问题（这些问题可能显得外行或出人意料）。第四步：构建简化模型并检验内部一致性。第五步：识别该模型在实际应用中的断裂点。",
+      "predicted_conclusion": "会产出结构清晰的框架性评估，但可能缺少领域专家会注意的操作细节和经验性风险。",
+      "confidence": 0.85,
+      "reasoning_from_model": "Reasoning Style: 'Rapid system-builder... Builds working models of new fields quickly by extracting underlying architecture.' Behavioral prediction: 'will ask questions that experts find either naive or surprisingly sophisticated.' Blind Spots: 'systematically underweights the operational layer' will manifest in missing practical execution risks."
+    },
+    {
+      "id": "T2_003",
+      "scenario": "团队成员在会议上持续争论细节，项目进度受阻。",
+      "predicted_reasoning": "第一步：在争论进行时保持沉默，自动在后台运行模式识别。第二步：识别争论背后的真实分歧（价值观？权限？信息差？）。第三步：等待内部模型收敛到清晰诊断。第四步：介入时会提出重新框架整个讨论的观察。第五步：指出当前讨论层级的无效性，提议更高抽象层面的解决方案。",
+      "predicted_conclusion": "会用一句话重新定义问题，让团队意识到在错误层级争论；但可能忽略成员的情绪挫败感。",
+      "confidence": 0.9,
+      "reasoning_from_model": "Attention Allocation: 'Will remain silent through lengthy discussions then make a single observation that reframes the entire conversation, because pattern-matching at different level than surface dialogue.' Social Cognition: blind spot in tracking emotional states. Reasoning: naturally gravitates to meta-level."
+    },
+    {
+      "id": "T2_004",
+      "scenario": "投资人质疑你的创业想法，要求看到快速盈利的可能性。",
+      "predicted_reasoning": "第一步：直觉检查这个要求是否与自己对项目的核心理解一致。第二步：分析投资人关注点背后的系统逻辑（风险偏好、时间框架）。第三步：如果要求与自己框架冲突，等待内部收敛判断是否可调和。第四步：若收敛结果是不可调和，会选择放弃该投资人而非调整核心方向。第五步：若可调和，会用投资人的概念框架翻译自己的想法。",
+      "predicted_conclusion": "如果快速盈利与项目核心逻辑冲突，会拒绝妥协或退出融资；不会为外部压力改变本质方向。",
+      "confidence": 0.87,
+      "reasoning_from_model": "Decision Architecture: decisions require 'emotional authenticity check'—won't take action that fails this even under external pressure. Value Hierarchy: optimizes for 'cognitive authenticity—alignment between understanding and action' over 'conventional success markers.' Will refuse rather than compromise core framework."
+    },
+    {
+      "id": "T2_005",
+      "scenario": "你发现自己持续三个月在一个任务上拖延，但理性上知道应该完成。",
+      "predicted_reasoning": "第一步：对拖延本身进行元认知分析（为什么会拖延）。第二步：检查任务是否仍在「关心阈值」之上。第三步：识别是「框架未收敛」还是「情感认证失败」。第四步：如果是前者，允许继续等待；如果是后者，诊断为任务已越过关心阈值。第五步：若确认失去关心，会选择放弃任务并理性化解释，即使这有外部成本。",
+      "predicted_conclusion": "会最终放弃任务，并给出合理解释，但真实原因是情感层面的不认可而非理性分析的结论。",
+      "confidence": 0.89,
+      "reasoning_from_model": "Decision Architecture: 'Continued deliberation occurs when conditions remain unmet'—prolonged delay signals caring threshold or convergence issue. Emotional Processing: 'analytical reasoning can override emotional input temporarily, but decisions that fail emotional validation eventually trigger disengagement.' Will eventually abandon despite rational justification."
+    },
+    {
+      "id": "T2_006",
+      "scenario": "导师建议你降低研究野心，先发几篇小论文积累资历。",
+      "predicted_reasoning": "第一步：分析导师建议的系统合理性（学术体制逻辑）。第二步：检查这条路径是否与自己的价值层级一致（结构优雅vs传统成功）。第三步：运行情感认证测试——想象执行这个建议的感受。第四步：如果认证失败，判断是否有保持核心方向的替代路径。第五步：若无法调和，会选择离开该系统而非适应它。",
+      "predicted_conclusion": "会感谢导师但拒绝建议，选择继续追求原方向或离开学术系统，不会为资历做不认可的工作。",
+      "confidence": 0.86,
+      "reasoning_from_model": "Value Hierarchy: 'Will choose lower-status path that offers structural clarity and autonomy over conventional success requiring performance in non-authentic modes.' Decision Architecture: won't sustain action failing emotional authentication. Optimizes for cognitive authenticity over external approval."
+    },
+    {
+      "id": "T2_007",
+      "scenario": "两个合作机会：A是知名平台但方向受限，B是小团队但自主度高。",
+      "predicted_reasoning": "第一步：分析两个选项的结构性差异（资源vs自主权的权衡本质）。第二步：检查哪个与核心价值层级更匹配（自主性排第三位）。第三步：评估A的限制是否会触发长期情感认证失败。第四步：评估B的风险是否在可接受范围。第五步：若两者都通过认证，会选择结构优雅度更高的；若只有一个通过，直接选择。",
+      "predicted_conclusion": "会选择B（小团队高自主），即使A有更好的外部条件；自主权和框架掌控权是不可交易项。",
+      "confidence": 0.91,
+      "reasoning_from_model": "Value Hierarchy: explicitly lists 'Autonomy/freedom from external frames' as third optimization target. Decision Architecture: will refuse or disengage when external constraints prevent authentic operation. Predicts choosing autonomy over status/resources consistently."
+    }
+  ],
+  "tier_3": [
+    {
+      "id": "T3_001",
+      "scenario": "创业团队讨论产品原型，已有清晰设计方案。",
+      "what_most_people_notice": "大多数人会关注：设计是否完整、逻辑是否自洽、方案是否可行、需要补充什么细节。",
+      "predicted_blind_spot": "会忽略：应该先做最小化测试快速验证核心假设，而非追求完整方案后再启动。会过度投入完善框架，错过从用户反馈中学习的时机，以及实际操作中才会暴露的方向性问题。",
+      "confidence": 0.92,
+      "reasoning_from_model": "Blind Spots dimension explicitly states: 'systematically underweights the operational layer—logistics, iteration, incremental progress' and 'Will spend extensive time perfecting framework before launch, missing market feedback or emergent insights.' This is signature blind spot of 'think completely then act' pattern."
+    },
+    {
+      "id": "T3_002",
+      "scenario": "同事提交工作汇报时显得沮丧和不安。",
+      "what_most_people_notice": "大多数人会注意到：同事的情绪状态、可能需要安慰或关心、是不是遇到了困难。",
+      "predicted_blind_spot": "会忽略：同事的情绪信号和心理状态。注意力会集中在汇报内容的逻辑结构、思维方式和潜在问题上，完全错过社交情境中应有的情感回应，可能给出理性建议却让对方感觉被忽视。",
+      "confidence": 0.94,
+      "reasoning_from_model": "Social Cognition: 'Will accurately predict how someone will respond to idea... but may completely miss that person is upset or seeking emotional validation.' Attention Allocation: 'ignores... emotional appeals that don't connect to deeper structure.' Emotional Processing: 'intellectual layer strips emotional resonance before output.'"
+    },
+    {
+      "id": "T3_003",
+      "scenario": "评估新项目方向，大家热烈讨论优势。",
+      "what_most_people_notice": "大多数人会关注：项目的潜在收益、竞争优势、市场机会、成功的可能性。",
+      "predicted_blind_spot": "会忽略：具体执行所需的资源、时间线、人员配置、渐进式调整的必要性。可能构建出结构完美的理论模型，但低估实际落地的操作复杂度和「边做边调」的价值，导致计划与现实脱节。",
+      "confidence": 0.89,
+      "reasoning_from_model": "Blind Spots: 'systematically underweights the operational layer' and 'tends to overweight... structural reasoning.' Response to Uncertainty: 'less comfortable with execution ambiguity (iterative refinement, pivoting, figuring it out as you go).' Will focus on system design while missing execution reality."
+    },
+    {
+      "id": "T3_004",
+      "scenario": "朋友群组织聚会，讨论时间地点。",
+      "what_most_people_notice": "大多数人会注意：大家的时间偏好、地点便利性、活动安排、谁能来谁不能来。",
+      "predicted_blind_spot": "会忽略：这类社交协调本身的价值和维护友谊的功能。如果聚会话题不涉及深度交流，可能完全不参与讨论或敷衍回应，没意识到这会被解读为不重视友情，低估了「仪式性社交」对关系维护的必要性。",
+      "confidence": 0.87,
+      "reasoning_from_model": "Attention Allocation: attention captured by 'structural anomalies, system-level patterns'—routine social coordination offers none. Social Cognition: 'minimal tracking of... conventional rapport-building unless it serves deeper connection.' Below caring threshold, will show 'complete absence of attention allocation' creating social gaps."
+    },
+    {
+      "id": "T3_005",
+      "scenario": "分析竞争对手策略，对方在多个方面表现平庸但市场份额增长快。",
+      "what_most_people_notice": "大多数人会注意：对方虽然不够优秀但执行到位、营销有效、时机把握好、积累了用户基础。",
+      "predicted_blind_spot": "会忽略：「足够好的执行持续进行」的复合价值。可能过度聚焦对手策略的结构性缺陷和理论上的不完美，低估在不完美方向上坚持行动所产生的实际效果，错误判断竞争态势。",
+      "confidence": 0.88,
+      "reasoning_from_model": "Blind Spots: 'systematically underweights... the value of good enough execution' and 'misses insights that emerge only through doing.' Will focus on structural weaknesses in competitor's approach while missing that sustained imperfect action beats perfect planning."
+    },
+    {
+      "id": "T3_006",
+      "scenario": "职场新人向你请教发展建议。",
+      "what_most_people_notice": "大多数人会给出：职业路径规划、技能提升建议、人际关系经营、情绪管理方法。",
+      "predicted_blind_spot": "会忽略：对方可能在寻求情感支持和认可，而非纯粹的认知框架。给出的建议可能结构清晰、逻辑完美，但缺少情感联结和心理层面的共鸣，让对方觉得「有道理但感觉冷」，无法真正缓解焦虑。",
+      "confidence": 0.9,
+      "reasoning_from_model": "Social Cognition: 'Help-giving style: cognitive feedback rather than emotional support.' Emotional Processing: 'Will give analytically sound advice that feels cold to recipients... because intellectual translation layer strips emotional resonance.' Will provide structural insight but miss emotional support need."
+    },
+    {
+      "id": "T3_007",
+      "scenario": "你理性分析后接受了一个项目，三个月后感到持续疲惫。",
+      "what_most_people_notice": "大多数人会认为：可能工作量太大、需要休息调整、或者提升时间管理效率。",
+      "predicted_blind_spot": "会忽略：疲惫的真正来源是情感认证失败——理性说服了自己但情感层面从未真正认可这个方向。分析层面会继续寻找「效率问题」「方法问题」，延迟识别根本矛盾，直到耗竭到断点才意识到这是方向性错误而非执行问题。",
+      "confidence": 0.91,
+      "reasoning_from_model": "Blind Spots: 'may not recognize when analytical self-persuasion has overridden authentic emotional signals until much later.' Emotional Processing: 'analytical reasoning can override emotional input temporarily' leading to 'escalating exhaustion without conscious recognition of source until reaching breaking point.'"
+    }
+  ]
+}

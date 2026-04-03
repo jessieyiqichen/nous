@@ -1,0 +1,17 @@
+node_modules/
+.next/
+.env
+.env.local
+__pycache__/
+*.pyc
+.claude/
+web/.claude/
+
+# Large data files (keep structure, not data)
+signals_history.json
+conversation_session_current.md
+conversation_claude_ai_raw.md
+interview_transcript_*.json
+interview_signals_*.json
+quiz_results.json
+accuracy_report.json

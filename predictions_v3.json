@@ -1,0 +1,161 @@
+{
+  "tier_1": [
+    {
+      "id": "T1_01",
+      "scenario": "你被邀请参加一个行业社交活动，可以认识潜在合作伙伴，但话题可能偏寒暄。你会？",
+      "options": [
+        "去，这是职业发展必须做的事",
+        "如果当天状态好就去，否则推掉",
+        "找个理由不去，除非有特别想交流的人",
+        "去但只待最短礼貌时间就离开"
+      ],
+      "predicted_answer": "找个理由不去，除非有特别想交流的人",
+      "confidence": 0.88,
+      "reasoning_from_model": "Attention Allocation维度：'完全由caring驱动——对在乎的事全力运转，对不在乎的几乎为零'。社交寒暄不会激活pattern-recognition系统，属于非engaged域。Execution-Layer Flexibility维度：在非在乎领域会'做最低限度或完全放弃'。只有当有特定目标（想交流的人=潜在intellectual engagement）才会激活caring，此时会去。"
+    },
+    {
+      "id": "T1_02",
+      "scenario": "项目截止前一天，你发现方案有概念性缺陷，修正需要延期三天。这是你在乎的项目。",
+      "options": [
+        "按原方案交付，缺陷不影响主要功能",
+        "连夜修补，做表面修正按时提交",
+        "告知需延期，必须修正概念问题",
+        "提交当前版本但附加说明缺陷"
+      ],
+      "predicted_answer": "告知需延期，必须修正概念问题",
+      "confidence": 0.92,
+      "reasoning_from_model": "Decision Architecture维度：'行动触发条件：内部框架达到coherence且方向在情感上感觉对'。发现概念性缺陷意味着失去了coherence。Execution-Layer Flexibility维度：'在在乎领域面临压力时：会牺牲几乎任何东西（截止日期、社会期待、个人健康）而不妥协质量'和'在在乎的项目面临硬截止时：会错过截止日期'。这是明确的cared-about项目，会选择延期而非妥协概念完整性。"
+    },
+    {
+      "id": "T1_03",
+      "scenario": "朋友情绪低落找你倾诉，但你当天状态疲惫。你会？",
+      "options": [
+        "打起精神陪伴，朋友需要我",
+        "诚实说明状态不好，改天再聊",
+        "简短回应几句后找理由离开",
+        "听ta说但保持情感距离，给建议"
+      ],
+      "predicted_answer": "听ta说但保持情感距离，给建议",
+      "confidence": 0.75,
+      "reasoning_from_model": "Social Cognition维度：'通过认知反馈帮助而非情感安慰——对某些人有用，对另一些人显得冷漠'。Emotional Processing维度：'情感表达需要特定安全条件'，普通朋友倾诉不构成这些条件。Execution-Layer Flexibility维度：疲惫时'会维持外部面对的胜任力（翻译层保持开启）但停止所有可选engagement'。会履行社交义务（听）但以认知模式（给建议）而非情感投入的方式。"
+    },
+    {
+      "id": "T1_04",
+      "scenario": "你需要完成一份不重要的行政报告，今天就截止。",
+      "options": [
+        "早就做完了，不喜欢拖延",
+        "最后一小时快速搞定",
+        "找理由延期或让别人代做",
+        "做到六成交上去"
+      ],
+      "predicted_answer": "最后一小时快速搞定",
+      "confidence": 0.8,
+      "reasoning_from_model": "Execution-Layer Flexibility维度：'在不在乎的项目面临硬截止时：会在最后一刻产出足够水平的东西或完全说服自己放弃'。Attention Allocation维度：非caring激活的任务获得'近零'处理能力直到必须完成。Emotional Processing维度：'分析层可以说服情感层'完成非engaged任务，创造临时顺从。会拖到最后但analysis-layer会persuade完成，产出adequate结果。"
+    },
+    {
+      "id": "T1_05",
+      "scenario": "一个新项目，概念很吸引你但细节模糊。团队等你决定是否启动。",
+      "options": [
+        "立即启动，边做边想",
+        "先做小范围试点探索",
+        "要求更多信息再决定",
+        "花时间构建清晰框架后再启动"
+      ],
+      "predicted_answer": "花时间构建清晰框架后再启动",
+      "confidence": 0.9,
+      "reasoning_from_model": "Decision Architecture维度：'不会启动项目直到获得清晰的概念架构，即使这在他人看来像拖延'和'在没有足够概念清晰度的情况下，更可能错过截止日期也不开始'。Response to Uncertainty维度：'执行时缺乏框架则无法容忍模糊'和'会保持在deliberation状态直到pattern浮现'。虽然概念吸引（激活caring），但会先构建框架再行动，这是核心architectural特征。"
+    },
+    {
+      "id": "T1_06",
+      "scenario": "你发现同事在不重要的事情上用了不太道德但常见的捷径。",
+      "options": [
+        "指出问题，原则就是原则",
+        "不关我的事，不说话",
+        "私下提醒但不深究",
+        "观察是否影响到我在乎的事再决定"
+      ],
+      "predicted_answer": "不关我的事，不说话",
+      "confidence": 0.82,
+      "reasoning_from_model": "Blind Spots维度：'缺乏大多数人使用的default baseline（大家都这么做），导致非在乎领域的伦理空白'。Value Hierarchy维度：'陈述的原则是基于caring-engagement的条件性而非普遍性'和'没有稳定的基线伦理——道德监控只在engaged领域激活'。如果是'不重要的事'（非caring域），道德监控系统不会运行，会表现出indifference。"
+    },
+    {
+      "id": "T1_07",
+      "scenario": "一个声望很高但内容不吸引你的工作机会，vs 一个默默无闻但智力上有趣的选择。",
+      "options": [
+        "选声望高的，对长期发展更好",
+        "选有趣的，但会纠结很久",
+        "选有趣的，毫不犹豫",
+        "尝试谈判让高声望工作变有趣"
+      ],
+      "predicted_answer": "选有趣的，毫不犹豫",
+      "confidence": 0.88,
+      "reasoning_from_model": "Value Hierarchy维度：'会做出外人视为浪费潜力的职业/人生选择，如果prestigious path不激活caring，且对此毫不困扰'。Revealed preference清晰：(1)智识coherence和depth，(2)自主性，排在社会期待之前。Attention Allocation维度：完全由caring驱动的资源分配。'智力上有趣'直接激活core engine，会按revealed preference选择，不会有prolonged纠结（因为价值层级明确）。"
+    }
+  ],
+  "tier_2": [
+    {
+      "id": "T2_01",
+      "scenario": "公司要进入新市场，数据显示可行，但你直觉感觉不对。老板催要决策。",
+      "predicted_reasoning": "第一步：内部感知到直觉-分析conflict，这会触发deliberation state而非立即决策。第二步：会深入分析'为什么直觉不对'——寻找数据未捕捉的structural pattern或系统性风险。第三步：如果找到framework解释直觉，会坚持；如果找不到，分析层会override直觉，做出'数据支持'的决策。第四步（预测）：如果analysis override了gut，后续可能验证直觉是对的，产生retrospective recognition。整个过程会抵抗老板压力延长deliberation时间，因为缺乏internal convergence。",
+      "predicted_conclusion": "更可能follow数据建议进入市场（分析override直觉），但会设置monitoring机制追踪直觉警告的点",
+      "predicted_objection": "会反对'直接跟着感觉走不需要解释'的建议——需要intellectual coherence；也会反对'忽略直觉，数据就是一切'——认识到直觉在捕捉pattern方面的价值",
+      "confidence": 0.85,
+      "reasoning_from_model": "Decision Architecture维度：'直觉优先，分析并行运行验证'和'在直觉与理性分析冲突时，会遵循分析但后来认识到直觉是对的'。Response to Uncertainty维度：'通过构建frameworks/models处理不确定性'。这会驱动寻找framework解释gut feeling。Reasoning Style维度：'先构建工作模型再行动'。"
+    },
+    {
+      "id": "T2_02",
+      "scenario": "团队成员持续表现不佳，影响项目进度。你需要决定如何处理。",
+      "predicted_reasoning": "第一步：会将此建模为系统问题而非情感问题——分析performance gap的structural原因（能力不匹配？激励错位？资源缺乏？）。第二步：判断此事是否在caring范围——如果项目本身engaged，会投入；否则可能delegate或最小化处理。第三步（假设caring激活）：会尝试认知层面的intervention（清晰反馈、重新框架任务）而非情感激励。第四步：如果intervention无效，会倾向系统性解决（调整角色/替换）而非持续emotional labor。整个过程避免直接冲突，可能通过'调整结构'方式quiet fade该成员的核心角色。",
+      "predicted_conclusion": "会给予一次清晰的认知反馈和改进框架，如无改善则推动角色调整或团队重组，而非反复情感沟通",
+      "predicted_objection": "会反对'多给几次机会，用情感支持激励'的approach——认为效率低且不在自己的help模式内；也会反对'立即严厉惩罚'如果问题可能是systemic而非个人",
+      "confidence": 0.8,
+      "reasoning_from_model": "Social Cognition维度：'将人建模为有盲点的系统'和'通过认知反馈帮助而非情感安慰'和'关系退出通过quiet fade而非confrontation'。Execution-Layer Flexibility维度：如果项目在caring范围会投入，否则最小化。Reasoning Style维度：'以机制和系统而非叙事思考'。"
+    },
+    {
+      "id": "T2_03",
+      "scenario": "你需要快速学习陌生领域为明天的会议做准备，时间只有今晚。",
+      "predicted_reasoning": "第一步：不会linear地阅读材料，而是rapid系统层面扫描——寻找该领域的core架构、关键pattern、与已知框架的连接点。第二步：会快速构建working model（这个领域的结构是什么），可能忽略domain-specific细节。第三步：准备时focus on framework和跨域insight，而非全面覆盖。第四步（潜在风险）：可能在会议中展现systemic understanding但miss领域内人视为常识的specific conventions。不会因为时间紧而焦虑，因为有confidence in rapid pattern extraction。",
+      "predicted_conclusion": "会在会议中展现surprisingly good系统理解和跨领域连接，但可能在细节问题上expose gaps",
+      "predicted_objection": "会反对'系统性通读所有材料'的建议——认为效率低；也会反对'只背关键talking points'——需要真实理解，不只是表面应付",
+      "confidence": 0.87,
+      "reasoning_from_model": "Reasoning Style维度：'跨领域快速系统层面理解'和'学习新领域时会快速把握systemic patterns但可能miss不符合提取结构的domain-specific细节'。Attention Allocation维度：'自动attention捕获：structural patterns, system-level anomalies'。这是核心strengths，在time pressure下会更依赖。"
+    },
+    {
+      "id": "T2_04",
+      "scenario": "你发现当前工作方向虽然符合计划，但持续感到能量下降。",
+      "predicted_reasoning": "第一步：会从intellectual层面分析原因（工作内容问题？目标不清晰？技能不匹配？），而不是首先check emotional alignment。第二步：可能构建rational explanation（'只是暂时疲惫''需要优化流程'）并说服自己继续。第三步（blind spot激活）：会underweight持续的情感misalignment signal，因为'决策在分析上make sense'。第四步：可能持续到burnout才意识到问题不在execution层面而在emotional-alignment层面。会surprised by burnout因为'逻辑上应该work'。",
+      "predicted_conclusion": "会先尝试理性优化（调整方法、提高效率），而非质疑方向本身的emotional fit，可能导致持续drain",
+      "predicted_objection": "会反对'立即放弃，跟着感觉走'——需要intellectual justification；也会（后来）反对'能量下降只是意志力问题'——会最终认识到emotional alignment的重要性",
+      "confidence": 0.9,
+      "reasoning_from_model": "Blind Spots维度：'系统性地低估：情感对齐作为决策输入——即使情感系统发送警告信号，分析也可以override'和'会在分析上合理但情感上misaligned的项目中burn out，并对burnout感到surprised因为决策make sense'。Emotional Processing维度：'分析层可以说服情感层'的危险面。这是明确预测的核心vulnerability。"
+    },
+    {
+      "id": "T2_05",
+      "scenario": "需要说服董事会支持你的创新提案，但他们偏好保守方案。",
+      "predicted_reasoning": "第一步：会model董事会成员的decision架构和blind spots——他们的风险框架是什么，care about什么。第二步：运行precision reframing——将创新提案翻译成他们的conceptual language，连接到他们的care points（如降低长期风险、保护既有优势）。第三步：会构建系统性论证显示保守方案的hidden risks，将'创新vs保守'重新框架为'两种风险管理策略'。第四步（内部张力）：会意识到这是manipulation，产生ambivalence，但如果项目本身在caring范围会还是会使用这个能力。高成功率但可能内部uncomfortable。",
+      "predicted_conclusion": "会精准定制presentation打动董事会，成功率高，但过程中对'使用persuasive ability'有内部ambivalence",
+      "predicted_objection": "会反对'直接展示技术优势'如果董事会不care技术；也会反对'妥协提案核心'换取支持——在cared-about domain会hold standards",
+      "confidence": 0.83,
+      "reasoning_from_model": "Social Cognition维度：'自动校准输出深度匹配接收者capacity'和'追踪他人思维中的认知gap和逻辑vulnerabilities'和'高persuasive能力通过precision reframing，但ambivalent about使用（感觉manipulative）'。Value Hierarchy维度：如果是cared-about项目会使用这个能力。"
+    },
+    {
+      "id": "T2_06",
+      "scenario": "连续加班两周后，需要决定周末是休息还是继续推进在乎的项目。",
+      "predicted_reasoning": "第一步：intellectual层面会evaluate项目进度和momentum，可能构建'现在推进效率更高'的rational case。第二步：会underweight身体疲劳信号（Blind Spots: embodied/physiological signals unless extreme）。第三步：决策会heavily weight'项目是否在关键节点'而非'身体是否需要休息'。第四步（最可能）：会选择继续工作，但效率可能下降；或者work到collapse才被迫休息。不会proactively prioritize self-care除非已经到'extreme'生理信号。",
+      "predicted_conclusion": "会继续推进项目，理性化为'关键时刻''休息后momentum会丢失'，直到身体forced shutdown",
+      "predicted_objection": "会反对'一定要work-life balance'的普遍规则——认为是context-dependent；但也会（如果有meta-awareness）承认自己systematically underweight生理需求",
+      "confidence": 0.85,
+      "reasoning_from_model": "Blind Spots维度：'embodied/physiological signals unless extreme——长期睡眠需求、身体limits被push直到collapse'和'在engaged领域操作unsustainably high standards'。Execution-Layer Flexibility维度：'在cared-about领域会牺牲personal health而非妥协质量'。这是明确的predicted vulnerability。"
+    },
+    {
+      "id": "T2_07",
+      "scenario": "朋友聚会上大家在聊你不感兴趣的话题，持续了一小时。",
+      "predicted_reasoning": "第一步：social translation layer保持运行——外部看起来normal参与（点头、偶尔回应），内部attention完全disengaged。第二步：不会产生焦虑或不适，而是cognitive resources自动转向internal processing（可能在思考完全无关的问题）。第三步：如果是close friends会找natural break point离开；如果是必须维持的社交场合会保持minimum viable presence。第四步：不会主动redirect话题（除非topic真的有问题需要reframe），而是等待或quiet exit。能量消耗来自translation layer而非topic本身。",
+      "predicted_conclusion": "会maintain外部正常表现但内部完全脱离，找合适时机礼貌离开，不会有guilt或试图改变话题",
+      "predicted_objection": "会反对'fake enthusiasm'——认为unnecessary且exhausting；也会反对'直接表达无聊'——social translation layer会防止这种unnecessarily blunt behavior",
+      "confidence": 0.82,
+      "reasoning_from_model": "Attention Allocation维度：'完全由caring驱动——对在乎的事全力运转，对不在乎的近零'。Social Cognition维度：'社交翻译层持续运行——外部正常，内部持续翻译'。Execution-Layer Flexibility维度：疲惫时'会维持external-facing competence（翻译层保持开启）但停止所有可选engagement'。"
+    }
+  ],
+  "tier_3": "[\n  {\n    \"id\": \"T3_01\",\n    \"scenario\": \"评估一个技术方案，你发现了精妙的架构设计。\",\n    \"what_most_people_notice\": \"大多数人会注意：技术可行性、成本、实施难度、团队能力匹配\",\n    \"predicted_blind_spot\": \"会miss：方案是否emotionally sustainable for执行团队——即使技术上优雅，如果要求长期高强度维护但团队不care，会在执行层collapse。也可能miss：用户群体的non-technical social conventions that影响adoption（如果用户领域不在caring范围，缺乏baseline understanding）\",\n    \"confidence\": 0.84,\n    \"reasoning_from_model\": \"Reasoning Style维度：会被'精妙的架构设计'吸引，这激活pattern-recognition系统和intellectual appreciation。Blind Spots维度：'systematically underweight emotional alignment as decision input'——会apply到对团队的evaluation。Social Cognition维度：'缺乏social-conventional reasoning的default baseline'可能在非技术社会因素上产生gaps。会从intellectual elegance评估方案，但miss执行层的emotional sustainability和social-conventional constraints。\"\n  },\n  {\n    \"id\": \"T3_02\",\n    \"scenario\": \"一个团队成员总是提前完成任务但从不主动沟通进展。\",\n    \"what_most_people_notice\": \"大多数人会注意：任务完成质量、是否需要改善沟通、团队协作问题\",\n    \"predicted_blind_spot\": \"会miss：这个人可能也是caring-driven且在不care的方面（social update）投入为零，实际上是cognitive similar。大多数manager会看到'沟通问题'，此人可能看到'高效执行者'而miss了对方可能在其他需要broad engagement的场景会完全disengaged，造成未来风险。或者完全不注意这个人（如果不影响系统运行），因为'不产生问题'的人不会capture attention。\",\n    \"confidence\": 0.78,\n    \"reasoning_from_model\": \"Attention Allocation维度：'自动attention捕获：structural patterns, system-level anomalies, conceptual gaps'——一个按时完成任务且不产生问题的人不会trigger这些。Social Cognition维度：models people as systems但focus on cognitive gaps和logical vulnerabilities，可能不track这种'silent reliable performer'的潜在conditional engagement pattern。可能产生projection——认为对方也是高自主性，但miss bimodal risk。\"\n  },\n  {\n    \"id\": \"T3_03\",\n    \"scenario\": \"决定是否投资一个理念很好但创始人风格与你完全不同的startup。\",\n    \"what_most_people_notice\": \"大多数人会注意：商业模式、市场规模、创始人背景、财务预测\",\n    \"predicted_blind_spot\": \"会miss：自己是否能genuinely engage with这个领域长期保持caring——可能被'理念很好'的intellectual appeal吸引，但如果日常运营细节、这个领域的social dynamics不能activate caring，会在需要持续attention的时候discover自己完全disengaged。Rational analysis会说'好投资'，但emotional alignment未被充分weight作为decision input。\",\n    \"confidence\": 0.88,\n    \"reasoning_from_model\": \"Blind Spots维度的核心vulnerability：'systematically underweight emotional alignment as decision input——analysis can override即使emotional system发送warning signals'和'会在analytically sound但emotionally misaligned的commitments中burn out'。Emotional Processing维度：'分析层可以说服情感层'进入cognitively-correct但emotionally-misaligned path。'理念很好'会activate analytical approval但这不等于sustained caring。\"\n  },\n  {\n    \"id\": \"T3_04\",\n    \"scenario\": \"需要组建新团队，有多个候选人简历，安排明天面试。\",\n    \"what_most_people_notice\": \"大多数人会注意：技能匹配、经验水平、文化fit、salary expectations\",\n    \"predicted_blind_spot\": \"会miss：自己的生理状态——如果已经连续工作很久，可能推进面试安排但实际面试时judgment会因疲劳而下降，自己却不会意识到（underweight embodied signals）。也可能miss：candidates对work-life balance的需求如果这不在自己的operating framework内——可能无意中筛选出similarly high-intensity people但miss team diversity需求，或者误判别人也会like him一样在cared-about项目投入一切。\",\n    \"confidence\": 0.75,\n    \"reasoning_from_model\": \"Blind Spots维度：'embodied/physiological signals unless extreme'——不会proactively check'我现在状态适合做重要判断吗'。Social Cognition维度：models people as systems，但自己的bimodal operating mode可能导致projection或在non-engaged领域miss对candidate的full evaluation。Execution-Layer维度：如果这是cared-about hiring，会投入；但可能assume others也operate in similar architecture。\"\n  },\n  {\n    \"id\": \"T3_05\",\n    \"scenario\": \"连续三个朋友都因为你\"太忙\"疏远了联系。\",\n    \"what_most_people_notice\": \"大多数人会注意：需要改善时间管理、主动联系朋友、关系维护的重要性\",\n    \"predicted_blind_spot\": \"会miss：自己对deep human connection的真实需求——已经adapt得太好以至于need itself变得invisible（Blind Spots: own need for human connection at depth）。可能rational analysis为'这些关系本来就不够深，自然淘汰'，但miss的是：可能长期operating in scarcity mode导致对connection need本身的suppression。不会感到urgency去修复，因为monitoring system在这个域可能不够active，除非某个朋友能提供peer-level intellectual dialogue。\",\n    \"confidence\": 0.86,\n    \"reasoning_from_model\": \"Blind Spots维度明确预测：'对自身深度人际连接的需求——已经适应scarcity到需求本身变得invisible'。Attention Allocation维度：如果这些友谊不activate intellectual engagement，可能在non-caring范围。Social Cognition维度：'relationship exit via quiet fade'意味着这个pattern可能被rationalized为normal。会miss自己的真实social-emotional need。\"\n  },\n  {\n    \"id\": \"T3_06\",\n    \"scenario\": \"参加行业会议，有机会做即兴简短发言介绍自己的工作。\",\n    \"what_most_people_notice\": \"大多数人会注意：发言内容、自我展示机会、networking价值、演讲技巧\",\n    \"predicted_blind_spot\": \"会miss：场合的social-conventional expectations——可能自动calibrate depth to audience（Social Cognition优势），但如果这个行业的conventions不在caring范围，可能miss一些'everyone does it this way'的implicit rules，比如expected的谦虚程度、name-dropping norms、或political sensitivities。会focus on intellectual content而potentially违反social protocols without noticing，因为这个domain的ethical/social monitoring可能dormant。\",\n    \"confidence\": 0.77,\n    \"reasoning_from_model\": \"Blind Spots维度：'缺乏大多数人使用的default baseline social-conventional reasoning，导致non-cared-about领域的ethical gaps'。Value Hierarchy维度：'moral monitoring只在engaged领域activate'。Social Cognition维度：虽然有strong calibration能力，但那是基于cognitive modeling；social conventions是不同类型的knowledge。如果行业social game不在caring范围，monitoring系统可能不运行。\"\n  },\n  {\n    \"id\": \"T3_07\",\n    \"scenario\": \"你的一个建议被采纳后效果很好，领导在会上表扬你。\",\n    \"what_most_people_notice\": \"大多数人会注意：职业发展机会、团队士气提升、个人成就感、感谢领导\",\n    \"predicted_blind_spot\": \"会miss：这可能提高了别人对你的期待和future依赖度，在non-cared-about方面也会找你——success会带来更多non-engaged demands。也可能miss：team中可能有人对表扬有emotional reaction（嫉妒、被忽视感），如果不tracking emotional dynamics的话。最可能的：会intellectually acknowledge表扬但miss这是个deepen relationship和build social capital的机会，因为focus on'建议本身的效果'（systemic outcome）而非social-relational meaning。\",\n    \"confidence\": 0.80,\n    \"reasoning_from_model\": \"Social Cognition维度：'models people as systems with blind spots而非tracking emotions or status'——会分析建议为什么work，但可能不track social-emotional ripple effects。Attention Allocation维度：会被'效果很好'（systemic validation）吸引，但'领导表扬'这个social event如果不activate caring可能不get full processing。Emotional Processing维度：高raw intensity被intellectual layer occlude，可能不会充分experience或leverage这个social-emotional moment。\"\n  }\n]"
+}
