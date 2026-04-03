@@ -93,10 +93,17 @@ export default function Home() {
           <Interview
             refineRequest={refineRequest}
             onRefineConsumed={handleRefineConsumed}
+            onModelReady={handleModelReady}
           />
         )}
         {tab === "analyze" && <Analyzer />}
-        {tab === "predict" && <Predictor onRequestRefine={handleRequestRefine} />}
+        {tab === "predict" && (
+          <Predictor
+            onRequestRefine={handleRequestRefine}
+            predictModel={predictModel}
+            onPredictModelConsumed={handlePredictModelConsumed}
+          />
+        )}
         {tab === "research" && <Research />}
       </div>
     </main>

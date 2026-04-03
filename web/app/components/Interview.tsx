@@ -45,6 +45,7 @@ type Phase = "chat" | "building" | "result";
 interface Props {
   refineRequest?: RefineRequest | null;
   onRefineConsumed?: () => void;
+  onModelReady?: (model: CognitiveModel) => void;
 }
 
 // ── LocalStorage helpers ──────────────────────────────────────
@@ -128,7 +129,7 @@ function applyBlindSpotsOverride(
 
 // ── Component ─────────────────────────────────────────────────
 
-export default function Interview({ refineRequest, onRefineConsumed }: Props) {
+export default function Interview({ refineRequest, onRefineConsumed, onModelReady }: Props) {
   // Core state — SSR-safe defaults, hydrated from localStorage in useEffect
   const [messages, setMessages] = useState<Message[]>([]);
   const [turn, setTurn] = useState(0);
@@ -651,6 +652,14 @@ export default function Interview({ refineRequest, onRefineConsumed }: Props) {
             </p>
           </div>
           <div className="flex gap-2">
+            {onModelReady && (
+              <button
+                onClick={() => onModelReady(model)}
+                className="px-3 py-1.5 text-sm bg-[var(--accent)] text-white rounded-md hover:opacity-90 transition-opacity"
+              >
+                用这个模型出题
+              </button>
+            )}
             <button
               onClick={() => {
                 const json = JSON.stringify(model, null, 2);
@@ -797,12 +806,18 @@ export default function Interview({ refineRequest, onRefineConsumed }: Props) {
         {/* Next steps */}
         <div className="p-4 rounded-lg bg-[var(--card)] border border-[var(--card-border)] text-sm text-[var(--muted)]">
           <p className="font-medium text-[var(--foreground)] mb-2">下一步</p>
+          {onModelReady ? (
+            <p>
+              点击上方「用这个模型出题」直接进入认知预测，或下载 JSON 手动导入。
+            </p>
+          ) : (
+            <p>
+              下载 JSON → 切换到「认知预测」tab → 导入模型 → 生成预测题 →
+              验证准确率
+            </p>
+          )}
           <p>
-            1. 下载 JSON → 切换到「认知预测」tab → 导入模型 → 生成预测题 →
-            验证准确率
-          </p>
-          <p>
-            2. 或直接用 CLI：
+            CLI：
             <code className="text-xs bg-white/5 px-1 rounded">
               python predictor.py predict cognitive_model.json
             </code>

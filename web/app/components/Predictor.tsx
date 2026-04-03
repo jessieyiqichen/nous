@@ -185,9 +185,11 @@ interface PredictorProps {
     model: CognitiveModel;
     focusDimensions: string[];
   }) => void;
+  predictModel?: CognitiveModel | null;
+  onPredictModelConsumed?: () => void;
 }
 
-export default function Predictor({ onRequestRefine }: PredictorProps = {}) {
+export default function Predictor({ onRequestRefine, predictModel, onPredictModelConsumed }: PredictorProps = {}) {
   /* SSR-safe defaults — hydrated from localStorage in useEffect */
   const [step, setStep] = useState<Step>("input");
   const [profileText, setProfileText] = useState("");
@@ -213,6 +215,50 @@ export default function Predictor({ onRequestRefine }: PredictorProps = {}) {
 
   // Hydration guard
   const [hydrated, setHydrated] = useState(false);
+
+  /* Handle incoming model from Interview tab */
+  const predictModelConsumedRef = useRef(false);
+  useEffect(() => {
+    if (predictModel && !predictModelConsumedRef.current) {
+      predictModelConsumedRef.current = true;
+      onPredictModelConsumed?.();
+
+      // Set model and auto-generate predictions
+      setCognitiveModel(predictModel);
+      lsSet(LS_KEYS.model, predictModel);
+      setStep("building");
+      setBuildProgress("正在用访谈模型生成预测题...");
+      setError("");
+
+      (async () => {
+        try {
+          const res = await fetch("/api/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ model: predictModel, conflicts: getConflicts(), signals: getSignals() }),
+          });
+          const text = await res.text();
+          let data;
+          try { data = JSON.parse(text); } catch { throw new Error(`API 返回非 JSON: ${text.slice(0, 200)}`); }
+          if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+
+          const preds = normalizePredictions(data.predictions);
+          validatePredictions(preds);
+          setPredictions(preds);
+          lsSet(LS_KEYS.predictions, preds);
+          setT1Answers({});
+          setT2Answers({});
+          setT3Answers({});
+          setStep("quiz");
+        } catch (err) {
+          setError(err instanceof Error ? err.message : "生成预测失败");
+          setStep("input");
+        } finally {
+          predictModelConsumedRef.current = false;
+        }
+      })();
+    }
+  }, [predictModel, onPredictModelConsumed]);
 
   /* Hydrate from localStorage on mount (SSR-safe) */
   useEffect(() => {
