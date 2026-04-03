@@ -182,15 +182,22 @@ def _save_processed(processed: dict) -> None:
 # ── Commands ──────────────────────────────────────────────────
 
 
-def cmd_collect(since_days: int, model_path: Path | None, dry_run: bool):
+def cmd_collect(since_days: int, model_path: Path | None, dry_run: bool, file_path: Path | None = None):
     """Scan JSONL files, filter, extract signals, append to history."""
-    print(f"Scanning for JSONL files (last {since_days} days)...", file=sys.stderr)
-
-    all_files = _scan_jsonl_files(since_days)
-    processed = _load_processed()
-
-    # Filter out already-processed
-    new_files = [f for f in all_files if str(f) not in processed]
+    if file_path:
+        # Process a single specified file
+        if not file_path.exists():
+            print(f"File not found: {file_path}", file=sys.stderr)
+            return
+        all_files = [file_path]
+        processed = _load_processed()
+        new_files = [f for f in all_files if str(f) not in processed]
+        print(f"Processing specified file: {file_path.name}", file=sys.stderr)
+    else:
+        print(f"Scanning for JSONL files (last {since_days} days)...", file=sys.stderr)
+        all_files = _scan_jsonl_files(since_days)
+        processed = _load_processed()
+        new_files = [f for f in all_files if str(f) not in processed]
 
     print(f"Found {len(all_files)} JSONL files, {len(new_files)} unprocessed.", file=sys.stderr)
 
@@ -456,6 +463,10 @@ def main():
         "--dry-run", action="store_true",
         help="List files that would be processed without actually processing",
     )
+    p_collect.add_argument(
+        "--file", type=Path, default=None,
+        help="Process a specific JSONL file instead of scanning all sessions",
+    )
 
     # status
     sub.add_parser("status", help="Show scan status and signal statistics")
@@ -463,7 +474,7 @@ def main():
     args = parser.parse_args()
 
     if args.command == "collect":
-        cmd_collect(args.since, args.model, args.dry_run)
+        cmd_collect(args.since, args.model, args.dry_run, getattr(args, 'file', None))
     elif args.command == "status":
         cmd_status()
     else:
