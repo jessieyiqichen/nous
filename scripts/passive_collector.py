@@ -36,6 +36,8 @@ from signal_extractor import (
     load_history,
     save_history,
     MAX_CONTENT_TOKENS,
+    MODEL_HAIKU,
+    MODEL_SONNET,
 )
 
 # ── Paths ─────────────────────────────────────────────────────
@@ -233,8 +235,44 @@ def cmd_collect(since_days: int, model_path: Path | None, dry_run: bool, file_pa
             continue
 
         stats["converted"] += 1
-        print(f"  Converted: {len(text):,} chars, "
-              f"{sum(1 for r, _ in [] if r == 'user')} turns", file=sys.stderr)
+        user_turn_count = text.count("] USER:")
+        print(f"  Converted: {len(text):,} chars, {user_turn_count} user turns", file=sys.stderr)
+
+        # Step 1.5: Local pre-filter — skip sessions with low cognitive signal density
+        COGNITIVE_KEYWORDS = [
+            # 判断/决策
+            "我觉得", "我选择", "决定", "我倾向", "我偏向", "我喜欢", "我讨厌", "我不想",
+            # 不确定/犹豫
+            "纠结", "不确定", "犹豫", "可能", "也许", "不知道", "不太确定", "要不要",
+            # 情绪/感受
+            "感觉", "担心", "焦虑", "烦", "累", "开心", "兴奋", "无聊", "难受", "舒服",
+            # 反思/思考
+            "思考", "在想", "想了想", "回头看", "说实话", "其实", "坦白说", "老实说",
+            # 价值/态度
+            "重要", "无所谓", "在乎", "不在乎", "有意思", "没意思", "值得", "不值得",
+            # 矛盾/冲突
+            "矛盾", "但是", "不过", "虽然", "可是", "放弃", "坚持",
+            # 自我描述
+            "我这个人", "我的习惯", "我一般", "我通常", "我总是", "我从来",
+            # 提问/探索
+            "为什么", "怎么想", "你觉得", "怎么看", "怎么办",
+        ]
+        user_lines = [line for line in text.split("\n") if line.startswith("[Turn") and "USER:" in line]
+        if user_lines:
+            hits = sum(1 for line in user_lines if any(kw in line for kw in COGNITIVE_KEYWORDS))
+            density = hits / len(user_lines)
+            print(f"  Local pre-filter: {hits}/{len(user_lines)} cognitive keywords ({density:.1%})", file=sys.stderr)
+            if density < 0.05:
+                print(f"  Skipped (signal density {density:.1%} < 5%, mostly technical)", file=sys.stderr)
+                processed[str(jsonl_path)] = {
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "status": "skipped_low_signal",
+                    "session_id": session_id,
+                    "signal_density": round(density, 3),
+                }
+                _save_processed(processed)
+                stats["filtered_out"] += 1
+                continue
 
         # Step 2: Filter — does this conversation have signal value?
         try:
@@ -254,8 +292,9 @@ def cmd_collect(since_days: int, model_path: Path | None, dry_run: bool, file_pa
                     + ending
                 )
 
-            print(f"  Filtering ({len(filter_text):,} chars)...", file=sys.stderr)
-            filter_result = call_api(FILTER_PROMPT, filter_text, FILTER_SCHEMA, "signal_filter")
+            print(f"  Filtering ({len(filter_text):,} chars, haiku)...", file=sys.stderr)
+            filter_result = call_api(FILTER_PROMPT, filter_text, FILTER_SCHEMA, "signal_filter",
+                                     model=MODEL_HAIKU)
 
             has_signal = filter_result.get("has_signal", False)
             confidence = filter_result.get("confidence", 0)
@@ -289,29 +328,32 @@ def cmd_collect(since_days: int, model_path: Path | None, dry_run: bool, file_pa
             continue
 
         # Step 3: Extract signals
+        # For large files (>100K chars), sample beginning+middle+end instead of full chunking
+        SAMPLE_THRESHOLD = 100_000
         try:
             model_context = _build_model_context(model_path)
             prompt = EXTRACT_PROMPT.format(model_context=model_context)
 
-            chunks = split_into_chunks(text)
-            n_chunks = len(chunks)
-
-            if n_chunks > 1:
-                print(f"  Extracting ({n_chunks} chunks)...", file=sys.stderr)
-                chunk_results = []
-                for ci, chunk in enumerate(chunks):
-                    chunk_prompt = prompt + (
-                        f"\n[CHUNK {ci+1}/{n_chunks} — "
-                        f"extract signals from this section only]\n\n"
-                    )
-                    print(f"    Chunk {ci+1}/{n_chunks} ({len(chunk):,} chars)...",
-                          file=sys.stderr)
-                    r = call_api(chunk_prompt, chunk, SIGNAL_SCHEMA, "signal_extraction")
-                    chunk_results.append(r)
-                result = _merge_chunk_results(chunk_results)
+            extract_text = text
+            if len(text) > SAMPLE_THRESHOLD:
+                sample_size = MAX_CONTENT_TOKENS // 3
+                beginning = text[:sample_size]
+                mid_start = len(text) // 2 - sample_size // 2
+                middle = text[mid_start:mid_start + sample_size]
+                ending = text[-sample_size:]
+                extract_text = (
+                    beginning
+                    + "\n\n[... MIDDLE SECTION ...]\n\n"
+                    + middle
+                    + "\n\n[... LATER SECTION ...]\n\n"
+                    + ending
+                )
+                print(f"  Extracting (sampled {len(text):,} → {len(extract_text):,} chars)...",
+                      file=sys.stderr)
             else:
-                print(f"  Extracting ({len(text):,} chars)...", file=sys.stderr)
-                result = call_api(prompt, text, SIGNAL_SCHEMA, "signal_extraction")
+                print(f"  Extracting ({len(extract_text):,} chars)...", file=sys.stderr)
+
+            result = call_api(prompt, extract_text, SIGNAL_SCHEMA, "signal_extraction")
 
             signals = result.get("signals", [])
             conflicts = result.get("stated_vs_behavioral_conflicts", [])
