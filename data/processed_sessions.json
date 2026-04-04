@@ -16,5 +16,13 @@
     "signals_count": 88,
     "conflicts_count": 17,
     "t3_deltas_count": 27
+  },
+  "/Users/chenxiaowen/.claude/projects/-Users-chenxiaowen-Desktop-IDEAS-/613bd26c-a2b6-4403-b6fc-51d279dd01a0.jsonl": {
+    "timestamp": "2026-04-03T16:00:08.813662+00:00",
+    "status": "extracted",
+    "session_id": "613bd26c-a2b6-4403-b6fc-51d279dd01a0",
+    "signals_count": 13,
+    "conflicts_count": 3,
+    "t3_deltas_count": 5
   }
 }

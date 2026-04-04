@@ -404,6 +404,12 @@ def cmd_collect(since_days: int, model_path: Path | None, dry_run: bool, file_pa
             continue
 
     # Final summary
+    new_conflicts = sum(
+        e.get("conflicts_count", 0) for e in history
+        if e.get("source", "").startswith("passive:")
+        and not e.get("reviewed", False)
+    )
+
     print(f"\n{'='*60}", file=sys.stderr)
     print("PASSIVE COLLECTION SUMMARY", file=sys.stderr)
     print(f"{'='*60}", file=sys.stderr)
@@ -413,6 +419,14 @@ def cmd_collect(since_days: int, model_path: Path | None, dry_run: bool, file_pa
     print(f"  Signals extracted: {stats['extracted']}", file=sys.stderr)
     print(f"  Errors:           {stats['errors']}", file=sys.stderr)
     print(f"  History total:    {len(history)} extractions", file=sys.stderr)
+
+    CONFLICT_THRESHOLD = 5
+    if new_conflicts >= CONFLICT_THRESHOLD:
+        print(f"\n  ⚠️  {new_conflicts} 条未 review 的矛盾待处理！", file=sys.stderr)
+        print(f"  建议打开 Web 端「模型验证」→「矛盾 Review」查看。", file=sys.stderr)
+    elif new_conflicts > 0:
+        print(f"\n  📊 {new_conflicts} 条未 review 的矛盾（阈值 {CONFLICT_THRESHOLD} 条触发提醒）", file=sys.stderr)
+
     print(f"{'='*60}", file=sys.stderr)
 
 

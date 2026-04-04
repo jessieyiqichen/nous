@@ -36,7 +36,21 @@ interface Judgment {
   correction?: string;
 }
 
-type Phase = "input" | "generating" | "judging" | "updating" | "results";
+interface ConflictItem {
+  entryIndex: number;
+  conflictIndex: number;
+  source: string;
+  timestamp: string;
+  conflict: {
+    stated_claim: string;
+    actual_behavior: string;
+    blind_spot_evidence: string;
+    confidence: number;
+  };
+  review?: "valid" | "invalid" | "uncertain";
+}
+
+type Phase = "input" | "generating" | "judging" | "updating" | "results" | "conflicts";
 
 interface Props {
   validateModel?: CognitiveModel | null;
@@ -313,6 +327,61 @@ export default function Validator({
     setModelFileName("");
   }, []);
 
+  // ── Conflict review state & handlers ────────────────────────
+
+  const [conflicts, setConflicts] = useState<ConflictItem[]>([]);
+  const [conflictVerdicts, setConflictVerdicts] = useState<Record<string, "valid" | "invalid" | "uncertain">>({});
+  const [conflictCount, setConflictCount] = useState(0);
+  const [conflictsLoading, setConflictsLoading] = useState(false);
+  const [conflictsSaving, setConflictsSaving] = useState(false);
+
+  const loadConflicts = useCallback(async () => {
+    setConflictsLoading(true);
+    try {
+      const res = await fetch("/api/conflicts");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setConflicts(data.conflicts || []);
+      setConflictCount(data.unreviewed || 0);
+    } catch {
+      setConflicts([]);
+      setConflictCount(0);
+    } finally {
+      setConflictsLoading(false);
+    }
+  }, []);
+
+  // Load conflict count on mount
+  useEffect(() => {
+    if (hydrated) loadConflicts();
+  }, [hydrated, loadConflicts]);
+
+  const submitConflictReviews = useCallback(async () => {
+    const reviews = Object.entries(conflictVerdicts).map(([key, verdict]) => {
+      const [ei, ci] = key.split("-").map(Number);
+      return { entryIndex: ei, conflictIndex: ci, verdict };
+    });
+    if (reviews.length === 0) return;
+
+    setConflictsSaving(true);
+    try {
+      const res = await fetch("/api/conflicts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reviews }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setConflictVerdicts({});
+      await loadConflicts();
+      setPhase("input");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "提交失败");
+    } finally {
+      setConflictsSaving(false);
+    }
+  }, [conflictVerdicts, loadConflicts]);
+
   // ── Render: Input phase ─────────────────────────────────────
 
   if (phase === "input") {
@@ -324,6 +393,30 @@ export default function Validator({
             验证认知模型对你的理解是否准确。AI 会基于模型生成具体行为预测，你逐条判断对不对。
           </p>
         </div>
+
+        {/* Conflict review entry */}
+        {conflictCount > 0 && (
+          <div className="bg-orange-500/5 border border-orange-500/30 rounded-lg p-5 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">&#9888;&#65039;</span>
+                <h3 className="text-sm font-medium text-orange-300">
+                  {conflictCount} 条新矛盾待 Review
+                </h3>
+              </div>
+              <span className="text-xs text-[var(--muted)]">来自被动采集</span>
+            </div>
+            <p className="text-xs text-[var(--muted)]">
+              被动信号采集发现了新的「自述 vs 实际行为」矛盾。请判断这些矛盾是否有效，有效的将用于改进模型。
+            </p>
+            <button
+              onClick={() => setPhase("conflicts")}
+              className="px-4 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
+            >
+              开始 Review
+            </button>
+          </div>
+        )}
 
         {/* Saved state recovery */}
         {predictions.length > 0 && (
@@ -480,6 +573,149 @@ export default function Validator({
         <div className="w-10 h-10 mx-auto border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
         <p className="text-sm text-[var(--muted)]">正在生成行为预测...</p>
         <p className="text-xs text-[var(--muted)]">AI 正在分析 9 个认知维度，为每个维度生成 3-5 条具体行为预测</p>
+      </div>
+    );
+  }
+
+  // ── Render: Conflict review phase ──────────────────────────
+
+  if (phase === "conflicts") {
+    const reviewedCount = Object.keys(conflictVerdicts).length;
+    return (
+      <div className="max-w-3xl mx-auto space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold">矛盾 Review</h2>
+            <p className="text-sm text-[var(--muted)] mt-1">
+              被动采集发现的「自述 vs 实际行为」矛盾。判断是否有效。
+            </p>
+          </div>
+          <button
+            onClick={() => setPhase("input")}
+            className="text-sm text-[var(--muted)] hover:text-white transition-colors"
+          >
+            返回
+          </button>
+        </div>
+
+        {/* Progress */}
+        <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4">
+          <div className="flex items-center justify-between text-sm mb-2">
+            <span>已判断 {reviewedCount} / {conflicts.length}</span>
+          </div>
+          <div className="h-2 bg-[var(--background)] rounded-full overflow-hidden">
+            <div
+              className="h-full bg-orange-500 rounded-full transition-all duration-300"
+              style={{ width: `${conflicts.length > 0 ? (reviewedCount / conflicts.length) * 100 : 0}%` }}
+            />
+          </div>
+        </div>
+
+        {conflictsLoading ? (
+          <div className="text-center py-10">
+            <div className="w-8 h-8 mx-auto border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+            <p className="text-sm text-[var(--muted)] mt-3">加载矛盾数据...</p>
+          </div>
+        ) : conflicts.length === 0 ? (
+          <div className="text-center py-10">
+            <p className="text-sm text-[var(--muted)]">没有待 review 的矛盾</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {conflicts.map((item) => {
+              const key = `${item.entryIndex}-${item.conflictIndex}`;
+              const verdict = conflictVerdicts[key];
+              return (
+                <div
+                  key={key}
+                  className={`bg-[var(--card)] border rounded-lg p-5 space-y-3 transition-colors ${
+                    verdict === "valid"
+                      ? "border-green-500/30"
+                      : verdict === "invalid"
+                        ? "border-red-500/30"
+                        : verdict === "uncertain"
+                          ? "border-yellow-500/30"
+                          : "border-[var(--card-border)]"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-[var(--muted)] font-mono">
+                      {item.source.replace("passive:", "")}
+                    </span>
+                    <span className="text-xs text-[var(--muted)]">
+                      置信度 {(item.conflict.confidence * 100).toFixed(0)}%
+                    </span>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <span className="text-xs px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 shrink-0">自述</span>
+                      <p className="text-sm">{item.conflict.stated_claim}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <span className="text-xs px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-300 shrink-0">实际</span>
+                      <p className="text-sm">{item.conflict.actual_behavior}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <span className="text-xs px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 shrink-0">盲区</span>
+                      <p className="text-sm text-[var(--muted)]">{item.conflict.blind_spot_evidence}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2 pt-1">
+                    <button
+                      onClick={() => setConflictVerdicts((prev) => ({ ...prev, [key]: "valid" }))}
+                      className={`flex-1 py-2 text-sm rounded-lg transition-all ${
+                        verdict === "valid"
+                          ? "bg-green-500/20 text-green-300 ring-1 ring-green-500/40"
+                          : "bg-[var(--background)] text-[var(--muted)] hover:text-green-300 hover:bg-green-500/10"
+                      }`}
+                    >
+                      有效
+                    </button>
+                    <button
+                      onClick={() => setConflictVerdicts((prev) => ({ ...prev, [key]: "invalid" }))}
+                      className={`flex-1 py-2 text-sm rounded-lg transition-all ${
+                        verdict === "invalid"
+                          ? "bg-red-500/20 text-red-300 ring-1 ring-red-500/40"
+                          : "bg-[var(--background)] text-[var(--muted)] hover:text-red-300 hover:bg-red-500/10"
+                      }`}
+                    >
+                      无效
+                    </button>
+                    <button
+                      onClick={() => setConflictVerdicts((prev) => ({ ...prev, [key]: "uncertain" }))}
+                      className={`flex-1 py-2 text-sm rounded-lg transition-all ${
+                        verdict === "uncertain"
+                          ? "bg-yellow-500/20 text-yellow-300 ring-1 ring-yellow-500/40"
+                          : "bg-[var(--background)] text-[var(--muted)] hover:text-yellow-300 hover:bg-yellow-500/10"
+                      }`}
+                    >
+                      不确定
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Submit */}
+        <div className="flex justify-center gap-3 pt-4 pb-8">
+          <button
+            onClick={submitConflictReviews}
+            disabled={reviewedCount === 0 || conflictsSaving}
+            className="px-8 py-3 bg-orange-600 text-white font-medium rounded-lg hover:opacity-90 disabled:opacity-40 transition-opacity"
+          >
+            {conflictsSaving ? "提交中..." : `提交 Review (${reviewedCount})`}
+          </button>
+        </div>
+
+        {error && (
+          <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+            <p className="text-sm text-red-400">{error}</p>
+          </div>
+        )}
       </div>
     );
   }

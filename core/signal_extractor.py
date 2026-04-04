@@ -288,11 +288,16 @@ def split_into_chunks(text: str, max_chars: int = MAX_CONTENT_TOKENS) -> list[st
     return chunks
 
 
-def call_api(prompt: str, input_text: str, schema: dict, tool_name: str) -> dict:
+MODEL_SONNET = "claude-sonnet-4-5-20250929"
+MODEL_HAIKU = "claude-haiku-4-5-20251001"
+
+
+def call_api(prompt: str, input_text: str, schema: dict, tool_name: str,
+             model: str = MODEL_SONNET) -> dict:
     """Call Anthropic API with tool_choice for structured output."""
     client = anthropic.Anthropic()
     response = client.messages.create(
-        model="claude-sonnet-4-5-20250929",
+        model=model,
         max_tokens=16384,
         messages=[{"role": "user", "content": prompt + input_text}],
         tools=[{

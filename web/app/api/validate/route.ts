@@ -16,6 +16,12 @@ CRITICAL RULES:
 - Predictions should have DISCRIMINATIVE POWER:
   - "This person would do X, but most people wouldn't"
   - OR "This person wouldn't do X, but most people would"
+- ANTI-MEMORIZATION: Predictions MUST use NEW scenarios that were NOT mentioned in the model text
+  - NEVER directly quote or paraphrase examples/evidence from the model description
+  - Extract the underlying COGNITIVE PATTERN, then apply it to a NOVEL situation
+  - OK: Model says "在乎驱动" → predict behavior in a new scenario like "参加一个无聊的团队会议时"
+  - BAD: Model says "不在乎的事情敷衍" → repeat "你在不在乎的事情上会敷衍"
+  - The goal is to test whether the model truly UNDERSTANDS the person, not just echoes their words
 - Each prediction needs a reasoning field explaining WHY the model implies this behavior
 - Each prediction needs a confidence score (0.0-1.0) based on how strongly the model supports it
 - Generate an ID for each prediction: dimension abbreviation + number (e.g., "DA-1", "AA-2")
