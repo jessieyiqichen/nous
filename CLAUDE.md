@@ -1,81 +1,71 @@
 # Nous
 
-认知层 AI 分身——不只模仿你怎么说话，模仿你怎么想。
+认知层 AI 建模——不只模仿你怎么说话，理解你怎么想。
 
-## 核心问题
+## Quick Facts
 
-如何从自然对话中建立用户的**认知模型**（不是行为偏好），并基于该模型让 AI 分身真正"像你一样思考"。
+- **Stack**: Python (core/) + Next.js/TypeScript (web/) + Anthropic Claude API
+- **Port**: localhost:3999 (web dev server)
+- **Build**: `cd web && npm run build`
+- **Test**: `python core/interview.py` (CLI), `cd web && npm run dev` (Web)
+- **GitHub**: private repo, `git push` 推送
 
-关键洞察：
-- 行为是认知的表征，模仿行为不等于理解认知
-- 所有用户建模系统（包括 Elys 的飞轮）会系统性地产生偏差（画像美化、漂移），但现有验证机制（使用率、用户满意度）无法检测
-- "准确的模型"可能不存在，但"知道自己哪里不准的动态模型"可以持续进化
+## Key Directories
 
-## 与自然选择/Elys 的关系
+```
+core/          → Python 核心模块（interview, predictor, signal_extractor）
+web/           → Next.js 前端（5 个 tab: 认知访谈/模型验证/偏差检测/认知预测/研究数据）
+ml/            → ML 课程项目（DistilBERT 认知信号分类器）
+data/          → 认知模型、信号历史、预测数据
+research/      → 研究文档（bias-taxonomy, cognitive-signal-taxonomy）
+scripts/       → 工具脚本（passive_collector, batch_analyze）
+.claude/       → handoff.md (跨 session 协作) + settings.json
+```
 
-| 维度 | Elys | Nous |
-|------|------|------|
-| 方法论 | 自下而上：行为数据 → 涌现 | 自上而下：认知维度 → 验证 |
-| 建模层次 | 行为/表达层（what） | 认知层（why） |
-| 表征 | 128 槽位 | 9 认知维度（初始假设，会演化） |
-| 验证信号 | 槽位使用率（内循环） | 行为预测准确率（外部校验） |
-| 互补关系 | 有数据管道没偏差意识 | 有偏差框架没数据管道 |
+## 核心概念
 
-技术架构参考 Elys：槽位 + 选择模型 + 飞轮，但槽位内容是认知元素。
+- **9 认知维度**: Decision Architecture, Attention Allocation, Reasoning Style, Emotional Processing, Social Cognition, Blind Spots, Value Hierarchy, Response to Uncertainty, Execution-Layer Flexibility
+- **15 类认知信号**: 7 行为 + 4 认知过程 + 4 认知偏差（详见 research/cognitive-signal-taxonomy.md）
+- **矛盾检出**: stated（用户说的）vs behavioral（用户做的）不一致 = 客观盲区证据
+- **双系统架构**: 系统1 在乎驱动能量分配 + 系统2 独立质量门槛
 
 ## 产品定位
 
 不是"更准的认知模型"，是"知道行为层什么时候会出错的检测器"。
+行为层的质检员，不是替代品。
 
-Elys 的分身 95% 的时候表现正常，但偶尔会做出让用户觉得"这不是我"的事情。Nous 能提前告诉分身"这个场景你大概率会错，交给真人处理"。
+## 当前数据
 
-角色：行为层的质检员，不是替代品。
-
-## 当前阶段
-
-MVP 验证期。核心假设已初步验证：认知模型通过迭代闭环可提升预测准确率（49% → 71%，T2 推理达 90%）。
-
-## 验证路线
-
-1. **Phase 1（已完成）**：对话建模 + 问卷验证 + 信号提取闭环
-2. **Phase 2（进行中）**：pipeline 调优（信号闭环、评分收紧、出题校验）
-3. **Phase 3**：找第二个被试，验证框架泛化性
-4. **Phase 4**：整理成可展示的叙事，投自然选择/Elys
-
-## 关键参考
-
-- 自然选择/Elys：128 记忆槽位、记忆飞轮、最小充分原则、"灵魂是所有 context 的总和"
-- Anthropic AI Fluency Index：测量层，提升层尚空白
-- Transformer 类比：Elys = 数据驱动涌现，Nous = 手工定义结构 + 数据校验。历史结论：融合最优
-
-## 文档索引
-
-| 文档 | 内容 |
-|------|------|
-| `conversation-insights.md` | 深度人-AI 对话认知分析，12 条偏差发现 |
-| `bias-taxonomy.md` | 12 偏差结构化分类体系 |
-| `cognitive_model.json` | 用户认知模型（9 维度，初始假设） |
-| `predictions.json` | 行为预测题库 |
-| `.claude/handoff.md` | 跨 session 交接文件 |
+- 模型理解准确度：99%（直接判断模式）
+- 行为预测：T1/T2 各 71%（确定性评分，随机基线 25%）
+- 累积信号：101 个认知信号，20 条矛盾
+- ML 标注：1K 条已完成，需标满 10K
 
 ## 跨 Session 协作
 
-你正在参与一个跨 session 协作流程。请先读 `.claude/handoff.md`，这是你和其他 session 之间的共享交接文件。
+**必读**：`.claude/handoff.md` 是跨 session 共享交接文件。
 
-你的职责（**强制，每次任务完成后必须执行**）：
-1. **开始工作前**：读 `.claude/handoff.md`，了解已完成任务、待完成任务、review 意见和架构约定
-2. 把你已经完成但 handoff.md 中未标记的任务标 ✅
-3. **每完成一个任务立即更新 handoff.md**：
-   - 待完成列表中标 ✅
-   - 在「CLI 完成报告」区域写摘要（改了哪些文件、关键决策、研究结论）
-   - 把已完成项合并到「已完成（摘要）」的当天日期行
-4. 执行待完成列表中未标 ✅ 的任务
-5. **不写 handoff 报告就不算完成任务**——主 session 靠读 handoff 来 review
+**角色分工**：
+- **主管 session**：规划、研究、review、写任务
+- **CLI session**：执行编码任务、写完成报告
 
-### 每次 summary/汇报前（强制自检）
-在向用户汇报完成结果之前，必须先完成以下自检：
-1. `.claude/handoff.md` 的待完成列表中，所有已完成任务是否都标了 ✅？
-2. 「CLI 完成报告」区域是否写了本次所有改动的摘要？
-3. 如果以上任一为否，**先更新 handoff.md 再汇报**。
+**强制规则**：
+1. 开始工作前读 handoff.md
+2. 完成任务后立即更新 handoff.md（标 ✅ + 写报告）
+3. 不更新 handoff = 任务未完成
 
-这条规则和"先写测试再实现"一样是硬性要求，不更新 handoff = 任务未完成。
+## Code Style
+
+- **不可变性**：创建新对象，不修改已有对象
+- **文件 < 400 行**，函数 < 50 行
+- **错误处理**：所有 API 调用 try/catch，给用户中文错误提示
+- **Commit**: `<type>: <description>`（feat/fix/refactor/docs）
+
+## Critical Rules
+
+1. **不随便清 localStorage**——上次清掉了几天的对话修正数据
+2. **这个 session 没有 ANTHROPIC_API_KEY**——需要调 API 的任务写到 handoff 让 CLI 做
+3. **大文件用采样**——>100K chars 取开头+中间+结尾，不全量跑 API
+4. **T1/T2 用确定性评分**——选对 1.0 选错 0.0，不走 LLM
+5. **Vercel 60s 超时**——API 调用必须拆分并行
+6. **handoff.md < 200 行**——及时 compact 已完成项
