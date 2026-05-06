@@ -1,0 +1,751 @@
+===== 2026-04-09 16:15:10 =====
+Scanning for JSONL files (last 7 days)...
+Found 15 JSONL files, 12 unprocessed.
+
+[1/12] afa0afa7-612a-4d83-830e-c5d7f6edeebf.jsonl
+  Converted: 42,457 chars, 29 user turns
+  Local pre-filter: 0/29 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[2/12] a373e5fe-db21-4a86-bab3-1d9126e6f274.jsonl
+  Converted: 260,510 chars, 322 user turns
+  Local pre-filter: 0/322 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[3/12] bc048205-9c5c-47a3-a1fd-032832238fdb.jsonl
+  Converted: 5,537 chars, 20 user turns
+  Local pre-filter: 0/20 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[4/12] 56a23631-3da6-4da1-a718-62e8feffacda.jsonl
+  Converted: 1,587,191 chars, 1979 user turns
+  Local pre-filter: 0/1979 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[5/12] 6de0f6a0-79f6-4b6a-aa0d-c7721e814f05.jsonl
+  Converted: 73,496 chars, 119 user turns
+  Local pre-filter: 0/119 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[6/12] df94a10e-3e49-4ce0-b8a4-e0b07a393d10.jsonl
+  Converted: 21,390 chars, 48 user turns
+  Local pre-filter: 0/48 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[7/12] 30e53a80-8661-4cf3-aa33-76c4929a378f.jsonl
+  Converted: 90,869 chars, 191 user turns
+  Local pre-filter: 0/191 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[8/12] 3b5cee59-5dc8-4181-b9ea-6adcb0f2eaaf.jsonl
+  Converted: 21,221 chars, 23 user turns
+  Local pre-filter: 0/23 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[9/12] 7df69ab5-b89d-42c2-93f1-a74938076ad5.jsonl
+  Converted: 6,170 chars, 8 user turns
+  Local pre-filter: 0/8 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[10/12] dcce3bf9-9bb1-430b-af15-5c33c7fefee0.jsonl
+  Converted: 53,788 chars, 68 user turns
+  Local pre-filter: 0/68 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[11/12] 82ae00fb-2590-4a88-9590-d7bf4e279dbe.jsonl
+  Converted: 5,246 chars, 14 user turns
+  Local pre-filter: 0/14 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[12/12] 6d13fd57-0512-42b4-9e3d-916765426315.jsonl
+  Converted: 125,669 chars, 36 user turns
+  Local pre-filter: 0/36 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+============================================================
+PASSIVE COLLECTION SUMMARY
+============================================================
+  Total scanned:    12
+  Converted:        12
+  Filtered out:     12
+  Signals extracted: 0
+  Errors:           0
+  History total:    6 extractions
+
+  ⚠️  20 条未 review 的矛盾待处理！
+  建议打开 Web 端「模型验证」→「矛盾 Review」查看。
+============================================================
+
+===== 2026-04-28 08:00:06 =====
+Scanning for JSONL files (last 7 days)...
+Found 107 JSONL files, 105 unprocessed.
+
+[1/105] 4eb5d723-95a7-43bc-bc4f-dc4aa7f94e8c.jsonl
+  Converted: 208,351 chars, 209 user turns
+  Local pre-filter: 0/209 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[2/105] dd80c9fc-326c-493b-b5ee-b9ba471b1119.jsonl
+  Converted: 104,966 chars, 124 user turns
+  Local pre-filter: 0/124 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[3/105] c36e9305-b7ff-4bab-ae05-4e20653edd5a.jsonl
+  Converted: 20,431 chars, 23 user turns
+  Local pre-filter: 0/23 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[4/105] 15b43817-6578-4352-a1d2-753fef2b1474.jsonl
+  Skipped (< 5 user turns or read error)
+
+[5/105] 46dd77bb-41f2-4385-a2a6-08d200b7aa97.jsonl
+  Skipped (< 5 user turns or read error)
+
+[6/105] b3593627-53b9-4dde-a20d-4b8830be7e02.jsonl
+  Converted: 95,822 chars, 47 user turns
+  Local pre-filter: 0/47 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[7/105] 98f7ebd8-2592-4551-ade8-13f28eedeb68.jsonl
+  Converted: 4,246 chars, 6 user turns
+  Local pre-filter: 0/6 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[8/105] a393e240-34ed-4c28-8f2d-3a9fbc3ea881.jsonl
+  Skipped (< 5 user turns or read error)
+
+[9/105] 557f71d1-1d37-4f84-8f30-99a2dc421688.jsonl
+  Skipped (< 5 user turns or read error)
+
+[10/105] 3828bcc6-9f53-41ff-90aa-66c09d455277.jsonl
+  Skipped (< 5 user turns or read error)
+
+[11/105] 078ff43e-587d-4d41-9b7b-7ecab4f67e6f.jsonl
+  Skipped (< 5 user turns or read error)
+
+[12/105] 5707c57e-46da-4e2a-ae78-75a2e4419a8b.jsonl
+  Skipped (< 5 user turns or read error)
+
+[13/105] cc0a7bab-efc2-4a18-85d1-de3799f0febe.jsonl
+  Converted: 120,868 chars, 6 user turns
+  Local pre-filter: 0/6 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[14/105] 646f3b41-cf87-4c54-81f8-5bc0ada3de4f.jsonl
+  Skipped (< 5 user turns or read error)
+
+[15/105] 3863c426-bd84-49b3-8566-9934cf99889a.jsonl
+  Skipped (< 5 user turns or read error)
+
+[16/105] dc30976f-e73f-437f-8831-e82283b31f8f.jsonl
+  Skipped (< 5 user turns or read error)
+
+[17/105] 3f02daea-7071-4fe1-b229-a962c6919d67.jsonl
+  Skipped (< 5 user turns or read error)
+
+[18/105] 9e103934-7f2a-4e58-bd45-ae51576856d8.jsonl
+  Skipped (< 5 user turns or read error)
+
+[19/105] b2b3770b-3849-4dfe-b67e-cc8eaf22f4ce.jsonl
+  Skipped (< 5 user turns or read error)
+
+[20/105] 2bed592e-636f-4287-a9ab-ae9351934620.jsonl
+  Skipped (< 5 user turns or read error)
+
+[21/105] 036c164c-0337-418b-8eab-38561b8d9ab5.jsonl
+  Skipped (< 5 user turns or read error)
+
+[22/105] cc667d3e-a3e8-437b-a599-40c8656b5a50.jsonl
+  Skipped (< 5 user turns or read error)
+
+[23/105] 6783c1ac-6a7d-4bcd-9c1f-3f3eb70d9314.jsonl
+  Skipped (< 5 user turns or read error)
+
+[24/105] c924856c-115e-462c-b8f9-4ea5ebad587b.jsonl
+  Skipped (< 5 user turns or read error)
+
+[25/105] e0ffd699-e76c-4d7e-8f76-aa10f87fe168.jsonl
+  Skipped (< 5 user turns or read error)
+
+[26/105] 6bb9d0be-ce63-47f5-86c1-c7685b0be099.jsonl
+  Skipped (< 5 user turns or read error)
+
+[27/105] 38ecac6f-7a9a-4bce-8c3d-b0b51c186216.jsonl
+  Skipped (< 5 user turns or read error)
+
+[28/105] c1dd2d28-22ba-4f8a-922a-37da639d19d5.jsonl
+  Skipped (< 5 user turns or read error)
+
+[29/105] 4ebc8350-15d9-4de8-95dc-3beb28c1528a.jsonl
+  Skipped (< 5 user turns or read error)
+
+[30/105] 656ab3c1-88f5-4bb4-9c4f-f578ed310cf3.jsonl
+  Skipped (< 5 user turns or read error)
+
+[31/105] 22ab6210-435a-4945-8b7b-1f1affa73de2.jsonl
+  Skipped (< 5 user turns or read error)
+
+[32/105] 264b02f1-c2ff-4ab5-9c9f-72a3c0b1dc3e.jsonl
+  Skipped (< 5 user turns or read error)
+
+[33/105] 30fa2628-ff8c-46bf-bb0f-04e7ae1297b5.jsonl
+  Skipped (< 5 user turns or read error)
+
+[34/105] b23089f8-ae94-4eab-8b31-0a1872d6c439.jsonl
+  Skipped (< 5 user turns or read error)
+
+[35/105] fcfda85b-941b-42e0-8d6f-8cf06d79ad21.jsonl
+  Skipped (< 5 user turns or read error)
+
+[36/105] a55d0263-efd0-49a2-a07d-ca68e13ad026.jsonl
+  Skipped (< 5 user turns or read error)
+
+[37/105] b8445fa3-0876-4287-9e12-724b9da4e398.jsonl
+  Skipped (< 5 user turns or read error)
+
+[38/105] 89fcfdbc-9916-4431-ad4e-7d37f6516d90.jsonl
+  Skipped (< 5 user turns or read error)
+
+[39/105] e8c2ec43-0796-466b-8599-ce4c29d46bf4.jsonl
+  Skipped (< 5 user turns or read error)
+
+[40/105] 53d47b74-0de9-4c7f-b1b1-3f84d29c98d2.jsonl
+  Skipped (< 5 user turns or read error)
+
+[41/105] d38b9a31-e9be-4cd5-aa66-9a3f136fdd93.jsonl
+  Skipped (< 5 user turns or read error)
+
+[42/105] 34c70a09-4098-42ed-b332-359b4858c489.jsonl
+  Skipped (< 5 user turns or read error)
+
+[43/105] abcaceb7-9f74-4e76-923e-6839bdb10378.jsonl
+  Skipped (< 5 user turns or read error)
+
+[44/105] e20d31c5-0c61-4aed-b6af-8dde7664f7aa.jsonl
+  Skipped (< 5 user turns or read error)
+
+[45/105] f912f7ed-1aea-46d2-8d20-5254c7a81d03.jsonl
+  Converted: 11,994 chars, 13 user turns
+  Local pre-filter: 0/13 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[46/105] e888dae4-1d35-48cf-a663-1b0a4b366c6b.jsonl
+  Converted: 15,968 chars, 21 user turns
+  Local pre-filter: 0/21 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[47/105] 011c8326-19e5-4f6b-93ea-fa4df001f8a6.jsonl
+  Skipped (< 5 user turns or read error)
+
+[48/105] 4dc53f2d-13e5-47b0-b0d9-abdbebff1d10.jsonl
+  Skipped (< 5 user turns or read error)
+
+[49/105] 892d53db-8426-4385-9579-e253fb9b0d95.jsonl
+  Converted: 10,426 chars, 15 user turns
+  Local pre-filter: 0/15 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[50/105] f1a59e00-1af3-4fb5-a2c0-d8e1f085dd4d.jsonl
+  Converted: 11,772 chars, 8 user turns
+  Local pre-filter: 0/8 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[51/105] de90f9a3-23c7-4fee-bcc3-054f706eb1fa.jsonl
+  Converted: 110,961 chars, 64 user turns
+  Local pre-filter: 0/64 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[52/105] b3c56014-5b41-4b8b-8dd6-bd725b89bddf.jsonl
+  Converted: 98,509 chars, 56 user turns
+  Local pre-filter: 0/56 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[53/105] 7674ee3f-4b94-47c6-915f-a75719fab16a.jsonl
+  Skipped (< 5 user turns or read error)
+
+[54/105] f90320ac-9041-4038-b6da-69059630c91d.jsonl
+  Converted: 61,793 chars, 92 user turns
+  Local pre-filter: 0/92 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[55/105] a6eb61a8-8a68-45e1-b1b7-779d51a2c231.jsonl
+  Skipped (< 5 user turns or read error)
+
+[56/105] d8eb84bd-13f3-4232-a93d-84133328e26d.jsonl
+  Skipped (< 5 user turns or read error)
+
+[57/105] d723ee6a-259b-400f-97f6-b4e2ff3ec423.jsonl
+  Skipped (< 5 user turns or read error)
+
+[58/105] 61b7f8eb-35dc-4a36-b18d-aeb82217ace6.jsonl
+  Skipped (< 5 user turns or read error)
+
+[59/105] 4d4cc0b8-fba9-4846-9490-4f03703e3dd1.jsonl
+  Skipped (< 5 user turns or read error)
+
+[60/105] 277b5300-2c28-492a-902c-891d9687ad0c.jsonl
+  Skipped (< 5 user turns or read error)
+
+[61/105] ffcab768-a349-4792-8bbd-20577f1954ce.jsonl
+  Skipped (< 5 user turns or read error)
+
+[62/105] e1f83a5a-3fa8-4e08-af1b-2c5fedd6a3bb.jsonl
+  Skipped (< 5 user turns or read error)
+
+[63/105] 68c0ce6e-3e2c-436f-ab35-c47a1918391c.jsonl
+  Skipped (< 5 user turns or read error)
+
+[64/105] 3762b730-c1b8-4309-bf4b-0ca495a8cf07.jsonl
+  Skipped (< 5 user turns or read error)
+
+[65/105] 47789392-962d-485d-b3ec-fbc911de1ae5.jsonl
+  Skipped (< 5 user turns or read error)
+
+[66/105] b6980f8f-9326-4c99-89ed-bc0cfdf68817.jsonl
+  Skipped (< 5 user turns or read error)
+
+[67/105] e2f92164-0e1b-431e-8f15-d6407ef3b811.jsonl
+  Skipped (< 5 user turns or read error)
+
+[68/105] 9fae2701-4be1-44ea-b25a-356cbbd5faf9.jsonl
+  Skipped (< 5 user turns or read error)
+
+[69/105] 7d7e241e-a43a-4449-a58f-0226876e2661.jsonl
+  Skipped (< 5 user turns or read error)
+
+[70/105] f27bec35-70d9-4e85-b082-a26b7a7c967b.jsonl
+  Skipped (< 5 user turns or read error)
+
+[71/105] ceb54223-afd6-4125-b7a5-8a527f272704.jsonl
+  Skipped (< 5 user turns or read error)
+
+[72/105] 007cc043-fe7a-45b2-90a7-5b95d592ab86.jsonl
+  Skipped (< 5 user turns or read error)
+
+[73/105] 7831efff-6e78-4b92-84c8-d6887a5b12d1.jsonl
+  Skipped (< 5 user turns or read error)
+
+[74/105] a7fa4706-98c5-43e8-822d-e0b88602c22f.jsonl
+  Skipped (< 5 user turns or read error)
+
+[75/105] 7ae31601-a752-426a-bd56-8a5cf0bb112a.jsonl
+  Skipped (< 5 user turns or read error)
+
+[76/105] 950ca8dc-7cac-4cec-a993-e04cf0aa267f.jsonl
+  Skipped (< 5 user turns or read error)
+
+[77/105] 0c37ad6d-f64a-440c-b2a8-786297ac24e3.jsonl
+  Converted: 116,340 chars, 73 user turns
+  Local pre-filter: 0/73 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[78/105] 68355df3-904e-46bf-b1fb-80d5ae2b0e7f.jsonl
+  Skipped (< 5 user turns or read error)
+
+[79/105] 960baf49-7885-4f27-bb13-713465f56b10.jsonl
+  Skipped (< 5 user turns or read error)
+
+[80/105] 2a962b3e-d348-41fa-adaf-fea5b3587ccc.jsonl
+  Skipped (< 5 user turns or read error)
+
+[81/105] 63b76784-4d7c-4486-9423-5d1b7df42a04.jsonl
+  Skipped (< 5 user turns or read error)
+
+[82/105] 6d3ef547-2f1b-4427-bacb-569b46d237a0.jsonl
+  Skipped (< 5 user turns or read error)
+
+[83/105] 72e332ff-55dc-4225-bac0-4b5fd52993d1.jsonl
+  Skipped (< 5 user turns or read error)
+
+[84/105] 8e81a4a8-1741-4c2f-9669-fa3a171c66bd.jsonl
+  Skipped (< 5 user turns or read error)
+
+[85/105] 4ac04b6d-501e-4dfc-b52d-7e13df94bdb6.jsonl
+  Skipped (< 5 user turns or read error)
+
+[86/105] 564b9979-2712-4806-9071-21310d3ff1a8.jsonl
+  Skipped (< 5 user turns or read error)
+
+[87/105] 63b89c41-b2da-4d8b-9051-c406de9523b4.jsonl
+  Skipped (< 5 user turns or read error)
+
+[88/105] 8f541cfd-f6dc-4a1d-bf68-3595aa5864df.jsonl
+  Skipped (< 5 user turns or read error)
+
+[89/105] 384d78f2-c95b-439d-9688-79ecc7a09838.jsonl
+  Skipped (< 5 user turns or read error)
+
+[90/105] 89eb7626-ea5b-42b6-bdd4-8f124dc2f49a.jsonl
+  Skipped (< 5 user turns or read error)
+
+[91/105] 5aa30ae4-a8ec-47af-81eb-86c3fe7ba197.jsonl
+  Skipped (< 5 user turns or read error)
+
+[92/105] 39c03170-e921-4f05-9da1-721ab695ba7a.jsonl
+  Skipped (< 5 user turns or read error)
+
+[93/105] fddbb9d0-8946-4987-8ae9-c6fcfda1e26f.jsonl
+  Skipped (< 5 user turns or read error)
+
+[94/105] 33cb173e-b7ee-4201-8a34-8c16afd960a7.jsonl
+  Skipped (< 5 user turns or read error)
+
+[95/105] 6a65d6f3-c993-4949-8b0f-2c570bf096ce.jsonl
+  Skipped (< 5 user turns or read error)
+
+[96/105] baed1de7-edf7-463b-a214-6b9714fdd4ec.jsonl
+  Skipped (< 5 user turns or read error)
+
+[97/105] c01ff4ff-f14b-4753-9e9e-6dae7541440b.jsonl
+  Skipped (< 5 user turns or read error)
+
+[98/105] 13afe800-e0ed-4836-b224-d5808126e5df.jsonl
+  Skipped (< 5 user turns or read error)
+
+[99/105] 17daba4e-ea08-48a7-9a0d-1f5fc28df096.jsonl
+  Skipped (< 5 user turns or read error)
+
+[100/105] d6949dc5-7816-4b0e-bb82-a4be7e4fa5ec.jsonl
+  Skipped (< 5 user turns or read error)
+
+[101/105] 1f202918-f441-4b3b-b4dc-0eefd92cc23e.jsonl
+  Skipped (< 5 user turns or read error)
+
+[102/105] daa4b0ca-e294-4262-958b-09be4a121581.jsonl
+  Skipped (< 5 user turns or read error)
+
+[103/105] 56a2bf8a-4488-4b95-a2d1-6454396b73a6.jsonl
+  Skipped (< 5 user turns or read error)
+
+[104/105] bf9c920b-c6d3-44c0-880c-1bb68501b47f.jsonl
+  Converted: 40,317 chars, 73 user turns
+  Local pre-filter: 0/73 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[105/105] d3dfec8d-b583-4979-96e6-3207fec07b79.jsonl
+  Converted: 13,172 chars, 13 user turns
+  Local pre-filter: 0/13 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+============================================================
+PASSIVE COLLECTION SUMMARY
+============================================================
+  Total scanned:    105
+  Converted:        16
+  Filtered out:     16
+  Signals extracted: 0
+  Errors:           0
+  History total:    6 extractions
+
+  ⚠️  20 条未 review 的矛盾待处理！
+  建议打开 Web 端「模型验证」→「矛盾 Review」查看。
+============================================================
+
+===== 2026-04-29 08:00:02 =====
+Scanning for JSONL files (last 7 days)...
+Found 56 JSONL files, 0 unprocessed.
+Nothing to process.
+
+===== 2026-04-30 08:00:04 =====
+Scanning for JSONL files (last 7 days)...
+Found 54 JSONL files, 4 unprocessed.
+
+[1/4] d3e9aef3-2efc-4cb7-94ac-087a4dc8dbb8.jsonl
+  Skipped (< 5 user turns or read error)
+
+[2/4] a3441667-8c52-4b13-ac1c-7ad43711ae2b.jsonl
+  Converted: 18,113 chars, 10 user turns
+  Local pre-filter: 0/10 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[3/4] 8759eeee-ba6b-43a3-b413-98a60aa51f57.jsonl
+  Skipped (< 5 user turns or read error)
+
+[4/4] b9306929-41a2-423d-abe0-41230e2b818c.jsonl
+  Skipped (< 5 user turns or read error)
+
+============================================================
+PASSIVE COLLECTION SUMMARY
+============================================================
+  Total scanned:    4
+  Converted:        1
+  Filtered out:     1
+  Signals extracted: 0
+  Errors:           0
+  History total:    6 extractions
+
+  ⚠️  20 条未 review 的矛盾待处理！
+  建议打开 Web 端「模型验证」→「矛盾 Review」查看。
+============================================================
+
+===== 2026-05-01 08:00:05 =====
+Scanning for JSONL files (last 7 days)...
+Found 36 JSONL files, 2 unprocessed.
+
+[1/2] 8759eeee-ba6b-43a3-b413-98a60aa51f57.jsonl
+  Skipped (< 5 user turns or read error)
+
+[2/2] b9306929-41a2-423d-abe0-41230e2b818c.jsonl
+  Skipped (< 5 user turns or read error)
+
+============================================================
+PASSIVE COLLECTION SUMMARY
+============================================================
+  Total scanned:    2
+  Converted:        0
+  Filtered out:     0
+  Signals extracted: 0
+  Errors:           0
+  History total:    6 extractions
+
+  ⚠️  20 条未 review 的矛盾待处理！
+  建议打开 Web 端「模型验证」→「矛盾 Review」查看。
+============================================================
+
+===== 2026-05-02 08:00:02 =====
+Scanning for JSONL files (last 7 days)...
+Found 25 JSONL files, 9 unprocessed.
+
+[1/9] 8e5c2db0-c104-425b-88bb-e675ba5dfb68.jsonl
+  Converted: 123,006 chars, 156 user turns
+  Local pre-filter: 0/156 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[2/9] e7505db4-cbe6-4b3e-af6b-aa799e5cce77.jsonl
+  Converted: 29,896 chars, 10 user turns
+  Local pre-filter: 0/10 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[3/9] 054d8ac0-3d13-43bb-b070-7d56a83ecb8f.jsonl
+  Converted: 18,224 chars, 27 user turns
+  Local pre-filter: 0/27 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[4/9] 92c9a177-e9f7-4619-9d38-821394ce01f0.jsonl
+  Skipped (< 5 user turns or read error)
+
+[5/9] 22633b14-fc1b-474f-a061-3b69ad834da1.jsonl
+  Skipped (< 5 user turns or read error)
+
+[6/9] 0318dbe1-522a-4f39-b560-6730a8b75f34.jsonl
+  Skipped (< 5 user turns or read error)
+
+[7/9] 725acdaa-de83-4a84-b3e0-e94126f9642b.jsonl
+  Skipped (< 5 user turns or read error)
+
+[8/9] 8759eeee-ba6b-43a3-b413-98a60aa51f57.jsonl
+  Skipped (< 5 user turns or read error)
+
+[9/9] b9306929-41a2-423d-abe0-41230e2b818c.jsonl
+  Skipped (< 5 user turns or read error)
+
+============================================================
+PASSIVE COLLECTION SUMMARY
+============================================================
+  Total scanned:    9
+  Converted:        3
+  Filtered out:     3
+  Signals extracted: 0
+  Errors:           0
+  History total:    6 extractions
+
+  ⚠️  20 条未 review 的矛盾待处理！
+  建议打开 Web 端「模型验证」→「矛盾 Review」查看。
+============================================================
+
+===== 2026-05-03 08:00:06 =====
+Scanning for JSONL files (last 7 days)...
+Found 26 JSONL files, 10 unprocessed.
+
+[1/10] e4d3f647-f1ed-4175-b155-d1226db864de.jsonl
+  Skipped (< 5 user turns or read error)
+
+[2/10] 88cee410-972c-40e3-8930-c207cb87c1b9.jsonl
+  Skipped (< 5 user turns or read error)
+
+[3/10] 39bbe6ef-1e3b-4613-80d0-5af4f456bb56.jsonl
+  Skipped (< 5 user turns or read error)
+
+[4/10] 35557abe-fe8f-45f2-878a-4ec39fadb404.jsonl
+  Skipped (< 5 user turns or read error)
+
+[5/10] 92c9a177-e9f7-4619-9d38-821394ce01f0.jsonl
+  Skipped (< 5 user turns or read error)
+
+[6/10] 22633b14-fc1b-474f-a061-3b69ad834da1.jsonl
+  Skipped (< 5 user turns or read error)
+
+[7/10] 0318dbe1-522a-4f39-b560-6730a8b75f34.jsonl
+  Skipped (< 5 user turns or read error)
+
+[8/10] 725acdaa-de83-4a84-b3e0-e94126f9642b.jsonl
+  Skipped (< 5 user turns or read error)
+
+[9/10] 8759eeee-ba6b-43a3-b413-98a60aa51f57.jsonl
+  Skipped (< 5 user turns or read error)
+
+[10/10] b9306929-41a2-423d-abe0-41230e2b818c.jsonl
+  Skipped (< 5 user turns or read error)
+
+============================================================
+PASSIVE COLLECTION SUMMARY
+============================================================
+  Total scanned:    10
+  Converted:        0
+  Filtered out:     0
+  Signals extracted: 0
+  Errors:           0
+  History total:    6 extractions
+
+  ⚠️  20 条未 review 的矛盾待处理！
+  建议打开 Web 端「模型验证」→「矛盾 Review」查看。
+============================================================
+
+===== 2026-05-04 08:00:05 =====
+Scanning for JSONL files (last 7 days)...
+Found 25 JSONL files, 10 unprocessed.
+
+[1/10] e4d3f647-f1ed-4175-b155-d1226db864de.jsonl
+  Skipped (< 5 user turns or read error)
+
+[2/10] 88cee410-972c-40e3-8930-c207cb87c1b9.jsonl
+  Skipped (< 5 user turns or read error)
+
+[3/10] 39bbe6ef-1e3b-4613-80d0-5af4f456bb56.jsonl
+  Skipped (< 5 user turns or read error)
+
+[4/10] 35557abe-fe8f-45f2-878a-4ec39fadb404.jsonl
+  Skipped (< 5 user turns or read error)
+
+[5/10] 92c9a177-e9f7-4619-9d38-821394ce01f0.jsonl
+  Skipped (< 5 user turns or read error)
+
+[6/10] 22633b14-fc1b-474f-a061-3b69ad834da1.jsonl
+  Skipped (< 5 user turns or read error)
+
+[7/10] 0318dbe1-522a-4f39-b560-6730a8b75f34.jsonl
+  Skipped (< 5 user turns or read error)
+
+[8/10] 725acdaa-de83-4a84-b3e0-e94126f9642b.jsonl
+  Skipped (< 5 user turns or read error)
+
+[9/10] 8759eeee-ba6b-43a3-b413-98a60aa51f57.jsonl
+  Skipped (< 5 user turns or read error)
+
+[10/10] b9306929-41a2-423d-abe0-41230e2b818c.jsonl
+  Skipped (< 5 user turns or read error)
+
+============================================================
+PASSIVE COLLECTION SUMMARY
+============================================================
+  Total scanned:    10
+  Converted:        0
+  Filtered out:     0
+  Signals extracted: 0
+  Errors:           0
+  History total:    6 extractions
+
+  ⚠️  20 条未 review 的矛盾待处理！
+  建议打开 Web 端「模型验证」→「矛盾 Review」查看。
+============================================================
+
+===== 2026-05-05 08:00:06 =====
+Scanning for JSONL files (last 7 days)...
+Found 23 JSONL files, 11 unprocessed.
+
+[1/11] 4b6589d2-21db-4df5-85f2-fa43267447e1.jsonl
+  Skipped (< 5 user turns or read error)
+
+[2/11] 22633b14-fc1b-474f-a061-3b69ad834da1.jsonl
+  Skipped (< 5 user turns or read error)
+
+[3/11] 725acdaa-de83-4a84-b3e0-e94126f9642b.jsonl
+  Converted: 14,642 chars, 7 user turns
+  Local pre-filter: 0/7 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[4/11] e4d3f647-f1ed-4175-b155-d1226db864de.jsonl
+  Skipped (< 5 user turns or read error)
+
+[5/11] 88cee410-972c-40e3-8930-c207cb87c1b9.jsonl
+  Skipped (< 5 user turns or read error)
+
+[6/11] 39bbe6ef-1e3b-4613-80d0-5af4f456bb56.jsonl
+  Skipped (< 5 user turns or read error)
+
+[7/11] 35557abe-fe8f-45f2-878a-4ec39fadb404.jsonl
+  Skipped (< 5 user turns or read error)
+
+[8/11] 92c9a177-e9f7-4619-9d38-821394ce01f0.jsonl
+  Skipped (< 5 user turns or read error)
+
+[9/11] 0318dbe1-522a-4f39-b560-6730a8b75f34.jsonl
+  Skipped (< 5 user turns or read error)
+
+[10/11] 8759eeee-ba6b-43a3-b413-98a60aa51f57.jsonl
+  Skipped (< 5 user turns or read error)
+
+[11/11] b9306929-41a2-423d-abe0-41230e2b818c.jsonl
+  Skipped (< 5 user turns or read error)
+
+============================================================
+PASSIVE COLLECTION SUMMARY
+============================================================
+  Total scanned:    11
+  Converted:        1
+  Filtered out:     1
+  Signals extracted: 0
+  Errors:           0
+  History total:    6 extractions
+
+  ⚠️  20 条未 review 的矛盾待处理！
+  建议打开 Web 端「模型验证」→「矛盾 Review」查看。
+============================================================
+
+===== 2026-05-06 08:00:07 =====
+Scanning for JSONL files (last 7 days)...
+Found 25 JSONL files, 9 unprocessed.
+
+[1/9] 80f0ab34-f235-46ce-abd7-c24313018b16.jsonl
+  Converted: 26,190 chars, 7 user turns
+  Local pre-filter: 0/7 cognitive keywords (0.0%)
+  Skipped (signal density 0.0% < 5%, mostly technical)
+
+[2/9] e4d3f647-f1ed-4175-b155-d1226db864de.jsonl
+  Skipped (< 5 user turns or read error)
+
+[3/9] 88cee410-972c-40e3-8930-c207cb87c1b9.jsonl
+  Skipped (< 5 user turns or read error)
+
+[4/9] 39bbe6ef-1e3b-4613-80d0-5af4f456bb56.jsonl
+  Skipped (< 5 user turns or read error)
+
+[5/9] 35557abe-fe8f-45f2-878a-4ec39fadb404.jsonl
+  Skipped (< 5 user turns or read error)
+
+[6/9] 92c9a177-e9f7-4619-9d38-821394ce01f0.jsonl
+  Skipped (< 5 user turns or read error)
+
+[7/9] 0318dbe1-522a-4f39-b560-6730a8b75f34.jsonl
+  Skipped (< 5 user turns or read error)
+
+[8/9] 8759eeee-ba6b-43a3-b413-98a60aa51f57.jsonl
+  Skipped (< 5 user turns or read error)
+
+[9/9] b9306929-41a2-423d-abe0-41230e2b818c.jsonl
+  Skipped (< 5 user turns or read error)
+
+============================================================
+PASSIVE COLLECTION SUMMARY
+============================================================
+  Total scanned:    9
+  Converted:        1
+  Filtered out:     1
+  Signals extracted: 0
+  Errors:           0
+  History total:    6 extractions
+
+  ⚠️  20 条未 review 的矛盾待处理！
+  建议打开 Web 端「模型验证」→「矛盾 Review」查看。
+============================================================
+

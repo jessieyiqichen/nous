@@ -49,10 +49,13 @@ scripts/       → 工具脚本（passive_collector, batch_analyze）
 - **主管 session**：规划、研究、review、写任务
 - **CLI session**：执行编码任务、写完成报告
 
-**强制规则**：
+**强制规则（违反 = 任务未完成）**：
 1. 开始工作前读 handoff.md
-2. 完成任务后立即更新 handoff.md（标 ✅ + 写报告）
-3. 不更新 handoff = 任务未完成
+2. **每完成一个任务，在做任何其他事之前，立即更新 handoff.md**：
+   - 待完成列表中标 ✅ + 完成日期
+   - CLI 完成报告区写一行摘要（改了哪些文件、关键结果）
+3. 不更新 handoff = 任务未完成。主管 session 只通过 handoff 来 review，看不到报告就当没做
+4. **向用户汇报之前必须先检查**：handoff 更新了吗？没更新就先更新再汇报
 
 ## Code Style
 

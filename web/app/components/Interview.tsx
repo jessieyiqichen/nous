@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import type { RefineRequest } from "../page";
+import InlineValidator, { clearInlineValidatorStorage } from "./InlineValidator";
 
 // ── Types ─────────────────────────────────────────────────────
 
@@ -46,7 +47,6 @@ interface Props {
   refineRequest?: RefineRequest | null;
   onRefineConsumed?: () => void;
   onModelReady?: (model: CognitiveModel) => void;
-  onValidateModel?: (model: CognitiveModel) => void;
 }
 
 // ── LocalStorage helpers ──────────────────────────────────────
@@ -62,6 +62,7 @@ const LS_KEYS = {
   refineMode: "nous_interview_refine",
   focusDims: "nous_interview_focus",
   existingModel: "nous_interview_existing_model",
+  showInlineValidator: "nous_interview_show_iv",
 } as const;
 
 function lsGet<T>(key: string, fallback: T): T {
@@ -81,6 +82,7 @@ function lsSet(key: string, value: unknown) {
 }
 function lsClear() {
   Object.values(LS_KEYS).forEach((k) => localStorage.removeItem(k));
+  clearInlineValidatorStorage();
 }
 
 // ── Dimension display names ───────────────────────────────────
@@ -130,7 +132,7 @@ function applyBlindSpotsOverride(
 
 // ── Component ─────────────────────────────────────────────────
 
-export default function Interview({ refineRequest, onRefineConsumed, onModelReady, onValidateModel }: Props) {
+export default function Interview({ refineRequest, onRefineConsumed, onModelReady }: Props) {
   // Core state — SSR-safe defaults, hydrated from localStorage in useEffect
   const [messages, setMessages] = useState<Message[]>([]);
   const [turn, setTurn] = useState(0);
@@ -146,6 +148,7 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
   const [signals, setSignals] = useState<Signal[]>([]);
   const [conflicts, setConflicts] = useState<Conflict[]>([]);
   const [model, setModel] = useState<CognitiveModel | null>(null);
+  const [showInlineValidator, setShowInlineValidator] = useState(false);
 
   // Hydration guard
   const [hydrated, setHydrated] = useState(false);
@@ -173,6 +176,7 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
     setSignals(lsGet(LS_KEYS.signals, []));
     setConflicts(lsGet(LS_KEYS.conflicts, []));
     setModel(lsGet(LS_KEYS.model, null));
+    setShowInlineValidator(lsGet(LS_KEYS.showInlineValidator, false));
     setHydrated(true);
   }, []);
 
@@ -187,6 +191,7 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
   useEffect(() => { if (hydrated) lsSet(LS_KEYS.refineMode, isRefineMode); }, [isRefineMode, hydrated]);
   useEffect(() => { if (hydrated) lsSet(LS_KEYS.focusDims, focusDims); }, [focusDims, hydrated]);
   useEffect(() => { if (hydrated) lsSet(LS_KEYS.existingModel, existingModel); }, [existingModel, hydrated]);
+  useEffect(() => { if (hydrated) lsSet(LS_KEYS.showInlineValidator, showInlineValidator); }, [showInlineValidator, hydrated]);
 
   // Auto-scroll
   useEffect(() => {
@@ -528,6 +533,12 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
     await buildModel(messages);
   }, [messages, buildModel]);
 
+  // ── Model corrected handler ─────────────────────────────────
+
+  const handleModelCorrected = useCallback((correctedModel: CognitiveModel) => {
+    setModel(correctedModel);
+  }, []);
+
   // ── Reset ────────────────────────────────────────────────────
 
   const reset = useCallback(() => {
@@ -539,6 +550,7 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
     setSignals([]);
     setConflicts([]);
     setModel(null);
+    setShowInlineValidator(false);
     setIsRefineMode(false);
     setFocusDims([]);
     setExistingModel(null);
@@ -653,14 +665,16 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
             </p>
           </div>
           <div className="flex gap-2">
-            {onValidateModel && (
-              <button
-                onClick={() => onValidateModel(model)}
-                className="px-3 py-1.5 text-sm bg-[var(--accent)] text-white rounded-md hover:opacity-90 transition-opacity"
-              >
-                验证模型理解
-              </button>
-            )}
+            <button
+              onClick={() => setShowInlineValidator((v) => !v)}
+              className={`px-3 py-1.5 text-sm rounded-md transition-opacity ${
+                showInlineValidator
+                  ? "bg-[var(--accent)]/80 text-white hover:opacity-90"
+                  : "bg-[var(--accent)] text-white hover:opacity-90"
+              }`}
+            >
+              {showInlineValidator ? "收起验证" : "开始验证"}
+            </button>
             {onModelReady && (
               <button
                 onClick={() => onModelReady(model)}
@@ -693,138 +707,272 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
           </div>
         </div>
 
-        {/* Summary */}
-        <div className="p-4 rounded-lg bg-[var(--card)] border border-[var(--card-border)]">
-          <p className="text-sm leading-relaxed">{model.summary}</p>
-        </div>
+        {/* Model details — collapsible when validator is shown */}
+        {showInlineValidator ? (
+          <details className="group">
+            <summary className="cursor-pointer text-sm text-[var(--muted)] hover:text-white transition-colors py-2">
+              查看模型详情（{model.dimensions.length} 个维度 · {conflicts.length} 个矛盾 · {signals.length} 个信号）
+            </summary>
+            <div className="space-y-4 mt-2">
+              {/* Summary */}
+              <div className="p-4 rounded-lg bg-[var(--card)] border border-[var(--card-border)]">
+                <p className="text-sm leading-relaxed">{model.summary}</p>
+              </div>
 
-        {/* Dimensions grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {(model.dimensions || []).map((dim) => {
-            const isFocus = isRefineMode && focusDims.includes(dim.name);
-            return (
-              <div
-                key={dim.name}
-                className={`p-4 rounded-lg bg-[var(--card)] border ${
-                  isFocus
-                    ? "border-orange-500/40"
-                    : "border-[var(--card-border)]"
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-medium text-sm">
-                    {DIM_NAMES_ZH[dim.name] || dim.name}
-                    {isFocus && (
-                      <span className="ml-2 text-xs text-orange-400">
-                        已修正
-                      </span>
-                    )}
+              {/* Dimensions grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {(model.dimensions || []).map((dim) => {
+                  const isFocus = isRefineMode && focusDims.includes(dim.name);
+                  return (
+                    <div
+                      key={dim.name}
+                      className={`p-4 rounded-lg bg-[var(--card)] border ${
+                        isFocus
+                          ? "border-orange-500/40"
+                          : "border-[var(--card-border)]"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-medium text-sm">
+                          {DIM_NAMES_ZH[dim.name] || dim.name}
+                          {isFocus && (
+                            <span className="ml-2 text-xs text-orange-400">
+                              已修正
+                            </span>
+                          )}
+                        </h3>
+                        <span
+                          className={`text-xs px-2 py-0.5 rounded-full ${
+                            dim.confidence === "high"
+                              ? "bg-green-500/20 text-green-400"
+                              : dim.confidence === "medium"
+                                ? "bg-yellow-500/20 text-yellow-400"
+                                : "bg-orange-500/20 text-orange-400"
+                          }`}
+                        >
+                          {dim.confidence}
+                        </span>
+                      </div>
+                      <p className="text-sm text-[var(--muted)] leading-relaxed mb-2">
+                        {dim.description}
+                      </p>
+                      {dim.behavioral_predictions.map((pred, i) => (
+                        <p
+                          key={i}
+                          className="text-xs text-[var(--muted)] pl-3 border-l border-[var(--card-border)] mt-1"
+                        >
+                          {pred}
+                        </p>
+                      ))}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Conflicts */}
+              {conflicts.length > 0 && (
+                <div>
+                  <h3 className="font-medium mb-3">
+                    述行矛盾（{conflicts.length}）
                   </h3>
-                  <span
-                    className={`text-xs px-2 py-0.5 rounded-full ${
-                      dim.confidence === "high"
-                        ? "bg-green-500/20 text-green-400"
-                        : dim.confidence === "medium"
-                          ? "bg-yellow-500/20 text-yellow-400"
-                          : "bg-orange-500/20 text-orange-400"
+                  <div className="space-y-2">
+                    {conflicts.map((c, i) => (
+                      <div
+                        key={i}
+                        className="p-3 rounded-lg bg-red-500/5 border border-red-500/20 text-sm"
+                      >
+                        <p>
+                          <span className="text-red-400">声称：</span>
+                          {c.stated_claim}
+                        </p>
+                        <p>
+                          <span className="text-yellow-400">实际：</span>
+                          {c.actual_behavior}
+                        </p>
+                        <p className="text-[var(--muted)] text-xs mt-1">
+                          {c.blind_spot_evidence}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Signal stats */}
+              {signals.length > 0 && (
+                <div>
+                  <h3 className="font-medium mb-3">
+                    认知信号（{signals.length}）
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {Object.entries(
+                      signals.reduce(
+                        (acc, s) => {
+                          acc[s.signal_type] = (acc[s.signal_type] || 0) + 1;
+                          return acc;
+                        },
+                        {} as Record<string, number>
+                      )
+                    ).map(([type, count]) => (
+                      <span
+                        key={type}
+                        className="px-2 py-1 text-xs rounded bg-[var(--card)] border border-[var(--card-border)]"
+                      >
+                        {type}: {count}
+                      </span>
+                    ))}
+                    <span className="px-2 py-1 text-xs rounded bg-blue-500/10 border border-blue-500/20">
+                      behavioral:{" "}
+                      {signals.filter((s) => s.track === "behavioral").length}
+                    </span>
+                    <span className="px-2 py-1 text-xs rounded bg-purple-500/10 border border-purple-500/20">
+                      stated:{" "}
+                      {signals.filter((s) => s.track === "stated").length}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </details>
+        ) : (
+          <>
+            {/* Summary */}
+            <div className="p-4 rounded-lg bg-[var(--card)] border border-[var(--card-border)]">
+              <p className="text-sm leading-relaxed">{model.summary}</p>
+            </div>
+
+            {/* Dimensions grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {(model.dimensions || []).map((dim) => {
+                const isFocus = isRefineMode && focusDims.includes(dim.name);
+                return (
+                  <div
+                    key={dim.name}
+                    className={`p-4 rounded-lg bg-[var(--card)] border ${
+                      isFocus
+                        ? "border-orange-500/40"
+                        : "border-[var(--card-border)]"
                     }`}
                   >
-                    {dim.confidence}
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-medium text-sm">
+                        {DIM_NAMES_ZH[dim.name] || dim.name}
+                        {isFocus && (
+                          <span className="ml-2 text-xs text-orange-400">
+                            已修正
+                          </span>
+                        )}
+                      </h3>
+                      <span
+                        className={`text-xs px-2 py-0.5 rounded-full ${
+                          dim.confidence === "high"
+                            ? "bg-green-500/20 text-green-400"
+                            : dim.confidence === "medium"
+                              ? "bg-yellow-500/20 text-yellow-400"
+                              : "bg-orange-500/20 text-orange-400"
+                        }`}
+                      >
+                        {dim.confidence}
+                      </span>
+                    </div>
+                    <p className="text-sm text-[var(--muted)] leading-relaxed mb-2">
+                      {dim.description}
+                    </p>
+                    {dim.behavioral_predictions.map((pred, i) => (
+                      <p
+                        key={i}
+                        className="text-xs text-[var(--muted)] pl-3 border-l border-[var(--card-border)] mt-1"
+                      >
+                        {pred}
+                      </p>
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Conflicts */}
+            {conflicts.length > 0 && (
+              <div>
+                <h3 className="font-medium mb-3">
+                  述行矛盾（{conflicts.length}）
+                </h3>
+                <div className="space-y-2">
+                  {conflicts.map((c, i) => (
+                    <div
+                      key={i}
+                      className="p-3 rounded-lg bg-red-500/5 border border-red-500/20 text-sm"
+                    >
+                      <p>
+                        <span className="text-red-400">声称：</span>
+                        {c.stated_claim}
+                      </p>
+                      <p>
+                        <span className="text-yellow-400">实际：</span>
+                        {c.actual_behavior}
+                      </p>
+                      <p className="text-[var(--muted)] text-xs mt-1">
+                        {c.blind_spot_evidence}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Signal stats */}
+            {signals.length > 0 && (
+              <div>
+                <h3 className="font-medium mb-3">
+                  认知信号（{signals.length}）
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {Object.entries(
+                    signals.reduce(
+                      (acc, s) => {
+                        acc[s.signal_type] = (acc[s.signal_type] || 0) + 1;
+                        return acc;
+                      },
+                      {} as Record<string, number>
+                    )
+                  ).map(([type, count]) => (
+                    <span
+                      key={type}
+                      className="px-2 py-1 text-xs rounded bg-[var(--card)] border border-[var(--card-border)]"
+                    >
+                      {type}: {count}
+                    </span>
+                  ))}
+                  <span className="px-2 py-1 text-xs rounded bg-blue-500/10 border border-blue-500/20">
+                    behavioral:{" "}
+                    {signals.filter((s) => s.track === "behavioral").length}
+                  </span>
+                  <span className="px-2 py-1 text-xs rounded bg-purple-500/10 border border-purple-500/20">
+                    stated:{" "}
+                    {signals.filter((s) => s.track === "stated").length}
                   </span>
                 </div>
-                <p className="text-sm text-[var(--muted)] leading-relaxed mb-2">
-                  {dim.description}
-                </p>
-                {dim.behavioral_predictions.map((pred, i) => (
-                  <p
-                    key={i}
-                    className="text-xs text-[var(--muted)] pl-3 border-l border-[var(--card-border)] mt-1"
-                  >
-                    {pred}
-                  </p>
-                ))}
               </div>
-            );
-          })}
-        </div>
+            )}
 
-        {/* Conflicts */}
-        {conflicts.length > 0 && (
-          <div>
-            <h3 className="font-medium mb-3">
-              述行矛盾（{conflicts.length}）
-            </h3>
-            <div className="space-y-2">
-              {conflicts.map((c, i) => (
-                <div
-                  key={i}
-                  className="p-3 rounded-lg bg-red-500/5 border border-red-500/20 text-sm"
-                >
-                  <p>
-                    <span className="text-red-400">声称：</span>
-                    {c.stated_claim}
-                  </p>
-                  <p>
-                    <span className="text-yellow-400">实际：</span>
-                    {c.actual_behavior}
-                  </p>
-                  <p className="text-[var(--muted)] text-xs mt-1">
-                    {c.blind_spot_evidence}
-                  </p>
-                </div>
-              ))}
+            {/* Next steps */}
+            <div className="p-4 rounded-lg bg-[var(--card)] border border-[var(--card-border)] text-sm text-[var(--muted)]">
+              <p className="font-medium text-[var(--foreground)] mb-2">下一步</p>
+              <p>
+                推荐先点「开始验证」确认模型描述是否准确，再用「直接出题」进入认知预测。
+              </p>
             </div>
-          </div>
+          </>
         )}
 
-        {/* Signal stats */}
-        {signals.length > 0 && (
-          <div>
-            <h3 className="font-medium mb-3">
-              认知信号（{signals.length}）
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {Object.entries(
-                signals.reduce(
-                  (acc, s) => {
-                    acc[s.signal_type] = (acc[s.signal_type] || 0) + 1;
-                    return acc;
-                  },
-                  {} as Record<string, number>
-                )
-              ).map(([type, count]) => (
-                <span
-                  key={type}
-                  className="px-2 py-1 text-xs rounded bg-[var(--card)] border border-[var(--card-border)]"
-                >
-                  {type}: {count}
-                </span>
-              ))}
-              <span className="px-2 py-1 text-xs rounded bg-blue-500/10 border border-blue-500/20">
-                behavioral:{" "}
-                {signals.filter((s) => s.track === "behavioral").length}
-              </span>
-              <span className="px-2 py-1 text-xs rounded bg-purple-500/10 border border-purple-500/20">
-                stated:{" "}
-                {signals.filter((s) => s.track === "stated").length}
-              </span>
-            </div>
-          </div>
+        {/* Inline Validator */}
+        {showInlineValidator && (
+          <InlineValidator
+            model={model}
+            onModelCorrected={handleModelCorrected}
+            onGoPredict={(m) => onModelReady?.(m)}
+          />
         )}
-
-        {/* Next steps */}
-        <div className="p-4 rounded-lg bg-[var(--card)] border border-[var(--card-border)] text-sm text-[var(--muted)]">
-          <p className="font-medium text-[var(--foreground)] mb-2">下一步</p>
-          {onValidateModel ? (
-            <p>
-              推荐先点「验证模型理解」确认模型描述是否准确，再用「直接出题」进入认知预测。
-            </p>
-          ) : (
-            <p>
-              下载 JSON → 切换到「模型验证」tab → 验证准确率 → 修正模型 → 出题
-            </p>
-          )}
-        </div>
       </div>
     );
   }

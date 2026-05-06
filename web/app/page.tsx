@@ -35,7 +35,6 @@ export default function Home() {
   const [tab, setTab] = useState<Tab>("interview");
   const [refineRequest, setRefineRequest] = useState<RefineRequest | null>(null);
   const [predictModel, setPredictModel] = useState<CognitiveModelType | null>(null);
-  const [validateModel, setValidateModel] = useState<CognitiveModelType | null>(null);
 
   const handleRequestRefine = useCallback(
     (req: RefineRequest) => {
@@ -59,18 +58,6 @@ export default function Home() {
 
   const handlePredictModelConsumed = useCallback(() => {
     setPredictModel(null);
-  }, []);
-
-  const handleValidateModel = useCallback(
-    (model: CognitiveModelType) => {
-      setValidateModel(model);
-      setTab("validate");
-    },
-    [],
-  );
-
-  const handleValidateModelConsumed = useCallback(() => {
-    setValidateModel(null);
   }, []);
 
   const handleGoPredict = useCallback(
@@ -117,13 +104,10 @@ export default function Home() {
             refineRequest={refineRequest}
             onRefineConsumed={handleRefineConsumed}
             onModelReady={handleModelReady}
-            onValidateModel={handleValidateModel}
           />
         )}
         {tab === "validate" && (
           <Validator
-            validateModel={validateModel}
-            onValidateModelConsumed={handleValidateModelConsumed}
             onGoPredict={handleGoPredict}
           />
         )}
