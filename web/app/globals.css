@@ -1,12 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #e5e5e5;
-  --card: #141414;
-  --card-border: #262626;
-  --accent: #3b82f6;
-  --muted: #737373;
+  /* Warm dark palette — inspired by Claude.ai dark mode */
+  --background: #171717;
+  --foreground: #e8e4df;
+  --card: #1e1e1e;
+  --card-border: #2a2a2a;
+  --accent: #c4956a;
+  --accent-soft: rgba(196, 149, 106, 0.12);
+  --muted: #8a8580;
+  --muted-soft: #6b6762;
+
+  /* Semantic — used sparingly */
+  --success: #6ec87a;
+  --warning: #d4a04a;
+  --error: #d46a6a;
 }
 
 @theme inline {
@@ -19,4 +27,26 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--card-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-soft);
+}
+
+/* Selection */
+::selection {
+  background: var(--accent-soft);
 }

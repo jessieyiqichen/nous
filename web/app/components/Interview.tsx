@@ -100,10 +100,10 @@ const DIM_NAMES_ZH: Record<string, string> = {
 };
 
 const CONFIDENCE_COLORS: Record<string, string> = {
-  high: "bg-green-500",
-  medium: "bg-yellow-500",
-  low: "bg-orange-500",
-  none: "bg-neutral-700",
+  high: "bg-[var(--success)]",
+  medium: "bg-[var(--accent)]",
+  low: "bg-[var(--muted)]",
+  none: "bg-[var(--card-border)]",
 };
 
 const CONFIDENCE_WIDTH: Record<string, string> = {
@@ -574,46 +574,44 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
 
   if (messages.length === 0 && phase === "chat" && !loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20">
-        <div className="text-center max-w-lg">
-          <h2 className="text-xl font-semibold mb-3">
-            {isRefineMode ? "认知模型修正" : "认知访谈"}
-          </h2>
-          {isRefineMode && focusDims.length > 0 ? (
-            <>
-              <p className="text-[var(--muted)] mb-2">
-                针对以下维度进行深度对话修正：
+      <div className="flex flex-col items-center justify-center" style={{ minHeight: "60vh" }}>
+        <div className="text-center max-w-md space-y-5">
+          <div className="w-12 h-12 mx-auto rounded-2xl bg-[var(--accent-soft)] flex items-center justify-center">
+            <span className="text-xl text-[var(--accent)]">N</span>
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold">
+              {isRefineMode ? "认知模型修正" : "认知访谈"}
+            </h2>
+            {isRefineMode && focusDims.length > 0 ? (
+              <>
+                <p className="text-sm text-[var(--muted)] leading-relaxed">
+                  针对以下维度进行深度对话修正
+                </p>
+                <div className="flex flex-wrap gap-2 justify-center pt-1">
+                  {focusDims.map((d) => (
+                    <span
+                      key={d}
+                      className="px-2.5 py-1 text-xs rounded-full bg-[var(--accent-soft)] text-[var(--accent)]"
+                    >
+                      {DIM_NAMES_ZH[d] || d}
+                    </span>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <p className="text-sm text-[var(--muted)] leading-relaxed">
+                通过自然对话了解你的思维模式，<br />
+                自动构建 9 维度认知模型
               </p>
-              <div className="flex flex-wrap gap-2 justify-center mb-4">
-                {focusDims.map((d) => (
-                  <span
-                    key={d}
-                    className="px-2 py-1 text-xs rounded bg-orange-500/10 border border-orange-500/20 text-orange-400"
-                  >
-                    {DIM_NAMES_ZH[d] || d}
-                  </span>
-                ))}
-              </div>
-              <p className="text-sm text-[var(--muted)] mb-6">
-                AI 会聚焦在这些维度上提问，达到 high 置信度后自动结束。
-              </p>
-            </>
-          ) : (
-            <>
-              <p className="text-[var(--muted)] mb-2">
-                通过自然对话了解你的思维模式，自动构建 9 维度认知模型。
-              </p>
-              <p className="text-sm text-[var(--muted)] mb-6">
-                AI 会像朋友一样和你聊天，在 15-25 轮对话后生成你的认知画像。
-              </p>
-            </>
-          )}
+            )}
+          </div>
           <button
             onClick={() =>
               startInterview(isRefineMode, existingModel, focusDims)
             }
             disabled={loading}
-            className="px-6 py-2.5 bg-[var(--accent)] text-white rounded-lg hover:opacity-90 disabled:opacity-50 transition-opacity"
+            className="px-8 py-2.5 bg-[var(--accent)] text-white rounded-full text-sm font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
           >
             {loading
               ? "正在准备..."
@@ -621,8 +619,8 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
                 ? "开始修正对话"
                 : "开始对话"}
           </button>
+          {error && <p className="text-[var(--error)] text-sm mt-2">{error}</p>}
         </div>
-        {error && <p className="text-red-400 text-sm mt-4">{error}</p>}
       </div>
     );
   }
@@ -631,17 +629,20 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
 
   if (phase === "building") {
     return (
-      <div className="flex flex-col items-center justify-center py-20">
-        <div className="animate-pulse text-center">
-          <div className="text-lg font-medium mb-2">
-            {isRefineMode ? "正在修正认知模型..." : "正在构建认知模型..."}
+      <div className="flex flex-col items-center justify-center" style={{ minHeight: "60vh" }}>
+        <div className="text-center space-y-4">
+          <div className="w-10 h-10 mx-auto border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
+          <div className="space-y-1">
+            <p className="text-sm font-medium">
+              {isRefineMode ? "正在修正认知模型" : "正在构建认知模型"}
+            </p>
+            <p className="text-xs text-[var(--muted)]">
+              分析 {messages.length} 条对话记录
+              {isRefineMode && focusDims.length > 0
+                ? `，修正 ${focusDims.length} 个维度`
+                : "，提取 9 个维度的认知特征"}
+            </p>
           </div>
-          <p className="text-sm text-[var(--muted)]">
-            分析 {messages.length} 条对话记录
-            {isRefineMode && focusDims.length > 0
-              ? `，修正 ${focusDims.length} 个维度`
-              : "，提取 9 个维度的认知特征"}
-          </p>
         </div>
       </div>
     );
@@ -650,35 +651,75 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
   // ── Render: Result state ─────────────────────────────────────
 
   if (phase === "result" && model) {
+    /** Shared dimension card renderer */
+    const renderDimCard = (dim: { name: string; description: string; behavioral_predictions: string[]; confidence: string }) => {
+      const isFocus = isRefineMode && focusDims.includes(dim.name);
+      return (
+        <div
+          key={dim.name}
+          className={`p-5 rounded-xl bg-[var(--card)] border transition-colors ${
+            isFocus ? "border-[var(--accent)]/40" : "border-[var(--card-border)]"
+          }`}
+        >
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-medium text-sm">
+              {DIM_NAMES_ZH[dim.name] || dim.name}
+              {isFocus && (
+                <span className="ml-2 text-xs text-[var(--accent)]">已修正</span>
+              )}
+            </h3>
+            <span
+              className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${
+                dim.confidence === "high"
+                  ? "bg-[var(--success)]/15 text-[var(--success)]"
+                  : dim.confidence === "medium"
+                    ? "bg-[var(--accent)]/15 text-[var(--accent)]"
+                    : "bg-[var(--muted)]/15 text-[var(--muted)]"
+              }`}
+            >
+              {dim.confidence}
+            </span>
+          </div>
+          <p className="text-sm text-[var(--muted)] leading-relaxed mb-3">
+            {dim.description}
+          </p>
+          <div className="space-y-1.5">
+            {dim.behavioral_predictions.map((pred, i) => (
+              <p
+                key={i}
+                className="text-xs text-[var(--muted-soft)] pl-3 border-l-2 border-[var(--card-border)]"
+              >
+                {pred}
+              </p>
+            ))}
+          </div>
+        </div>
+      );
+    };
+
     return (
-      <div className="space-y-6">
+      <div className="space-y-8">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-semibold">
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            <h2 className="text-lg font-semibold">
               {isRefineMode ? "修正后的认知模型" : "认知模型"}
             </h2>
-            <p className="text-sm text-[var(--muted)] mt-1">
-              基于 {turn} 轮对话
-              {isRefineMode ? "修正" : "构建"} · {signals.length} 个信号 ·{" "}
-              {conflicts.length} 个矛盾
+            <p className="text-sm text-[var(--muted)]">
+              {turn} 轮对话 · {signals.length} 个信号 · {conflicts.length} 个矛盾
             </p>
           </div>
           <div className="flex gap-2">
             <button
               onClick={() => setShowInlineValidator((v) => !v)}
-              className={`px-3 py-1.5 text-sm rounded-md transition-opacity ${
-                showInlineValidator
-                  ? "bg-[var(--accent)]/80 text-white hover:opacity-90"
-                  : "bg-[var(--accent)] text-white hover:opacity-90"
-              }`}
+              className="px-4 py-2 text-sm rounded-full bg-[var(--accent)] text-white font-medium hover:opacity-90 transition-opacity"
             >
               {showInlineValidator ? "收起验证" : "开始验证"}
             </button>
             {onModelReady && (
               <button
                 onClick={() => onModelReady(model)}
-                className="px-3 py-1.5 text-sm border border-[var(--card-border)] rounded-md hover:bg-white/5"
+                className="px-4 py-2 text-sm rounded-full border border-[var(--card-border)] text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[var(--muted)] transition-colors"
               >
                 直接出题
               </button>
@@ -694,15 +735,15 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
                 a.click();
                 URL.revokeObjectURL(url);
               }}
-              className="px-3 py-1.5 text-sm border border-[var(--card-border)] rounded-md hover:bg-white/5"
+              className="px-4 py-2 text-sm rounded-full border border-[var(--card-border)] text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[var(--muted)] transition-colors"
             >
-              下载 JSON
+              下载
             </button>
             <button
               onClick={reset}
-              className="px-3 py-1.5 text-sm border border-[var(--card-border)] rounded-md hover:bg-white/5"
+              className="px-4 py-2 text-sm rounded-full border border-[var(--card-border)] text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[var(--muted)] transition-colors"
             >
-              重新开始
+              重来
             </button>
           </div>
         </div>
@@ -710,208 +751,51 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
         {/* Model details — collapsible when validator is shown */}
         {showInlineValidator ? (
           <details className="group">
-            <summary className="cursor-pointer text-sm text-[var(--muted)] hover:text-white transition-colors py-2">
-              查看模型详情（{model.dimensions.length} 个维度 · {conflicts.length} 个矛盾 · {signals.length} 个信号）
+            <summary className="cursor-pointer text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition-colors py-1">
+              查看模型详情（{model.dimensions.length} 个维度）
             </summary>
-            <div className="space-y-4 mt-2">
-              {/* Summary */}
-              <div className="p-4 rounded-lg bg-[var(--card)] border border-[var(--card-border)]">
+            <div className="space-y-5 mt-4">
+              <div className="p-5 rounded-xl bg-[var(--card)] border border-[var(--card-border)]">
                 <p className="text-sm leading-relaxed">{model.summary}</p>
               </div>
-
-              {/* Dimensions grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {(model.dimensions || []).map((dim) => {
-                  const isFocus = isRefineMode && focusDims.includes(dim.name);
-                  return (
-                    <div
-                      key={dim.name}
-                      className={`p-4 rounded-lg bg-[var(--card)] border ${
-                        isFocus
-                          ? "border-orange-500/40"
-                          : "border-[var(--card-border)]"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-medium text-sm">
-                          {DIM_NAMES_ZH[dim.name] || dim.name}
-                          {isFocus && (
-                            <span className="ml-2 text-xs text-orange-400">
-                              已修正
-                            </span>
-                          )}
-                        </h3>
-                        <span
-                          className={`text-xs px-2 py-0.5 rounded-full ${
-                            dim.confidence === "high"
-                              ? "bg-green-500/20 text-green-400"
-                              : dim.confidence === "medium"
-                                ? "bg-yellow-500/20 text-yellow-400"
-                                : "bg-orange-500/20 text-orange-400"
-                          }`}
-                        >
-                          {dim.confidence}
-                        </span>
-                      </div>
-                      <p className="text-sm text-[var(--muted)] leading-relaxed mb-2">
-                        {dim.description}
-                      </p>
-                      {dim.behavioral_predictions.map((pred, i) => (
-                        <p
-                          key={i}
-                          className="text-xs text-[var(--muted)] pl-3 border-l border-[var(--card-border)] mt-1"
-                        >
-                          {pred}
-                        </p>
-                      ))}
-                    </div>
-                  );
-                })}
+                {(model.dimensions || []).map(renderDimCard)}
               </div>
-
-              {/* Conflicts */}
-              {conflicts.length > 0 && (
-                <div>
-                  <h3 className="font-medium mb-3">
-                    述行矛盾（{conflicts.length}）
-                  </h3>
-                  <div className="space-y-2">
-                    {conflicts.map((c, i) => (
-                      <div
-                        key={i}
-                        className="p-3 rounded-lg bg-red-500/5 border border-red-500/20 text-sm"
-                      >
-                        <p>
-                          <span className="text-red-400">声称：</span>
-                          {c.stated_claim}
-                        </p>
-                        <p>
-                          <span className="text-yellow-400">实际：</span>
-                          {c.actual_behavior}
-                        </p>
-                        <p className="text-[var(--muted)] text-xs mt-1">
-                          {c.blind_spot_evidence}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Signal stats */}
-              {signals.length > 0 && (
-                <div>
-                  <h3 className="font-medium mb-3">
-                    认知信号（{signals.length}）
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {Object.entries(
-                      signals.reduce(
-                        (acc, s) => {
-                          acc[s.signal_type] = (acc[s.signal_type] || 0) + 1;
-                          return acc;
-                        },
-                        {} as Record<string, number>
-                      )
-                    ).map(([type, count]) => (
-                      <span
-                        key={type}
-                        className="px-2 py-1 text-xs rounded bg-[var(--card)] border border-[var(--card-border)]"
-                      >
-                        {type}: {count}
-                      </span>
-                    ))}
-                    <span className="px-2 py-1 text-xs rounded bg-blue-500/10 border border-blue-500/20">
-                      behavioral:{" "}
-                      {signals.filter((s) => s.track === "behavioral").length}
-                    </span>
-                    <span className="px-2 py-1 text-xs rounded bg-purple-500/10 border border-purple-500/20">
-                      stated:{" "}
-                      {signals.filter((s) => s.track === "stated").length}
-                    </span>
-                  </div>
-                </div>
-              )}
             </div>
           </details>
         ) : (
           <>
             {/* Summary */}
-            <div className="p-4 rounded-lg bg-[var(--card)] border border-[var(--card-border)]">
+            <div className="p-5 rounded-xl bg-[var(--card)] border border-[var(--card-border)]">
               <p className="text-sm leading-relaxed">{model.summary}</p>
             </div>
 
             {/* Dimensions grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {(model.dimensions || []).map((dim) => {
-                const isFocus = isRefineMode && focusDims.includes(dim.name);
-                return (
-                  <div
-                    key={dim.name}
-                    className={`p-4 rounded-lg bg-[var(--card)] border ${
-                      isFocus
-                        ? "border-orange-500/40"
-                        : "border-[var(--card-border)]"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-medium text-sm">
-                        {DIM_NAMES_ZH[dim.name] || dim.name}
-                        {isFocus && (
-                          <span className="ml-2 text-xs text-orange-400">
-                            已修正
-                          </span>
-                        )}
-                      </h3>
-                      <span
-                        className={`text-xs px-2 py-0.5 rounded-full ${
-                          dim.confidence === "high"
-                            ? "bg-green-500/20 text-green-400"
-                            : dim.confidence === "medium"
-                              ? "bg-yellow-500/20 text-yellow-400"
-                              : "bg-orange-500/20 text-orange-400"
-                        }`}
-                      >
-                        {dim.confidence}
-                      </span>
-                    </div>
-                    <p className="text-sm text-[var(--muted)] leading-relaxed mb-2">
-                      {dim.description}
-                    </p>
-                    {dim.behavioral_predictions.map((pred, i) => (
-                      <p
-                        key={i}
-                        className="text-xs text-[var(--muted)] pl-3 border-l border-[var(--card-border)] mt-1"
-                      >
-                        {pred}
-                      </p>
-                    ))}
-                  </div>
-                );
-              })}
+              {(model.dimensions || []).map(renderDimCard)}
             </div>
 
             {/* Conflicts */}
             {conflicts.length > 0 && (
-              <div>
-                <h3 className="font-medium mb-3">
+              <div className="space-y-3">
+                <h3 className="text-sm font-medium text-[var(--muted)]">
                   述行矛盾（{conflicts.length}）
                 </h3>
                 <div className="space-y-2">
                   {conflicts.map((c, i) => (
                     <div
                       key={i}
-                      className="p-3 rounded-lg bg-red-500/5 border border-red-500/20 text-sm"
+                      className="p-4 rounded-xl bg-[var(--card)] border border-[var(--card-border)] text-sm space-y-1"
                     >
                       <p>
-                        <span className="text-red-400">声称：</span>
+                        <span className="text-[var(--muted)]">声称：</span>
                         {c.stated_claim}
                       </p>
                       <p>
-                        <span className="text-yellow-400">实际：</span>
+                        <span className="text-[var(--accent)]">实际：</span>
                         {c.actual_behavior}
                       </p>
-                      <p className="text-[var(--muted)] text-xs mt-1">
+                      <p className="text-[var(--muted-soft)] text-xs pt-1">
                         {c.blind_spot_evidence}
                       </p>
                     </div>
@@ -922,8 +806,8 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
 
             {/* Signal stats */}
             {signals.length > 0 && (
-              <div>
-                <h3 className="font-medium mb-3">
+              <div className="space-y-3">
+                <h3 className="text-sm font-medium text-[var(--muted)]">
                   认知信号（{signals.length}）
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -938,30 +822,24 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
                   ).map(([type, count]) => (
                     <span
                       key={type}
-                      className="px-2 py-1 text-xs rounded bg-[var(--card)] border border-[var(--card-border)]"
+                      className="px-2.5 py-1 text-xs rounded-full bg-[var(--card)] border border-[var(--card-border)] text-[var(--muted)]"
                     >
                       {type}: {count}
                     </span>
                   ))}
-                  <span className="px-2 py-1 text-xs rounded bg-blue-500/10 border border-blue-500/20">
-                    behavioral:{" "}
-                    {signals.filter((s) => s.track === "behavioral").length}
-                  </span>
-                  <span className="px-2 py-1 text-xs rounded bg-purple-500/10 border border-purple-500/20">
-                    stated:{" "}
-                    {signals.filter((s) => s.track === "stated").length}
-                  </span>
                 </div>
               </div>
             )}
 
             {/* Next steps */}
-            <div className="p-4 rounded-lg bg-[var(--card)] border border-[var(--card-border)] text-sm text-[var(--muted)]">
-              <p className="font-medium text-[var(--foreground)] mb-2">下一步</p>
-              <p>
-                推荐先点「开始验证」确认模型描述是否准确，再用「直接出题」进入认知预测。
-              </p>
-            </div>
+            {!showInlineValidator && (
+              <div className="p-5 rounded-xl bg-[var(--accent-soft)] border border-[var(--accent)]/10 text-sm">
+                <p className="text-[var(--accent)] font-medium mb-1">下一步</p>
+                <p className="text-[var(--muted)]">
+                  推荐先点「开始验证」确认模型描述是否准确，再用「直接出题」进入认知预测。
+                </p>
+              </div>
+            )}
           </>
         )}
 
@@ -980,43 +858,54 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
   // ── Render: Chat phase ───────────────────────────────────────
 
   return (
-    <div className="flex gap-4" style={{ height: "calc(100vh - 180px)" }}>
+    <div className="flex gap-5" style={{ height: "calc(100vh - 160px)" }}>
       {/* Chat area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mode indicator */}
         {isRefineMode && (
-          <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-lg bg-orange-500/5 border border-orange-500/20 text-sm">
-            <span className="text-orange-400 font-medium">修正模式</span>
-            <span className="text-[var(--muted)]">·</span>
+          <div className="flex items-center gap-2 mb-3 px-4 py-2.5 rounded-xl bg-[var(--accent-soft)] text-sm">
+            <span className="text-[var(--accent)] font-medium">修正模式</span>
+            <span className="text-[var(--muted-soft)]">·</span>
             <span className="text-[var(--muted)]">
-              聚焦：
               {focusDims.map((d) => DIM_NAMES_ZH[d] || d).join("、")}
             </span>
           </div>
         )}
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto space-y-3 pb-4">
+        <div className="flex-1 overflow-y-auto pb-4 space-y-5">
           {messages.map((msg, i) => (
             <div
               key={i}
               className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
             >
-              <div
-                className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
-                  msg.role === "user"
-                    ? "bg-[var(--accent)] text-white rounded-br-md"
-                    : "bg-[var(--card)] border border-[var(--card-border)] rounded-bl-md"
-                }`}
-              >
-                {msg.content}
-              </div>
+              {msg.role === "assistant" ? (
+                <div className="flex gap-3 max-w-[85%]">
+                  <div className="w-7 h-7 rounded-full bg-[var(--accent-soft)] flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-xs text-[var(--accent)] font-medium">N</span>
+                  </div>
+                  <div className="text-sm leading-relaxed text-[var(--foreground)] pt-1">
+                    {msg.content}
+                  </div>
+                </div>
+              ) : (
+                <div className="max-w-[75%] px-4 py-2.5 rounded-2xl rounded-br-sm bg-[var(--accent)] text-white text-sm leading-relaxed">
+                  {msg.content}
+                </div>
+              )}
             </div>
           ))}
           {loading && (
-            <div className="flex justify-start">
-              <div className="px-4 py-2.5 rounded-2xl rounded-bl-md bg-[var(--card)] border border-[var(--card-border)] text-sm text-[var(--muted)]">
-                <span className="animate-pulse">思考中...</span>
+            <div className="flex gap-3">
+              <div className="w-7 h-7 rounded-full bg-[var(--accent-soft)] flex items-center justify-center flex-shrink-0">
+                <span className="text-xs text-[var(--accent)] font-medium">N</span>
+              </div>
+              <div className="text-sm text-[var(--muted)] pt-1">
+                <span className="inline-flex gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--muted)] animate-bounce" style={{ animationDelay: "0ms" }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--muted)] animate-bounce" style={{ animationDelay: "150ms" }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--muted)] animate-bounce" style={{ animationDelay: "300ms" }} />
+                </span>
               </div>
             </div>
           )}
@@ -1024,67 +913,69 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
         </div>
 
         {/* Status bar */}
-        <div className="flex items-center justify-between text-xs text-[var(--muted)] py-1">
+        <div className="flex items-center justify-between text-xs text-[var(--muted)] py-2">
           <span>
             第 {turn} 轮
-            {analyzing && " · 分析中..."}
+            {analyzing && " · 分析中"}
             {signals.length > 0 && ` · ${signals.length} 信号`}
             {conflicts.length > 0 && ` · ${conflicts.length} 矛盾`}
           </span>
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <button
               onClick={() => setShowPanel(!showPanel)}
-              className="hover:text-white transition-colors"
+              className="hover:text-[var(--foreground)] transition-colors"
             >
-              {showPanel ? "隐藏面板" : "显示面板"}
+              {showPanel ? "隐藏面板" : "面板"}
             </button>
             <button
               onClick={endInterview}
               disabled={loading || building || messages.length < 6}
-              className="hover:text-white transition-colors disabled:opacity-30"
+              className="hover:text-[var(--foreground)] transition-colors disabled:opacity-30"
             >
-              结束对话 → {isRefineMode ? "修正模型" : "建模"}
+              结束 → {isRefineMode ? "修正" : "建模"}
             </button>
           </div>
         </div>
 
         {/* Input area */}
-        <div className="flex gap-2 pt-2 border-t border-[var(--card-border)]">
+        <div className="relative">
           <textarea
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="说点什么...（Enter 发送，Shift+Enter 换行）"
+            placeholder="说点什么..."
             disabled={loading || building}
             rows={1}
-            className="flex-1 bg-[var(--card)] border border-[var(--card-border)] rounded-xl px-4 py-2.5 text-sm resize-none focus:outline-none focus:border-[var(--accent)] disabled:opacity-50"
+            className="w-full bg-[var(--card)] border border-[var(--card-border)] rounded-2xl pl-4 pr-14 py-3 text-sm resize-none focus:outline-none focus:border-[var(--accent)]/50 disabled:opacity-50 transition-colors"
           />
           <button
             onClick={sendMessage}
             disabled={loading || !input.trim()}
-            className="px-4 py-2.5 bg-[var(--accent)] text-white rounded-xl text-sm hover:opacity-90 disabled:opacity-30 transition-opacity"
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-xl bg-[var(--accent)] text-white hover:opacity-90 disabled:opacity-30 transition-opacity"
           >
-            发送
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
           </button>
         </div>
 
-        {error && <p className="text-red-400 text-xs mt-1">{error}</p>}
+        {error && <p className="text-[var(--error)] text-xs mt-2">{error}</p>}
       </div>
 
       {/* Right panel: dimension coverage */}
       {showPanel && (
-        <div className="w-56 flex-shrink-0 overflow-y-auto">
-          <div className="p-3 rounded-lg bg-[var(--card)] border border-[var(--card-border)]">
-            <h3 className="text-xs font-medium mb-3">
+        <div className="w-52 flex-shrink-0 overflow-y-auto">
+          <div className="p-4 rounded-xl bg-[var(--card)] border border-[var(--card-border)]">
+            <h3 className="text-xs font-medium text-[var(--muted)] mb-3">
               {isRefineMode ? "修正进度" : "维度覆盖"}
             </h3>
             {coverage.length === 0 ? (
-              <p className="text-xs text-[var(--muted)]">
+              <p className="text-xs text-[var(--muted-soft)]">
                 第 5 轮后开始追踪
               </p>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 {coverage.map((dim) => {
                   const isFocus = focusDims.includes(dim.name);
                   const targetMet = isRefineMode
@@ -1097,29 +988,26 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
                     <div
                       key={dim.name}
                       className={
-                        isRefineMode && !isFocus ? "opacity-40" : ""
+                        isRefineMode && !isFocus ? "opacity-30" : ""
                       }
                     >
-                      <div className="flex items-center justify-between text-xs mb-0.5">
-                        <span className="truncate pr-1">
+                      <div className="flex items-center justify-between text-[11px] mb-1">
+                        <span className="truncate pr-1 text-[var(--muted)]">
                           {DIM_NAMES_ZH[dim.name] || dim.name}
-                          {isRefineMode && isFocus && " *"}
                         </span>
                         <span
                           className={`flex-shrink-0 ${
                             targetMet
-                              ? "text-green-400"
+                              ? "text-[var(--success)]"
                               : dim.confidence === "medium"
-                                ? "text-yellow-400"
-                                : dim.confidence === "low"
-                                  ? "text-orange-400"
-                                  : "text-neutral-500"
+                                ? "text-[var(--accent)]"
+                                : "text-[var(--muted-soft)]"
                           }`}
                         >
                           {dim.confidence}
                         </span>
                       </div>
-                      <div className="h-1 rounded-full bg-neutral-800">
+                      <div className="h-1 rounded-full bg-[var(--background)]">
                         <div
                           className={`h-full rounded-full transition-all duration-500 ${CONFIDENCE_COLORS[dim.confidence]} ${CONFIDENCE_WIDTH[dim.confidence]}`}
                         />
@@ -1133,21 +1021,14 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
             {/* Signal summary */}
             {signals.length > 0 && (
               <div className="mt-4 pt-3 border-t border-[var(--card-border)]">
-                <h3 className="text-xs font-medium mb-2">信号累积</h3>
-                <div className="text-xs text-[var(--muted)] space-y-1">
-                  <p>总计: {signals.length} 个信号</p>
+                <div className="text-[11px] text-[var(--muted)] space-y-1">
+                  <p>{signals.length} 信号</p>
                   <p>
-                    行为:{" "}
-                    {
-                      signals.filter((s) => s.track === "behavioral")
-                        .length
-                    }{" "}
-                    · 自述:{" "}
-                    {signals.filter((s) => s.track === "stated").length}
+                    行为 {signals.filter((s) => s.track === "behavioral").length} · 自述 {signals.filter((s) => s.track === "stated").length}
                   </p>
                   {conflicts.length > 0 && (
-                    <p className="text-red-400">
-                      矛盾: {conflicts.length}
+                    <p className="text-[var(--accent)]">
+                      {conflicts.length} 矛盾
                     </p>
                   )}
                 </div>

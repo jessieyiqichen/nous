@@ -69,25 +69,22 @@ export default function Home() {
   );
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="border-b border-[var(--card-border)] px-6 py-5">
-        <div className="max-w-5xl mx-auto flex items-baseline justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Nous</h1>
-            <p className="text-sm text-[var(--muted)] mt-1">
-              AI 认知偏差检测与行为预测
-            </p>
-          </div>
-          <nav className="flex gap-1">
+      <header className="border-b border-[var(--card-border)]">
+        <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+          <h1 className="text-lg font-semibold tracking-tight text-[var(--foreground)]">
+            Nous
+          </h1>
+          <nav className="flex gap-0.5 rounded-lg bg-[var(--card)] p-1">
             {TABS.map((t) => (
               <button
                 key={t.key}
                 onClick={() => setTab(t.key)}
-                className={`px-4 py-1.5 text-sm rounded-md transition-colors ${
+                className={`px-3.5 py-1.5 text-[13px] rounded-md transition-all duration-200 ${
                   tab === t.key
-                    ? "bg-white/10 text-white"
-                    : "text-[var(--muted)] hover:text-white"
+                    ? "bg-[var(--accent-soft)] text-[var(--accent)] font-medium"
+                    : "text-[var(--muted)] hover:text-[var(--foreground)]"
                 }`}
               >
                 {t.label}
@@ -98,7 +95,7 @@ export default function Home() {
       </header>
 
       {/* Content */}
-      <div className="max-w-5xl mx-auto px-6 py-8">
+      <div className="flex-1 max-w-4xl w-full mx-auto px-6 py-8">
         {tab === "interview" && (
           <Interview
             refineRequest={refineRequest}

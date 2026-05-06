@@ -275,10 +275,10 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
 
   if (phase === "generating") {
     return (
-      <div className="text-center py-10 space-y-3">
+      <div className="text-center py-12 space-y-3">
         <div className="w-8 h-8 mx-auto border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
-        <p className="text-sm text-[var(--muted)]">正在生成行为预测...</p>
-        <p className="text-xs text-[var(--muted)]">AI 正在分析 9 个认知维度，为每个维度生成具体行为预测</p>
+        <p className="text-sm text-[var(--muted)]">正在生成行为预测</p>
+        <p className="text-xs text-[var(--muted-soft)]">AI 正在分析 9 个认知维度</p>
       </div>
     );
   }
@@ -287,9 +287,9 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
 
   if (phase === "updating") {
     return (
-      <div className="text-center py-10 space-y-3">
-        <div className="w-8 h-8 mx-auto border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
-        <p className="text-sm text-[var(--muted)]">正在根据你的反馈修正模型...</p>
+      <div className="text-center py-12 space-y-3">
+        <div className="w-8 h-8 mx-auto border-2 border-[var(--success)] border-t-transparent rounded-full animate-spin" />
+        <p className="text-sm text-[var(--muted)]">正在修正模型</p>
       </div>
     );
   }
@@ -298,36 +298,36 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
 
   if (phase === "results") {
     return (
-      <div className="space-y-4">
+      <div className="space-y-5">
         {/* Overall accuracy */}
-        <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-5 text-center">
-          <p className={`text-4xl font-bold ${accuracy >= 0.7 ? "text-green-400" : accuracy >= 0.4 ? "text-yellow-400" : "text-red-400"}`}>
+        <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-xl p-6 text-center">
+          <p className={`text-4xl font-bold ${accuracy >= 0.7 ? "text-[var(--success)]" : accuracy >= 0.4 ? "text-[var(--accent)]" : "text-[var(--error)]"}`}>
             {(accuracy * 100).toFixed(0)}%
           </p>
           <p className="text-sm text-[var(--muted)] mt-1">整体理解准确率</p>
-          <div className="flex justify-center gap-4 mt-3 text-sm">
-            <span className="text-green-400">{correctCount} 正确</span>
-            <span className="text-yellow-400">{partialCount} 部分对</span>
-            <span className="text-red-400">{wrongCount} 不对</span>
-            <span className="text-[var(--muted)]">{totalPredictions - judgedCount} 跳过</span>
+          <div className="flex justify-center gap-5 mt-4 text-sm">
+            <span className="text-[var(--success)]">{correctCount} 正确</span>
+            <span className="text-[var(--accent)]">{partialCount} 部分对</span>
+            <span className="text-[var(--error)]">{wrongCount} 不对</span>
+            <span className="text-[var(--muted-soft)]">{totalPredictions - judgedCount} 跳过</span>
           </div>
         </div>
 
         {/* Per-dimension accuracy */}
-        <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4 space-y-3">
-          <h3 className="text-sm font-medium">按维度准确率</h3>
-          <div className="space-y-2">
+        <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-xl p-5 space-y-3">
+          <h3 className="text-sm font-medium text-[var(--muted)]">按维度准确率</h3>
+          <div className="space-y-2.5">
             {dimAccuracy.filter((d) => d.total > 0).map((d) => (
               <div key={d.dimension} className="space-y-1">
                 <div className="flex items-center justify-between text-sm">
                   <span>{d.dimension_zh}</span>
-                  <span className={`font-mono text-xs ${d.accuracy >= 0.7 ? "text-green-400" : d.accuracy >= 0.4 ? "text-yellow-400" : "text-red-400"}`}>
+                  <span className={`font-mono text-xs ${d.accuracy >= 0.7 ? "text-[var(--success)]" : d.accuracy >= 0.4 ? "text-[var(--accent)]" : "text-[var(--error)]"}`}>
                     {(d.accuracy * 100).toFixed(0)}%
                   </span>
                 </div>
                 <div className="h-1.5 bg-[var(--background)] rounded-full overflow-hidden">
                   <div
-                    className={`h-full rounded-full transition-all duration-500 ${d.accuracy >= 0.7 ? "bg-green-500" : d.accuracy >= 0.4 ? "bg-yellow-500" : "bg-red-500"}`}
+                    className={`h-full rounded-full transition-all duration-500 ${d.accuracy >= 0.7 ? "bg-[var(--success)]" : d.accuracy >= 0.4 ? "bg-[var(--accent)]" : "bg-[var(--error)]"}`}
                     style={{ width: `${Math.max(d.accuracy * 100, 2)}%` }}
                   />
                 </div>
@@ -338,8 +338,8 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
 
         {/* Changes summary */}
         {changesSummary && (
-          <div className="bg-green-500/5 border border-green-500/20 rounded-lg p-4 space-y-1">
-            <h3 className="text-sm font-medium text-green-400">模型已修正</h3>
+          <div className="bg-[var(--success)]/5 border border-[var(--success)]/15 rounded-xl p-5 space-y-1">
+            <h3 className="text-sm font-medium text-[var(--success)]">模型已修正</h3>
             <p className="text-sm text-[var(--muted)] leading-relaxed">{changesSummary}</p>
           </div>
         )}
@@ -349,7 +349,7 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
           {!correctedModel && (wrongCount > 0 || partialCount > 0) && (
             <button
               onClick={handleUpdateModel}
-              className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
+              className="px-5 py-2 bg-[var(--success)] text-white text-sm font-medium rounded-full hover:opacity-90 transition-opacity"
             >
               用修正更新模型
             </button>
@@ -363,28 +363,28 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
                 setPhase(null);
                 generatePredictions(correctedModel);
               }}
-              className="px-4 py-2 border border-[var(--card-border)] text-sm rounded-lg hover:bg-white/5 transition-colors"
+              className="px-5 py-2 border border-[var(--card-border)] text-sm rounded-full text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[var(--muted)] transition-colors"
             >
               重新验证
             </button>
           )}
           <button
             onClick={() => onGoPredict(correctedModel || model)}
-            className="px-4 py-2 bg-[var(--accent)] text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
+            className="px-5 py-2 bg-[var(--accent)] text-white text-sm font-medium rounded-full hover:opacity-90 transition-opacity"
           >
             出题
           </button>
           <button
             onClick={handleDownload}
-            className="px-4 py-2 border border-[var(--card-border)] text-sm rounded-lg hover:bg-white/5 transition-colors"
+            className="px-5 py-2 border border-[var(--card-border)] text-sm rounded-full text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[var(--muted)] transition-colors"
           >
             下载 JSON
           </button>
         </div>
 
         {error && (
-          <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
-            <p className="text-sm text-red-400">{error}</p>
+          <div className="rounded-xl p-4 bg-[var(--error)]/5 border border-[var(--error)]/15">
+            <p className="text-sm text-[var(--error)]">{error}</p>
           </div>
         )}
       </div>
@@ -395,12 +395,12 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
 
   if (phase === "judging") {
     return (
-      <div className="space-y-4">
+      <div className="space-y-5">
         {/* Progress bar */}
-        <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-3">
+        <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-xl p-4">
           <div className="flex items-center justify-between text-sm mb-2">
-            <span>已判断 {judgedCount} / {totalPredictions}</span>
-            <span className={`font-mono text-xs ${accuracy >= 0.7 ? "text-green-400" : accuracy >= 0.4 ? "text-yellow-400" : "text-red-400"}`}>
+            <span className="text-[var(--muted)]">已判断 {judgedCount} / {totalPredictions}</span>
+            <span className={`font-mono text-xs ${accuracy >= 0.7 ? "text-[var(--success)]" : accuracy >= 0.4 ? "text-[var(--accent)]" : "text-[var(--error)]"}`}>
               {judgedCount > 0 ? `${(accuracy * 100).toFixed(0)}%` : "-"}
             </span>
           </div>
@@ -419,20 +419,19 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
           const dimTotal = dp.predictions.length;
 
           return (
-            <div key={dp.dimension} className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg overflow-hidden">
+            <div key={dp.dimension} className="bg-[var(--card)] border border-[var(--card-border)] rounded-xl overflow-hidden">
               <button
                 onClick={() => toggleDim(dp.dimension)}
-                className="w-full flex items-center justify-between p-3 hover:bg-white/5 transition-colors text-left"
+                className="w-full flex items-center justify-between p-4 hover:bg-white/[0.02] transition-colors text-left"
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2.5">
                   <span className="text-sm font-medium">{dp.dimension_zh}</span>
-                  <span className="text-xs text-[var(--muted)]">{dp.dimension}</span>
-                  <span className="text-xs px-1.5 py-0.5 rounded bg-[var(--background)]">
+                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--background)] text-[var(--muted)]">
                     {dimJudgedCount}/{dimTotal}
                   </span>
                 </div>
                 <svg
-                  className={`w-4 h-4 text-[var(--muted)] transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                  className={`w-4 h-4 text-[var(--muted-soft)] transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -443,11 +442,11 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
 
               {isExpanded && (
                 <div className="border-t border-[var(--card-border)]">
-                  <div className="px-3 py-2 bg-white/[0.02]">
-                    <p className="text-xs text-[var(--muted)] leading-relaxed">{dp.description}</p>
+                  <div className="px-4 py-2.5 bg-white/[0.01]">
+                    <p className="text-xs text-[var(--muted-soft)] leading-relaxed">{dp.description}</p>
                   </div>
 
-                  <div className="p-3 space-y-3">
+                  <div className="p-4 space-y-3">
                     {dp.predictions.map((pred) => {
                       const verdict = judgments[pred.id];
                       const showCorrection = verdict === "wrong" || verdict === "partial";
@@ -455,28 +454,23 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
                       return (
                         <div
                           key={pred.id}
-                          className={`border rounded-lg p-3 transition-colors ${
+                          className={`border rounded-xl p-4 transition-colors ${
                             verdict === "correct"
-                              ? "border-green-500/30 bg-green-500/5"
+                              ? "border-[var(--success)]/25 bg-[var(--success)]/5"
                               : verdict === "wrong"
-                                ? "border-red-500/30 bg-red-500/5"
+                                ? "border-[var(--error)]/25 bg-[var(--error)]/5"
                                 : verdict === "partial"
-                                  ? "border-yellow-500/30 bg-yellow-500/5"
+                                  ? "border-[var(--accent)]/25 bg-[var(--accent-soft)]"
                                   : "border-[var(--card-border)]"
                           }`}
                         >
-                          <div className="flex items-center justify-between mb-1.5">
-                            <span className="text-xs text-[var(--muted)] font-mono">{pred.id}</span>
-                            <span className="text-xs text-[var(--muted)] font-mono">{pred.confidence.toFixed(1)}</span>
-                          </div>
+                          <p className="text-sm leading-relaxed mb-3">{pred.statement}</p>
 
-                          <p className="text-sm leading-relaxed mb-2">{pred.statement}</p>
-
-                          <details className="mb-2">
-                            <summary className="text-xs text-[var(--muted)] cursor-pointer hover:text-white transition-colors">
-                              模型推理依据
+                          <details className="mb-3">
+                            <summary className="text-xs text-[var(--muted-soft)] cursor-pointer hover:text-[var(--muted)] transition-colors">
+                              推理依据
                             </summary>
-                            <p className="text-xs text-[var(--muted)] mt-1 pl-3 border-l border-[var(--card-border)]">
+                            <p className="text-xs text-[var(--muted-soft)] mt-1.5 pl-3 border-l-2 border-[var(--card-border)]">
                               {pred.reasoning}
                             </p>
                           </details>
@@ -484,30 +478,30 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
                           <div className="flex gap-2">
                             <button
                               onClick={() => setVerdict(pred.id, "correct")}
-                              className={`flex-1 py-1.5 text-sm rounded-lg transition-all ${
+                              className={`flex-1 py-2 text-sm rounded-lg transition-all ${
                                 verdict === "correct"
-                                  ? "bg-green-500/20 text-green-300 ring-1 ring-green-500/40"
-                                  : "bg-[var(--background)] text-[var(--muted)] hover:text-green-300 hover:bg-green-500/10"
+                                  ? "bg-[var(--success)]/15 text-[var(--success)] ring-1 ring-[var(--success)]/30"
+                                  : "bg-[var(--background)] text-[var(--muted)] hover:text-[var(--success)]"
                               }`}
                             >
                               对
                             </button>
                             <button
                               onClick={() => setVerdict(pred.id, "wrong")}
-                              className={`flex-1 py-1.5 text-sm rounded-lg transition-all ${
+                              className={`flex-1 py-2 text-sm rounded-lg transition-all ${
                                 verdict === "wrong"
-                                  ? "bg-red-500/20 text-red-300 ring-1 ring-red-500/40"
-                                  : "bg-[var(--background)] text-[var(--muted)] hover:text-red-300 hover:bg-red-500/10"
+                                  ? "bg-[var(--error)]/15 text-[var(--error)] ring-1 ring-[var(--error)]/30"
+                                  : "bg-[var(--background)] text-[var(--muted)] hover:text-[var(--error)]"
                               }`}
                             >
                               不对
                             </button>
                             <button
                               onClick={() => setVerdict(pred.id, "partial")}
-                              className={`flex-1 py-1.5 text-sm rounded-lg transition-all ${
+                              className={`flex-1 py-2 text-sm rounded-lg transition-all ${
                                 verdict === "partial"
-                                  ? "bg-yellow-500/20 text-yellow-300 ring-1 ring-yellow-500/40"
-                                  : "bg-[var(--background)] text-[var(--muted)] hover:text-yellow-300 hover:bg-yellow-500/10"
+                                  ? "bg-[var(--accent-soft)] text-[var(--accent)] ring-1 ring-[var(--accent)]/30"
+                                  : "bg-[var(--background)] text-[var(--muted)] hover:text-[var(--accent)]"
                               }`}
                             >
                               部分对
@@ -515,13 +509,13 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
                           </div>
 
                           {showCorrection && (
-                            <div className="mt-2">
+                            <div className="mt-3">
                               <textarea
                                 value={corrections[pred.id] || ""}
                                 onChange={(e) => setCorrection(pred.id, e.target.value)}
-                                placeholder="实际情况是...（可选，帮助 AI 修正模型）"
+                                placeholder="实际情况是...（可选）"
                                 rows={2}
-                                className="w-full bg-[var(--background)] border border-[var(--card-border)] rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:border-[var(--accent)] transition-colors"
+                                className="w-full bg-[var(--background)] border border-[var(--card-border)] rounded-xl px-3 py-2.5 text-sm resize-none focus:outline-none focus:border-[var(--accent)]/50 transition-colors"
                               />
                             </div>
                           )}
@@ -536,12 +530,12 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
         })}
 
         {/* Bottom actions */}
-        <div className="flex flex-col items-center gap-2 pt-2 pb-4">
+        <div className="flex flex-col items-center gap-3 pt-2 pb-4">
           <div className="flex gap-2">
             {(wrongCount > 0 || partialCount > 0) && (
               <button
                 onClick={handleUpdateModel}
-                className="px-6 py-2.5 bg-green-600 text-white font-medium rounded-lg hover:opacity-90 transition-opacity"
+                className="px-6 py-2.5 bg-[var(--success)] text-white font-medium rounded-full hover:opacity-90 transition-opacity"
               >
                 用修正更新模型
               </button>
@@ -549,17 +543,17 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
             <button
               onClick={handleViewResults}
               disabled={judgedCount === 0}
-              className="px-6 py-2.5 bg-[var(--accent)] text-white font-medium rounded-lg hover:opacity-90 disabled:opacity-40 transition-opacity"
+              className="px-6 py-2.5 bg-[var(--accent)] text-white font-medium rounded-full hover:opacity-90 disabled:opacity-40 transition-opacity"
             >
               查看结果
             </button>
           </div>
           {judgedCount < totalPredictions && (
-            <p className="text-xs text-[var(--muted)]">
+            <p className="text-xs text-[var(--muted-soft)]">
               还有 {totalPredictions - judgedCount} 条未判断（可以跳过）
             </p>
           )}
-          {error && <p className="text-sm text-red-400">{error}</p>}
+          {error && <p className="text-sm text-[var(--error)]">{error}</p>}
         </div>
       </div>
     );
@@ -568,8 +562,8 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
   // ── Render: Not started yet (waiting for hydration) ───────
 
   return (
-    <div className="text-center py-8">
-      <p className="text-sm text-[var(--muted)]">准备验证...</p>
+    <div className="text-center py-10">
+      <p className="text-sm text-[var(--muted-soft)]">准备验证...</p>
     </div>
   );
 }
