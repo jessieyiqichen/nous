@@ -39,6 +39,7 @@ from signal_extractor import (
     MODEL_HAIKU,
     MODEL_SONNET,
 )
+from hybrid_extractor import hybrid_extract
 
 # ── Paths ─────────────────────────────────────────────────────
 
@@ -327,40 +328,19 @@ def cmd_collect(since_days: int, model_path: Path | None, dry_run: bool, file_pa
             _save_processed(processed)
             continue
 
-        # Step 3: Extract signals
-        # For large files (>100K chars), sample beginning+middle+end instead of full chunking
-        SAMPLE_THRESHOLD = 100_000
+        # Step 3: Extract signals (hybrid: local DistilBERT + API fallback)
         try:
-            model_context = _build_model_context(model_path)
-            prompt = EXTRACT_PROMPT.format(model_context=model_context)
+            print(f"  Extracting ({len(text):,} chars, hybrid)...", file=sys.stderr)
+            result = hybrid_extract(text, model_path=model_path)
 
-            extract_text = text
-            if len(text) > SAMPLE_THRESHOLD:
-                sample_size = MAX_CONTENT_TOKENS // 3
-                beginning = text[:sample_size]
-                mid_start = len(text) // 2 - sample_size // 2
-                middle = text[mid_start:mid_start + sample_size]
-                ending = text[-sample_size:]
-                extract_text = (
-                    beginning
-                    + "\n\n[... MIDDLE SECTION ...]\n\n"
-                    + middle
-                    + "\n\n[... LATER SECTION ...]\n\n"
-                    + ending
-                )
-                print(f"  Extracting (sampled {len(text):,} → {len(extract_text):,} chars)...",
-                      file=sys.stderr)
-            else:
-                print(f"  Extracting ({len(extract_text):,} chars)...", file=sys.stderr)
-
-            result = call_api(prompt, extract_text, SIGNAL_SCHEMA, "signal_extraction")
-
+            extraction_method = result.get("extraction_method", "unknown")
             signals = result.get("signals", [])
             conflicts = result.get("stated_vs_behavioral_conflicts", [])
             t3_deltas = result.get("t3_relevant_signals", [])
 
             print(f"  Result: {len(signals)} signals, {len(conflicts)} conflicts, "
-                  f"{len(t3_deltas)} T3 deltas", file=sys.stderr)
+                  f"{len(t3_deltas)} T3 deltas (method: {extraction_method})",
+                  file=sys.stderr)
 
             # Append to history
             history.append({
@@ -368,6 +348,7 @@ def cmd_collect(since_days: int, model_path: Path | None, dry_run: bool, file_pa
                 "source": f"passive:{session_id}",
                 "source_path": str(jsonl_path),
                 "model_used": str(model_path) if model_path else None,
+                "extraction_method": extraction_method,
                 "signals_count": len(signals),
                 "conflicts_count": len(conflicts),
                 "t3_deltas_count": len(t3_deltas),
@@ -385,6 +366,7 @@ def cmd_collect(since_days: int, model_path: Path | None, dry_run: bool, file_pa
                 "timestamp": datetime.now(timezone.utc).isoformat(),
                 "status": "extracted",
                 "session_id": session_id,
+                "extraction_method": extraction_method,
                 "signals_count": len(signals),
                 "conflicts_count": len(conflicts),
                 "t3_deltas_count": len(t3_deltas),

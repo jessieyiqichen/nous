@@ -68,4 +68,4 @@ scripts/       → 工具脚本（passive_collector, batch_analyze）
 3. **大文件用采样**——>100K chars 取开头+中间+结尾，不全量跑 API
 4. **T1/T2 用确定性评分**——选对 1.0 选错 0.0，不走 LLM
 5. **Vercel 60s 超时**——API 调用必须拆分并行
-6. **handoff.md < 200 行**——及时 compact 已完成项
+6. **handoff.md < 100 行**——超过时必须 compact：CLI 完成报告归档到已完成摘要（一天一行），删除详细报告正文，只保留关键数据和待完成任务。每次读 handoff 时检查行数，超过 100 行主动 compact。

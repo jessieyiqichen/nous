@@ -7,6 +7,11 @@ __pycache__/
 .claude/
 web/.claude/
 
+# ML model weights (too large for git)
+ml/output/
+ml/data/labeled*.jsonl
+ml/data/wildchat*.jsonl
+
 # Large/generated data files
 data/signals_history.json
 data/conversation_session_current.md
