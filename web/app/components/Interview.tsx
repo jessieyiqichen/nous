@@ -99,19 +99,6 @@ const DIM_NAMES_ZH: Record<string, string> = {
   "Execution-Layer Flexibility": "执行层弹性",
 };
 
-const CONFIDENCE_COLORS: Record<string, string> = {
-  high: "bg-[var(--success)]",
-  medium: "bg-[var(--accent)]",
-  low: "bg-[var(--muted)]",
-  none: "bg-[var(--card-border)]",
-};
-
-const CONFIDENCE_WIDTH: Record<string, string> = {
-  high: "w-full",
-  medium: "w-2/3",
-  low: "w-1/3",
-  none: "w-0",
-};
 
 /** Override Blind Spots confidence based on contradiction evidence.
  *  Blind spots can't reach high confidence through conversation alone.
@@ -437,10 +424,10 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
       const hardLimitReached =
         (isRefineMode && newTurn >= 30) || (!isRefineMode && newTurn >= 50);
 
-      // Every 5 turns (or at hard limit), run analysis
+      // Every turn from turn 3 onward, run analysis (maximize info per turn)
       let coverageHint = "";
       let latestCoverage = coverage;
-      const shouldAnalyze = (newTurn >= 5 && newTurn % 5 === 0) || hardLimitReached;
+      const shouldAnalyze = newTurn >= 3 || hardLimitReached;
       if (shouldAnalyze) {
         latestCoverage = await runAnalysis(updatedMessages);
 
@@ -575,43 +562,34 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
   if (messages.length === 0 && phase === "chat" && !loading) {
     return (
       <div className="flex flex-col items-center justify-center" style={{ minHeight: "60vh" }}>
-        <div className="text-center max-w-md space-y-5">
-          <div className="w-12 h-12 mx-auto rounded-2xl bg-[var(--accent-soft)] flex items-center justify-center">
-            <span className="text-xl text-[var(--accent)]">N</span>
-          </div>
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold">
-              {isRefineMode ? "认知模型修正" : "认知访谈"}
-            </h2>
-            {isRefineMode && focusDims.length > 0 ? (
-              <>
-                <p className="text-sm text-[var(--muted)] leading-relaxed">
-                  针对以下维度进行深度对话修正
-                </p>
-                <div className="flex flex-wrap gap-2 justify-center pt-1">
-                  {focusDims.map((d) => (
-                    <span
-                      key={d}
-                      className="px-2.5 py-1 text-xs rounded-full bg-[var(--accent-soft)] text-[var(--accent)]"
-                    >
-                      {DIM_NAMES_ZH[d] || d}
-                    </span>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <p className="text-sm text-[var(--muted)] leading-relaxed">
-                通过自然对话了解你的思维模式，<br />
-                自动构建 9 维度认知模型
+        <div className="text-center" style={{ maxWidth: 480 }}>
+          {isRefineMode && focusDims.length > 0 ? (
+            <>
+              <p style={{ fontSize: 20, fontWeight: 600, lineHeight: 1.5, margin: "0 0 16px" }}>
+                针对以下维度进行深度对话修正
               </p>
-            )}
-          </div>
+              <div className="flex flex-wrap gap-2 justify-center" style={{ marginBottom: 32 }}>
+                {focusDims.map((d) => (
+                  <span
+                    key={d}
+                    style={{ fontSize: 11, padding: "3px 10px", borderRadius: 9999, border: "1px solid rgba(138,74,42,0.25)", background: "rgba(138,74,42,0.06)", color: "var(--accent)" }}
+                  >
+                    {DIM_NAMES_ZH[d] || d}
+                  </span>
+                ))}
+              </div>
+            </>
+          ) : (
+            <p style={{ fontSize: 20, fontWeight: 600, lineHeight: 1.5, margin: "0 0 32px" }}>
+              随便聊聊。聊到第几句，<br/>我就开始懂你怎么想了。
+            </p>
+          )}
           <button
             onClick={() =>
               startInterview(isRefineMode, existingModel, focusDims)
             }
             disabled={loading}
-            className="px-8 py-2.5 bg-[var(--accent)] text-white rounded-full text-sm font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
+            style={{ fontSize: 13, fontWeight: 500, padding: "10px 24px", borderRadius: 9999, border: 0, cursor: "pointer", background: "var(--accent)", color: "#fff", opacity: loading ? 0.4 : 1, transition: "opacity 200ms" }}
           >
             {loading
               ? "正在准备..."
@@ -619,7 +597,7 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
                 ? "开始修正对话"
                 : "开始对话"}
           </button>
-          {error && <p className="text-[var(--error)] text-sm mt-2">{error}</p>}
+          {error && <p style={{ fontSize: 14, color: "var(--error)", marginTop: 8 }}>{error}</p>}
         </div>
       </div>
     );
@@ -630,19 +608,17 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
   if (phase === "building") {
     return (
       <div className="flex flex-col items-center justify-center" style={{ minHeight: "60vh" }}>
-        <div className="text-center space-y-4">
-          <div className="w-10 h-10 mx-auto border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
-          <div className="space-y-1">
-            <p className="text-sm font-medium">
-              {isRefineMode ? "正在修正认知模型" : "正在构建认知模型"}
-            </p>
-            <p className="text-xs text-[var(--muted)]">
-              分析 {messages.length} 条对话记录
-              {isRefineMode && focusDims.length > 0
-                ? `，修正 ${focusDims.length} 个维度`
-                : "，提取 9 个维度的认知特征"}
-            </p>
-          </div>
+        <div className="text-center">
+          <div style={{ width: 32, height: 32, margin: "0 auto 20px", border: "1.5px solid var(--accent)", borderTopColor: "transparent", borderRadius: 9999 }} className="animate-spin" />
+          <p style={{ fontSize: 14, fontWeight: 500, margin: "0 0 4px" }}>
+            {isRefineMode ? "正在修正认知模型" : "正在构建认知模型"}
+          </p>
+          <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--muted-soft)", letterSpacing: "0.02em", margin: 0 }}>
+            {messages.length} 条对话
+            {isRefineMode && focusDims.length > 0
+              ? ` · ${focusDims.length} 个维度`
+              : " · 9 维度"}
+          </p>
         </div>
       </div>
     );
@@ -651,43 +627,35 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
   // ── Render: Result state ─────────────────────────────────────
 
   if (phase === "result" && model) {
-    /** Shared dimension card renderer */
+    /** Shared dimension card renderer — hairline border, literary style */
     const renderDimCard = (dim: { name: string; description: string; behavioral_predictions: string[]; confidence: string }) => {
       const isFocus = isRefineMode && focusDims.includes(dim.name);
       return (
         <div
           key={dim.name}
-          className={`p-5 rounded-xl bg-[var(--card)] border transition-colors ${
-            isFocus ? "border-[var(--accent)]/40" : "border-[var(--card-border)]"
-          }`}
+          style={{
+            border: `1px solid ${isFocus ? "var(--accent)" : "var(--card-border)"}`,
+            background: isFocus ? "var(--accent-soft)" : "transparent",
+            borderRadius: 0,
+            padding: "16px 20px",
+          }}
         >
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-medium text-sm">
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 }}>
+            <h3 style={{ fontSize: 14, fontWeight: 500, margin: 0 }}>
               {DIM_NAMES_ZH[dim.name] || dim.name}
-              {isFocus && (
-                <span className="ml-2 text-xs text-[var(--accent)]">已修正</span>
-              )}
             </h3>
-            <span
-              className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${
-                dim.confidence === "high"
-                  ? "bg-[var(--success)]/15 text-[var(--success)]"
-                  : dim.confidence === "medium"
-                    ? "bg-[var(--accent)]/15 text-[var(--accent)]"
-                    : "bg-[var(--muted)]/15 text-[var(--muted)]"
-              }`}
-            >
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.05em", textTransform: "uppercase" as const, color: "var(--muted-soft)" }}>
               {dim.confidence}
             </span>
           </div>
-          <p className="text-sm text-[var(--muted)] leading-relaxed mb-3">
-            {dim.description}
+          <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.65, margin: "0 0 12px" }}>
+            {dim.description.length > 60 ? dim.description.slice(0, 60) + "..." : dim.description}
           </p>
-          <div className="space-y-1.5">
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {dim.behavioral_predictions.map((pred, i) => (
               <p
                 key={i}
-                className="text-xs text-[var(--muted-soft)] pl-3 border-l-2 border-[var(--card-border)]"
+                style={{ fontSize: 12, color: "var(--muted-soft)", paddingLeft: 12, borderLeft: "1px solid var(--card-border)", margin: 0, lineHeight: 1.55 }}
               >
                 {pred}
               </p>
@@ -698,28 +666,28 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
     };
 
     return (
-      <div className="space-y-8">
+      <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
         {/* Header */}
-        <div className="flex items-start justify-between">
-          <div className="space-y-1">
-            <h2 className="text-lg font-semibold">
-              {isRefineMode ? "修正后的认知模型" : "认知模型"}
-            </h2>
-            <p className="text-sm text-[var(--muted)]">
-              {turn} 轮对话 · {signals.length} 个信号 · {conflicts.length} 个矛盾
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+          <div>
+            <p className="eyebrow" style={{ marginBottom: 8 }}>
+              {isRefineMode ? "修正后的模型" : "认知模型"} · {turn} 轮对话
             </p>
+            <h2 style={{ fontSize: 18, fontWeight: 600, margin: "0 0 4px" }}>
+              {signals.length} 个信号，{conflicts.length} 个矛盾
+            </h2>
           </div>
-          <div className="flex gap-2">
+          <div style={{ display: "flex", gap: 8 }}>
             <button
               onClick={() => setShowInlineValidator((v) => !v)}
-              className="px-4 py-2 text-sm rounded-full bg-[var(--accent)] text-white font-medium hover:opacity-90 transition-opacity"
+              style={{ fontSize: 13, fontWeight: 500, padding: "10px 20px", borderRadius: 9999, border: 0, cursor: "pointer", background: "var(--accent)", color: "#fff", transition: "opacity 200ms" }}
             >
               {showInlineValidator ? "收起验证" : "开始验证"}
             </button>
             {onModelReady && (
               <button
                 onClick={() => onModelReady(model)}
-                className="px-4 py-2 text-sm rounded-full border border-[var(--card-border)] text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[var(--muted)] transition-colors"
+                style={{ fontSize: 13, fontWeight: 500, padding: "9px 19px", borderRadius: 9999, border: "1px solid var(--card-border)", cursor: "pointer", background: "transparent", color: "var(--muted)", transition: "all 200ms" }}
               >
                 直接出题
               </button>
@@ -735,13 +703,13 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
                 a.click();
                 URL.revokeObjectURL(url);
               }}
-              className="px-4 py-2 text-sm rounded-full border border-[var(--card-border)] text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[var(--muted)] transition-colors"
+              style={{ fontSize: 13, fontWeight: 500, padding: "9px 19px", borderRadius: 9999, border: "1px solid var(--card-border)", cursor: "pointer", background: "transparent", color: "var(--muted)", transition: "all 200ms" }}
             >
               下载
             </button>
             <button
               onClick={reset}
-              className="px-4 py-2 text-sm rounded-full border border-[var(--card-border)] text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[var(--muted)] transition-colors"
+              style={{ fontSize: 13, fontWeight: 500, padding: "9px 19px", borderRadius: 9999, border: "1px solid var(--card-border)", cursor: "pointer", background: "transparent", color: "var(--muted)", transition: "all 200ms" }}
             >
               重来
             </button>
@@ -750,52 +718,51 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
 
         {/* Model details — collapsible when validator is shown */}
         {showInlineValidator ? (
-          <details className="group">
-            <summary className="cursor-pointer text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition-colors py-1">
-              查看模型详情（{model.dimensions.length} 个维度）
+          <details>
+            <summary style={{ cursor: "pointer", fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.05em", textTransform: "uppercase" as const, color: "var(--muted-soft)", padding: "4px 0" }}>
+              查看模型详情 · {model.dimensions.length} 维度
             </summary>
-            <div className="space-y-5 mt-4">
-              <div className="p-5 rounded-xl bg-[var(--card)] border border-[var(--card-border)]">
-                <p className="text-sm leading-relaxed">{model.summary}</p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div style={{ display: "flex", flexDirection: "column", gap: 20, marginTop: 16 }}>
+              <p className="pull-quote">{model.summary}</p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1, border: "1px solid var(--card-border)" }}>
                 {(model.dimensions || []).map(renderDimCard)}
               </div>
             </div>
           </details>
         ) : (
           <>
-            {/* Summary */}
-            <div className="p-5 rounded-xl bg-[var(--card)] border border-[var(--card-border)]">
-              <p className="text-sm leading-relaxed">{model.summary}</p>
-            </div>
+            {/* Summary — pull-quote */}
+            <p className="pull-quote">{model.summary}</p>
 
             {/* Dimensions grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {(model.dimensions || []).map(renderDimCard)}
+            <div>
+              <p className="eyebrow" style={{ marginBottom: 12 }}>9 个认知维度</p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1, border: "1px solid var(--card-border)" }}>
+                {(model.dimensions || []).map(renderDimCard)}
+              </div>
             </div>
 
             {/* Conflicts */}
             {conflicts.length > 0 && (
-              <div className="space-y-3">
-                <h3 className="text-sm font-medium text-[var(--muted)]">
-                  述行矛盾（{conflicts.length}）
-                </h3>
-                <div className="space-y-2">
+              <div>
+                <p className="eyebrow" style={{ marginBottom: 12 }}>
+                  述行矛盾 · {conflicts.length}
+                </p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                   {conflicts.map((c, i) => (
                     <div
                       key={i}
-                      className="p-4 rounded-xl bg-[var(--card)] border border-[var(--card-border)] text-sm space-y-1"
+                      style={{ padding: "16px 0", borderBottom: "1px solid var(--card-border)", fontSize: 13, display: "flex", flexDirection: "column", gap: 4 }}
                     >
-                      <p>
-                        <span className="text-[var(--muted)]">声称：</span>
+                      <p style={{ margin: 0 }}>
+                        <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.05em", textTransform: "uppercase" as const, color: "var(--muted-soft)", marginRight: 8 }}>声称</span>
                         {c.stated_claim}
                       </p>
-                      <p>
-                        <span className="text-[var(--accent)]">实际：</span>
+                      <p style={{ margin: 0 }}>
+                        <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.05em", textTransform: "uppercase" as const, color: "var(--accent)", marginRight: 8 }}>实际</span>
                         {c.actual_behavior}
                       </p>
-                      <p className="text-[var(--muted-soft)] text-xs pt-1">
+                      <p style={{ fontSize: 12, fontStyle: "italic", color: "var(--muted-soft)", margin: 0, paddingTop: 4 }}>
                         {c.blind_spot_evidence}
                       </p>
                     </div>
@@ -806,11 +773,11 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
 
             {/* Signal stats */}
             {signals.length > 0 && (
-              <div className="space-y-3">
-                <h3 className="text-sm font-medium text-[var(--muted)]">
-                  认知信号（{signals.length}）
-                </h3>
-                <div className="flex flex-wrap gap-2">
+              <div>
+                <p className="eyebrow" style={{ marginBottom: 12 }}>
+                  认知信号 · {signals.length}
+                </p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {Object.entries(
                     signals.reduce(
                       (acc, s) => {
@@ -822,9 +789,9 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
                   ).map(([type, count]) => (
                     <span
                       key={type}
-                      className="px-2.5 py-1 text-xs rounded-full bg-[var(--card)] border border-[var(--card-border)] text-[var(--muted)]"
+                      style={{ fontSize: 11, padding: "3px 10px", borderRadius: 9999, border: "1px solid var(--card-border)", color: "var(--muted)" }}
                     >
-                      {type}: {count}
+                      {type} <span style={{ fontFamily: "var(--font-mono)", fontSize: 10 }}>{count}</span>
                     </span>
                   ))}
                 </div>
@@ -833,10 +800,9 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
 
             {/* Next steps */}
             {!showInlineValidator && (
-              <div className="p-5 rounded-xl bg-[var(--accent-soft)] border border-[var(--accent)]/10 text-sm">
-                <p className="text-[var(--accent)] font-medium mb-1">下一步</p>
-                <p className="text-[var(--muted)]">
-                  推荐先点「开始验证」确认模型描述是否准确，再用「直接出题」进入认知预测。
+              <div style={{ borderLeft: "1px solid var(--card-border)", paddingLeft: 20, marginTop: 8 }}>
+                <p style={{ fontSize: 13, color: "var(--muted)", margin: 0, lineHeight: 1.65 }}>
+                  推荐先「开始验证」确认模型是否准确，再用「直接出题」进入认知预测。
                 </p>
               </div>
             )}
@@ -858,49 +824,49 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
   // ── Render: Chat phase ───────────────────────────────────────
 
   return (
-    <div className="flex gap-5" style={{ height: "calc(100vh - 160px)" }}>
+    <div style={{ display: "flex", gap: 20, height: "calc(100vh - 160px)" }}>
       {/* Chat area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
         {/* Mode indicator */}
         {isRefineMode && (
-          <div className="flex items-center gap-2 mb-3 px-4 py-2.5 rounded-xl bg-[var(--accent-soft)] text-sm">
-            <span className="text-[var(--accent)] font-medium">修正模式</span>
-            <span className="text-[var(--muted-soft)]">·</span>
-            <span className="text-[var(--muted)]">
-              {focusDims.map((d) => DIM_NAMES_ZH[d] || d).join("、")}
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12, paddingBottom: 12, borderBottom: "1px solid var(--card-border)", fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.05em", textTransform: "uppercase" as const }}>
+            <span style={{ color: "var(--accent)" }}>修正模式</span>
+            <span style={{ color: "var(--card-border)" }}>/</span>
+            <span style={{ color: "var(--muted-soft)" }}>
+              {focusDims.map((d) => DIM_NAMES_ZH[d] || d).join(" · ")}
             </span>
           </div>
         )}
 
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto pb-4 space-y-5">
+        {/* Messages — gutter labels, no bubbles */}
+        <div style={{ flex: 1, overflowY: "auto", paddingBottom: 16 }}>
           {messages.map((msg, i) => (
-            <div
-              key={i}
-              className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-            >
-              {msg.role === "assistant" ? (
-                <div className="flex gap-3 max-w-[85%]">
-                  <div className="w-7 h-7 rounded-full bg-[var(--accent-soft)] flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs text-[var(--accent)] font-medium">N</span>
-                  </div>
-                  <div className="text-sm leading-relaxed text-[var(--foreground)] pt-1">
-                    {msg.content}
-                  </div>
-                </div>
-              ) : (
-                <div className="max-w-[75%] px-4 py-2.5 rounded-2xl rounded-br-sm bg-[var(--accent)] text-white text-sm leading-relaxed">
+            msg.role === "assistant" ? (
+              <div key={i} style={{ display: "flex", gap: 16, padding: "20px 0", borderBottom: "1px solid var(--card-border)" }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.05em", textTransform: "uppercase", color: "var(--muted-soft)", flexShrink: 0, paddingTop: 3, width: 20 }}>
+                  AI
+                </span>
+                <div style={{ fontSize: 14, lineHeight: 1.65, flex: 1 }}>
                   {msg.content}
                 </div>
-              )}
-            </div>
+              </div>
+            ) : (
+              <div key={i} style={{ display: "flex", flexDirection: "row-reverse", gap: 16, padding: "20px 0", borderBottom: "1px solid var(--card-border)" }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.05em", textTransform: "uppercase", color: "var(--muted-soft)", flexShrink: 0, paddingTop: 3, width: 20, textAlign: "right" }}>
+                  你
+                </span>
+                <div style={{ fontSize: 14, lineHeight: 1.75, flex: 1, textAlign: "right" }}>
+                  {msg.content}
+                </div>
+              </div>
+            )
           ))}
           {loading && (
-            <div className="flex gap-3">
-              <div className="w-7 h-7 rounded-full bg-[var(--accent-soft)] flex items-center justify-center flex-shrink-0">
-                <span className="text-xs text-[var(--accent)] font-medium">N</span>
-              </div>
-              <div className="text-sm text-[var(--muted)] pt-1">
+            <div style={{ display: "flex", gap: 16, padding: "20px 0" }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.05em", textTransform: "uppercase", color: "var(--muted-soft)", flexShrink: 0, paddingTop: 3, width: 20 }}>
+                AI
+              </span>
+              <div style={{ paddingTop: 3 }}>
                 <span className="inline-flex gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[var(--muted)] animate-bounce" style={{ animationDelay: "0ms" }} />
                   <span className="w-1.5 h-1.5 rounded-full bg-[var(--muted)] animate-bounce" style={{ animationDelay: "150ms" }} />
@@ -913,32 +879,32 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
         </div>
 
         {/* Status bar */}
-        <div className="flex items-center justify-between text-xs text-[var(--muted)] py-2">
+        <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.02em", color: "var(--muted-soft)", padding: "12px 0 8px", borderTop: "1px solid var(--card-border)" }}>
           <span>
             第 {turn} 轮
             {analyzing && " · 分析中"}
             {signals.length > 0 && ` · ${signals.length} 信号`}
             {conflicts.length > 0 && ` · ${conflicts.length} 矛盾`}
           </span>
-          <div className="flex gap-3">
+          <div style={{ display: "flex", gap: 16 }}>
             <button
               onClick={() => setShowPanel(!showPanel)}
-              className="hover:text-[var(--foreground)] transition-colors"
+              style={{ background: "transparent", border: 0, color: "var(--muted-soft)", fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.02em", cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 4 }}
             >
-              {showPanel ? "隐藏面板" : "面板"}
+              {showPanel ? "隐藏" : "面板"}
             </button>
             <button
               onClick={endInterview}
               disabled={loading || building || messages.length < 6}
-              className="hover:text-[var(--foreground)] transition-colors disabled:opacity-30"
+              style={{ background: "transparent", border: 0, color: "var(--muted-soft)", fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.02em", cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 4, opacity: (loading || building || messages.length < 6) ? 0.3 : 1 }}
             >
-              结束 → {isRefineMode ? "修正" : "建模"}
+              结束建模
             </button>
           </div>
         </div>
 
-        {/* Input area */}
-        <div className="relative">
+        {/* Input area — manuscript margin */}
+        <div style={{ position: "relative", borderLeft: "2px solid var(--accent)", paddingLeft: 16 }}>
           <textarea
             ref={inputRef}
             value={input}
@@ -947,94 +913,64 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
             placeholder="说点什么..."
             disabled={loading || building}
             rows={1}
-            className="w-full bg-[var(--card)] border border-[var(--card-border)] rounded-2xl pl-4 pr-14 py-3 text-sm resize-none focus:outline-none focus:border-[var(--accent)]/50 disabled:opacity-50 transition-colors"
+            style={{ width: "100%", background: "transparent", border: "none", padding: "8px 40px 8px 0", fontSize: 14, color: "var(--foreground)", fontFamily: "inherit", outline: "none", resize: "none", opacity: (loading || building) ? 0.5 : 1, boxSizing: "border-box" }}
           />
           <button
             onClick={sendMessage}
             disabled={loading || !input.trim()}
-            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-xl bg-[var(--accent)] text-white hover:opacity-90 disabled:opacity-30 transition-opacity"
+            style={{ position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)", background: "transparent", border: 0, color: "var(--accent)", cursor: "pointer", opacity: (loading || !input.trim()) ? 0.2 : 1, transition: "opacity 200ms", padding: 4 }}
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
+            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </button>
         </div>
 
-        {error && <p className="text-[var(--error)] text-xs mt-2">{error}</p>}
+        {error && <p style={{ fontSize: 12, color: "var(--error)", marginTop: 8 }}>{error}</p>}
       </div>
 
-      {/* Right panel: dimension coverage */}
+      {/* Right panel: thin hairline track */}
       {showPanel && (
-        <div className="w-52 flex-shrink-0 overflow-y-auto">
-          <div className="p-4 rounded-xl bg-[var(--card)] border border-[var(--card-border)]">
-            <h3 className="text-xs font-medium text-[var(--muted)] mb-3">
-              {isRefineMode ? "修正进度" : "维度覆盖"}
-            </h3>
-            {coverage.length === 0 ? (
-              <p className="text-xs text-[var(--muted-soft)]">
-                第 5 轮后开始追踪
-              </p>
-            ) : (
-              <div className="space-y-2.5">
-                {coverage.map((dim) => {
-                  const isFocus = focusDims.includes(dim.name);
-                  const targetMet = isRefineMode
-                    ? isFocus
-                      ? dim.confidence === "high"
-                      : true
-                    : dim.confidence === "high" ||
-                      dim.confidence === "medium";
-                  return (
-                    <div
-                      key={dim.name}
-                      className={
-                        isRefineMode && !isFocus ? "opacity-30" : ""
-                      }
-                    >
-                      <div className="flex items-center justify-between text-[11px] mb-1">
-                        <span className="truncate pr-1 text-[var(--muted)]">
-                          {DIM_NAMES_ZH[dim.name] || dim.name}
-                        </span>
-                        <span
-                          className={`flex-shrink-0 ${
-                            targetMet
-                              ? "text-[var(--success)]"
-                              : dim.confidence === "medium"
-                                ? "text-[var(--accent)]"
-                                : "text-[var(--muted-soft)]"
-                          }`}
-                        >
-                          {dim.confidence}
-                        </span>
-                      </div>
-                      <div className="h-1 rounded-full bg-[var(--background)]">
-                        <div
-                          className={`h-full rounded-full transition-all duration-500 ${CONFIDENCE_COLORS[dim.confidence]} ${CONFIDENCE_WIDTH[dim.confidence]}`}
-                        />
-                      </div>
+        <div style={{ width: 208, flexShrink: 0, paddingTop: 8 }}>
+          <p className="eyebrow" style={{ marginBottom: 16 }}>
+            {isRefineMode ? "修正进度" : "维度覆盖"}
+          </p>
+          {coverage.length === 0 ? (
+            <p style={{ fontSize: 11, color: "var(--muted-soft)", margin: 0 }}>
+              第 5 轮后开始追踪
+            </p>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {coverage.map((dim) => {
+                const isFocus = focusDims.includes(dim.name);
+                const fillWidths: Record<string, string> = { high: "100%", medium: "66%", low: "33%", none: "0%" };
+                const fillColors: Record<string, string> = { high: "var(--success)", medium: "var(--accent)", low: "var(--muted)", none: "transparent" };
+                return (
+                  <div
+                    key={dim.name}
+                    style={{ opacity: isRefineMode && !isFocus ? 0.3 : 1 }}
+                  >
+                    <div style={{ height: 1, background: "var(--card-border)", position: "relative", marginBottom: 6 }}>
+                      <div style={{ position: "absolute", top: 0, left: 0, height: "100%", background: fillColors[dim.confidence] || "transparent", width: fillWidths[dim.confidence] || "0%", transition: "width 500ms" }} />
                     </div>
-                  );
-                })}
-              </div>
-            )}
+                    <span style={{ fontSize: 11, color: "var(--muted)", display: "block" }}>
+                      {DIM_NAMES_ZH[dim.name] || dim.name}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
-            {/* Signal summary */}
-            {signals.length > 0 && (
-              <div className="mt-4 pt-3 border-t border-[var(--card-border)]">
-                <div className="text-[11px] text-[var(--muted)] space-y-1">
-                  <p>{signals.length} 信号</p>
-                  <p>
-                    行为 {signals.filter((s) => s.track === "behavioral").length} · 自述 {signals.filter((s) => s.track === "stated").length}
-                  </p>
-                  {conflicts.length > 0 && (
-                    <p className="text-[var(--accent)]">
-                      {conflicts.length} 矛盾
-                    </p>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
+          {/* Signal summary */}
+          {signals.length > 0 && (
+            <div style={{ marginTop: 20, paddingTop: 16, borderTop: "1px solid var(--card-border)" }}>
+              <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.02em", color: "var(--muted-soft)", margin: 0, lineHeight: 1.8 }}>
+                {signals.length} 信号 · 行为 {signals.filter((s) => s.track === "behavioral").length} · 自述 {signals.filter((s) => s.track === "stated").length}
+                {conflicts.length > 0 && <><br /><span style={{ color: "var(--accent)" }}>{conflicts.length} 矛盾</span></>}
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>
