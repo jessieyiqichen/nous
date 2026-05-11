@@ -567,6 +567,10 @@ def main():
     parser = argparse.ArgumentParser(
         description="Cognitive Signal Extractor — extract behavioral signals from conversations"
     )
+    parser.add_argument(
+        "--subject", type=str, default="jessie",
+        help="Subject name for data isolation (default: jessie)",
+    )
     sub = parser.add_subparsers(dest="command")
 
     # filter
@@ -578,18 +582,23 @@ def main():
     p_extract.add_argument("conversation", type=Path, help="Path to conversation file (.md/.json/.jsonl)")
     p_extract.add_argument("--model", type=Path, default=None, help="Path to cognitive model JSON")
     p_extract.add_argument(
-        "--history", type=Path, default=Path("signals_history.json"),
-        help="Path to history file (default: signals_history.json)",
+        "--history", type=Path, default=None,
+        help="Path to history file (default: data/subjects/<subject>/signals_history.json)",
     )
 
     # history
     p_history = sub.add_parser("history", help="Show signal extraction history")
     p_history.add_argument(
-        "--history", type=Path, default=Path("signals_history.json"),
-        help="Path to history file (default: signals_history.json)",
+        "--history", type=Path, default=None,
+        help="Path to history file (default: data/subjects/<subject>/signals_history.json)",
     )
 
     args = parser.parse_args()
+
+    # Subject-aware default for --history
+    subject_dir = Path(__file__).resolve().parent.parent / "data" / "subjects" / args.subject
+    subject_dir.mkdir(parents=True, exist_ok=True)
+    default_history = subject_dir / "signals_history.json"
 
     if args.command == "filter":
         if not args.conversation.exists():
@@ -601,10 +610,10 @@ def main():
         if not args.conversation.exists():
             print(f"Error: {args.conversation} not found", file=sys.stderr)
             sys.exit(1)
-        cmd_extract(args.conversation, args.model, args.history)
+        cmd_extract(args.conversation, args.model, args.history or default_history)
 
     elif args.command == "history":
-        cmd_history(args.history)
+        cmd_history(args.history or default_history)
 
     else:
         parser.print_help()

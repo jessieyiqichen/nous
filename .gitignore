@@ -12,12 +12,17 @@ ml/output/
 ml/data/labeled*.jsonl
 ml/data/wildchat*.jsonl
 
-# Large/generated data files
-data/signals_history.json
+# Large/generated data files (global)
 data/collector.log
+data/collector_launchd.log
 data/processed_sessions.json
-data/conversation_session_current.md
-data/conversation_claude_ai_raw.md
+
+# Per-subject data (sensitive, generated)
+data/subjects/*/signals_history.json
+data/subjects/*/conversation_*.md
+data/subjects/*/predictions*.json
+# Exception: keep jessie's predictions in git (demo evidence for the 71% number)
+!data/subjects/jessie/predictions*.json
 interview_transcript_*.json
 interview_signals_*.json
 quiz_results.json

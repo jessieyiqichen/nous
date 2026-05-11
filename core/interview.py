@@ -761,6 +761,10 @@ def main():
         description="Nous — Interactive cognitive interview"
     )
     parser.add_argument(
+        "--subject", type=str, default="jessie",
+        help="Subject name for data isolation (default: jessie)",
+    )
+    parser.add_argument(
         "--turns", type=int, default=25,
         help="Maximum conversation turns (default: 25)",
     )
@@ -786,6 +790,11 @@ def main():
     )
     args = parser.parse_args()
 
+    # Subject data directory
+    subject_dir = Path(__file__).resolve().parent.parent / "data" / "subjects" / args.subject
+    subject_dir.mkdir(parents=True, exist_ok=True)
+    print(f"Subject: {args.subject} → {subject_dir}", file=sys.stderr)
+
     # Load existing model if provided
     existing_model = None
     if args.model:
@@ -797,13 +806,13 @@ def main():
     if args.focus:
         focus_dims = [d.strip() for d in args.focus.split(",") if d.strip()]
 
-    # Default output path
+    # Default output path (inside subject dir)
     ts = datetime.now().strftime("%Y%m%d_%H%M")
     mode = "refined" if existing_model else "cognitive"
     if args.output is None:
-        args.output = Path(f"{mode}_model_{ts}.json")
+        args.output = subject_dir / f"{mode}_model_{ts}.json"
     if args.transcript is None:
-        args.transcript = Path(f"interview_transcript_{ts}.json")
+        args.transcript = subject_dir / f"interview_transcript_{ts}.json"
 
     # Run interview
     messages, signals, conflicts = run_interview(

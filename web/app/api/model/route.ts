@@ -3,7 +3,7 @@ import { join } from "path";
 
 export async function GET() {
   try {
-    const modelPath = join(process.cwd(), "..", "data", "cognitive_model_v2.json");
+    const modelPath = join(process.cwd(), "..", "data", "subjects", "jessie", "cognitive_model_v2.json");
     const raw = await readFile(modelPath, "utf-8");
     const model = JSON.parse(raw);
     return Response.json(model);

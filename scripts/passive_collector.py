@@ -46,7 +46,10 @@ from hybrid_extractor import hybrid_extract
 CLAUDE_PROJECTS_DIR = Path.home() / ".claude" / "projects"
 DATA_DIR = PROJECT_ROOT / "data"
 PROCESSED_PATH = DATA_DIR / "processed_sessions.json"
-HISTORY_PATH = DATA_DIR / "signals_history.json"
+
+# Default subject — overridden by --subject CLI arg
+_SUBJECT = "jessie"
+HISTORY_PATH = DATA_DIR / "subjects" / _SUBJECT / "signals_history.json"
 
 # ── JSONL → Conversation ─────────────────────────────────────
 
@@ -485,6 +488,10 @@ def main():
     parser = argparse.ArgumentParser(
         description="Passive cognitive signal collector — extract signals from Claude Code sessions"
     )
+    parser.add_argument(
+        "--subject", type=str, default="jessie",
+        help="Subject name for data isolation (default: jessie)",
+    )
     sub = parser.add_subparsers(dest="command")
 
     # collect
@@ -510,6 +517,12 @@ def main():
     sub.add_parser("status", help="Show scan status and signal statistics")
 
     args = parser.parse_args()
+
+    # Update HISTORY_PATH based on --subject
+    global HISTORY_PATH
+    subject_dir = DATA_DIR / "subjects" / args.subject
+    subject_dir.mkdir(parents=True, exist_ok=True)
+    HISTORY_PATH = subject_dir / "signals_history.json"
 
     if args.command == "collect":
         cmd_collect(args.since, args.model, args.dry_run, getattr(args, 'file', None))

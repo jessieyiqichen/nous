@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { readFile, writeFile } from "fs/promises";
 import { join } from "path";
 
-const HISTORY_PATH = join(process.cwd(), "..", "data", "signals_history.json");
+const HISTORY_PATH = join(process.cwd(), "..", "data", "subjects", "jessie", "signals_history.json");
 
 interface Conflict {
   stated_claim: string;

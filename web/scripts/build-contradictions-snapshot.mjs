@@ -10,7 +10,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const HISTORY_PATH = join(__dirname, "..", "..", "data", "signals_history.json");
+const HISTORY_PATH = join(__dirname, "..", "..", "data", "subjects", "jessie", "signals_history.json");
 const OUTPUT_PATH = join(__dirname, "..", "data", "contradictions-snapshot.json");
 
 async function main() {

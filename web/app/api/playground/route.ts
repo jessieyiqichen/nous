@@ -62,7 +62,7 @@ const RESULT_SCHEMA = {
 };
 
 async function loadCognitiveModel(): Promise<Record<string, unknown>> {
-  const modelPath = join(process.cwd(), "..", "data", "cognitive_model_v2.json");
+  const modelPath = join(process.cwd(), "..", "data", "subjects", "jessie", "cognitive_model_v2.json");
   const raw = await readFile(modelPath, "utf-8");
   return JSON.parse(raw);
 }

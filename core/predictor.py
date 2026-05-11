@@ -614,39 +614,56 @@ def cmd_score(result_path: Path, output: Path):
 
 def main():
     parser = argparse.ArgumentParser(description="Behavioral Prediction Validator")
+    parser.add_argument(
+        "--subject", type=str, default="jessie",
+        help="Subject name for data isolation (default: jessie)",
+    )
     sub = parser.add_subparsers(dest="command")
 
     p_build = sub.add_parser("build", help="Build cognitive model from profile")
     p_build.add_argument("profile", type=Path)
     p_build.add_argument("--conflicts", type=Path, default=None, help="Conflict/signal data (signals_history.json)")
     p_build.add_argument("--signals", type=Path, default=None, help="Additional signals file")
-    p_build.add_argument("-o", "--output", type=Path, default=Path("cognitive_model.json"))
+    p_build.add_argument("-o", "--output", type=Path, default=None)
 
     p_pred = sub.add_parser("predict", help="Generate predictions from model")
     p_pred.add_argument("model", type=Path)
     p_pred.add_argument("--conflicts", type=Path, default=None, help="Conflict/signal data (signals_history.json)")
     p_pred.add_argument("--signals", type=Path, default=None, help="Additional signals file")
-    p_pred.add_argument("-o", "--output", type=Path, default=Path("predictions.json"))
+    p_pred.add_argument("-o", "--output", type=Path, default=None)
 
     p_quiz = sub.add_parser("quiz", help="Interactive quiz for subject")
     p_quiz.add_argument("predictions", type=Path)
     p_quiz.add_argument("--conflicts", type=Path, default=None,
                          help="Conflict data file for T3 auto-scoring (signals_history.json or interview conflicts)")
-    p_quiz.add_argument("-o", "--output", type=Path, default=Path("quiz_results.json"))
+    p_quiz.add_argument("-o", "--output", type=Path, default=None)
 
     p_score = sub.add_parser("score", help="Score predictions against responses")
     p_score.add_argument("results", type=Path)
-    p_score.add_argument("-o", "--output", type=Path, default=Path("accuracy_report.json"))
+    p_score.add_argument("-o", "--output", type=Path, default=None)
 
     args = parser.parse_args()
 
+    # Subject data directory
+    subject_dir = Path(__file__).resolve().parent.parent / "data" / "subjects" / args.subject
+    subject_dir.mkdir(parents=True, exist_ok=True)
+
+    # Apply subject-aware defaults for output paths
     if args.command == "build":
+        if args.output is None:
+            args.output = subject_dir / "cognitive_model.json"
         cmd_build(args.profile, args.output, getattr(args, "conflicts", None), getattr(args, "signals", None))
     elif args.command == "predict":
+        if args.output is None:
+            args.output = subject_dir / "predictions.json"
         cmd_predict(args.model, args.output, getattr(args, "conflicts", None), getattr(args, "signals", None))
     elif args.command == "quiz":
+        if args.output is None:
+            args.output = subject_dir / "quiz_results.json"
         cmd_quiz(args.predictions, args.output, args.conflicts)
     elif args.command == "score":
+        if args.output is None:
+            args.output = subject_dir / "accuracy_report.json"
         cmd_score(args.results, args.output)
     else:
         parser.print_help()
