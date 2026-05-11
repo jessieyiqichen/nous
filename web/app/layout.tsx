@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fraunces, Source_Serif_4, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const fraunces = Fraunces({
   subsets: ["latin"],
+  axes: ["opsz"],
+  variable: "--font-display",
+});
+
+const sourceSerif = Source_Serif_4({
+  subsets: ["latin"],
+  axes: ["opsz"],
+  variable: "--font-sans",
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+  variable: "--font-mono",
   subsets: ["latin"],
 });
 
@@ -25,7 +32,7 @@ export default function RootLayout({
   return (
     <html
       lang="zh-CN"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${fraunces.variable} ${sourceSerif.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

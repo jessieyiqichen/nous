@@ -662,25 +662,28 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
   if (step === "results" && scores) {
     return (
       <div ref={topRef} className="max-w-3xl mx-auto space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <h2 className="text-xl font-bold">预测准确率报告</h2>
-            {testRound > 1 && (
-              <span className="text-xs px-2 py-0.5 rounded bg-[var(--accent)]/20 text-[var(--accent)]">
-                第 {testRound} 轮
-              </span>
-            )}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+          <div>
+            <p className="eyebrow" style={{ marginBottom: 8 }}>
+              预测准确率{testRound > 1 ? ` · 第 ${testRound} 轮` : ""}
+            </p>
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: 24, fontWeight: 400, margin: 0 }}>
+              报告
+            </h2>
           </div>
-          <button onClick={handleReset} className="text-sm text-[var(--muted)] hover:text-white transition-colors">
+          <button
+            onClick={handleReset}
+            style={{ fontSize: 12, color: "var(--muted-soft)", background: "transparent", border: 0, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 4, fontFamily: "inherit" }}
+          >
             重新测试
           </button>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <ScoreCard label="偏好预测" value={scores.tier_1_accuracy} color="text-blue-400" />
-          <ScoreCard label="推理预测" value={scores.tier_2_accuracy} color="text-orange-400" />
-          <ScoreCard label="盲区（自动）" value={scores.tier_3_accuracy} color="text-purple-400" />
-          <ScoreCard label="综合准确率" value={scores.overall_accuracy} color="text-white" />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1, border: "1px solid var(--card-border)" }}>
+          <ScoreCard label="偏好预测" value={scores.tier_1_accuracy} color="" />
+          <ScoreCard label="推理预测" value={scores.tier_2_accuracy} color="" />
+          <ScoreCard label="盲区（自动）" value={scores.tier_3_accuracy} color="" />
+          <ScoreCard label="综合准确率" value={scores.overall_accuracy} color="" />
         </div>
 
         {/* Random baseline comparison */}
@@ -692,21 +695,21 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
           const t1Lift = scores.tier_1_accuracy - t1Baseline;
           const t2Lift = scores.tier_2_accuracy - t2Baseline;
           return (
-            <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4">
-              <h3 className="text-sm font-medium mb-3">vs 随机基线</h3>
-              <div className="grid grid-cols-2 gap-4 text-sm">
+            <div style={{ border: "1px solid var(--card-border)", padding: 20 }}>
+              <p className="eyebrow" style={{ marginBottom: 12 }}>vs 随机基线</p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, fontSize: 14 }}>
                 <div>
-                  <span className="text-[var(--muted)]">T1 随机猜中率：</span>
-                  <span className="text-blue-400 font-mono">{(t1Baseline * 100).toFixed(0)}%</span>
-                  <span className="ml-2 text-xs">{t1Lift > 0 ? "+" : ""}{(t1Lift * 100).toFixed(0)}pp</span>
+                  <span style={{ color: "var(--muted)" }}>T1 随机猜中率：</span>
+                  <span style={{ fontFamily: "var(--font-mono)", color: "#5e7a8a" }}>{(t1Baseline * 100).toFixed(0)}%</span>
+                  <span style={{ fontSize: 12, marginLeft: 8 }}>{t1Lift > 0 ? "+" : ""}{(t1Lift * 100).toFixed(0)}pp</span>
                 </div>
                 <div>
-                  <span className="text-[var(--muted)]">T2 随机猜中率：</span>
-                  <span className="text-orange-400 font-mono">{(t2Baseline * 100).toFixed(0)}%</span>
-                  <span className="ml-2 text-xs">{t2Lift > 0 ? "+" : ""}{(t2Lift * 100).toFixed(0)}pp</span>
+                  <span style={{ color: "var(--muted)" }}>T2 随机猜中率：</span>
+                  <span style={{ fontFamily: "var(--font-mono)", color: "#a86c3a" }}>{(t2Baseline * 100).toFixed(0)}%</span>
+                  <span style={{ fontSize: 12, marginLeft: 8 }}>{t2Lift > 0 ? "+" : ""}{(t2Lift * 100).toFixed(0)}pp</span>
                 </div>
               </div>
-              <p className="text-xs text-[var(--muted)] mt-2">
+              <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 8 }}>
                 pp = percentage points above random guessing. 高于基线越多，模型信号越强。
               </p>
             </div>
@@ -746,49 +749,48 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
             .sort((a, b) => a.acc - b.acc);
           if (entries.length === 0) return null;
           return (
-            <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4 space-y-3">
-              <h3 className="text-sm font-medium">情境诊断（T1+T2，按 context 分组）</h3>
-              <div className="space-y-1.5">
+            <div style={{ border: "1px solid var(--card-border)", padding: 20 }}>
+              <p className="eyebrow" style={{ marginBottom: 12 }}>情境诊断（T1+T2，按 context 分组）</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 {entries.map(({ tag, acc, n }) => (
-                  <div key={tag} className="flex items-center gap-3 text-sm">
-                    <span className="w-36 text-[var(--muted)] truncate">{tag}</span>
-                    <div className="flex-1 h-2 bg-[var(--background)] rounded-full overflow-hidden">
+                  <div key={tag} style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 14 }}>
+                    <span style={{ width: 144, color: "var(--muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{tag}</span>
+                    <div style={{ flex: 1, height: 2, background: "var(--card-border)", borderRadius: 9999, overflow: "hidden" }}>
                       <div
-                        className={`h-full rounded-full ${acc >= 0.5 ? "bg-green-500" : "bg-red-500"}`}
-                        style={{ width: `${acc * 100}%` }}
+                        style={{ height: "100%", borderRadius: 9999, background: acc >= 0.5 ? "var(--success)" : "var(--error)", width: `${acc * 100}%` }}
                       />
                     </div>
-                    <span className="font-mono text-xs w-16 text-right">{(acc * 100).toFixed(0)}% ({n})</span>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, width: 64, textAlign: "right" }}>{(acc * 100).toFixed(0)}% ({n})</span>
                   </div>
                 ))}
               </div>
-              <p className="text-xs text-[var(--muted)]">
+              <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 8 }}>
                 红色 = 模型在此情境下系统性失败（&lt;50%），绿色 = 有效。数字括号内为题数。
               </p>
             </div>
           );
         })()}
 
-        <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-5">
-          <h3 className="text-sm font-medium mb-4">准确率梯度</h3>
+        <div style={{ border: "1px solid var(--card-border)", padding: 20 }}>
+          <p className="eyebrow" style={{ marginBottom: 16 }}>准确率梯度</p>
           <GradientBar report={scores} />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4">
-            <h3 className="text-sm font-medium mb-2">三层对比</h3>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
+          <div style={{ border: "1px solid var(--card-border)", padding: 20 }}>
+            <p className="eyebrow" style={{ marginBottom: 8 }}>三层对比</p>
             <AccuracyChart report={scores} />
           </div>
-          <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4">
-            <h3 className="text-sm font-medium mb-2">核心发现</h3>
-            <p className="text-sm text-[var(--muted)] leading-relaxed">{scores.key_findings}</p>
+          <div>
+            <p className="eyebrow" style={{ marginBottom: 8 }}>核心发现</p>
+            <p className="pull-quote">{scores.key_findings}</p>
           </div>
         </div>
 
         {/* Round history — only show if we have 2+ rounds */}
         {roundHistory.length >= 2 && (
-          <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4 space-y-3">
-            <h3 className="text-sm font-medium">迭代趋势（{roundHistory.length} 轮）</h3>
+          <div style={{ border: "1px solid var(--card-border)", padding: 20 }}>
+            <p className="eyebrow" style={{ marginBottom: 12 }}>迭代趋势（{roundHistory.length} 轮）</p>
             <RoundHistoryChart history={roundHistory} />
           </div>
         )}
@@ -808,26 +810,26 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
           const hasErrors = Object.keys(errorCounts).length > 0;
           if (!hasErrors) return null;
           return (
-            <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4 space-y-3">
-              <h3 className="text-sm font-medium">错误类型分布</h3>
-              <div className="flex flex-wrap gap-3">
+            <div style={{ border: "1px solid var(--card-border)", padding: 20 }}>
+              <p className="eyebrow" style={{ marginBottom: 12 }}>错误类型分布</p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
                 {ERROR_TYPES.map((et) => {
                   const count = errorCounts[et] || 0;
                   if (count === 0) return null;
-                  const cls =
-                    et === "过度理想化" ? "bg-orange-500/20 text-orange-300" :
-                    et === "认知架构错误" ? "bg-red-500/20 text-red-300" :
-                    et === "情境缺失" ? "bg-blue-500/20 text-blue-300" :
-                    "bg-purple-500/20 text-purple-300";
+                  const tone =
+                    et === "过度理想化" ? "#a86c3a" :
+                    et === "认知架构错误" ? "#b85c4a" :
+                    et === "情境缺失" ? "#5e7a8a" :
+                    "#9a5a6e";
                   return (
-                    <div key={et} className={`px-3 py-2 rounded-lg ${cls} text-center`}>
-                      <p className="text-lg font-bold">{count}</p>
-                      <p className="text-xs">{et}</p>
+                    <div key={et} style={{ padding: "8px 12px", borderRadius: 8, border: `1px solid ${tone}66`, background: `${tone}1a`, textAlign: "center" }}>
+                      <p style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 400, margin: "0 0 2px", color: tone }}>{count}</p>
+                      <p style={{ fontSize: 11, margin: 0, color: tone }}>{et}</p>
                     </div>
                   );
                 })}
               </div>
-              <p className="text-xs text-[var(--muted)]">
+              <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 12 }}>
                 基于评分中 surprise 字段的错误标注（仅统计得分 &lt; 50% 的预测）
               </p>
             </div>
@@ -835,78 +837,86 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
         })()}
 
         {cognitiveModel && (
-          <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4 space-y-3">
-            <h3 className="text-sm font-medium">认知模型摘要</h3>
-            <p className="text-sm text-[var(--muted)] leading-relaxed">{cognitiveModel.summary}</p>
+          <div style={{ border: "1px solid var(--card-border)", padding: 20 }}>
+            <p className="eyebrow" style={{ marginBottom: 8 }}>认知模型摘要</p>
+            <p style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.65, margin: 0 }}>{cognitiveModel.summary}</p>
           </div>
         )}
 
-        <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4 space-y-3">
-          <h3 className="text-sm font-medium">逐题评分</h3>
-          {scores.pair_scores.map((ps) => (
-            <div key={`score_t${ps.tier}_${ps.id}`} className="border-b border-[var(--card-border)] pb-3 last:border-b-0 last:pb-0">
-              <div className="flex items-center gap-2 mb-1">
-                <TierBadge tier={ps.tier} />
-                <span className="text-sm font-medium">{ps.id}</span>
-                <ScoreBadge score={ps.score} />
+        <div style={{ border: "1px solid var(--card-border)", padding: 20 }}>
+          <p className="eyebrow" style={{ marginBottom: 16 }}>逐题评分</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {scores.pair_scores.map((ps) => (
+              <div key={`score_t${ps.tier}_${ps.id}`} style={{ borderBottom: "1px solid var(--card-border)", paddingBottom: 12 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                  <TierBadge tier={ps.tier} />
+                  <span style={{ fontSize: 14 }}>{ps.id}</span>
+                  <ScoreBadge score={ps.score} />
+                </div>
+                <p style={{ fontSize: 14, color: "var(--muted)", margin: 0, lineHeight: 1.6 }}>{ps.reasoning}</p>
+                {ps.surprise && <p style={{ fontSize: 12, color: "var(--warning)", marginTop: 4 }}>意外发现：{ps.surprise}</p>}
               </div>
-              <p className="text-sm text-[var(--muted)]">{ps.reasoning}</p>
-              {ps.surprise && <p className="text-xs text-yellow-400 mt-1">意外发现：{ps.surprise}</p>}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* Refinement section */}
         {!refinement && (
-          <div className="bg-[var(--card)] border border-[var(--accent)]/30 rounded-lg p-5 space-y-3">
-            <h3 className="text-sm font-medium">闭环修正</h3>
-            <p className="text-xs text-[var(--muted)]">
+          <div style={{ borderTop: "2px solid var(--accent)", paddingTop: 20 }}>
+            <p className="eyebrow" style={{ marginBottom: 8 }}>闭环修正</p>
+            <p style={{ fontSize: 13, color: "var(--muted)", margin: "0 0 16px", lineHeight: 1.6 }}>
               基于本轮预测错误，AI 会分析模型哪些维度需要修正，然后用修正后的模型生成新一轮预测题。
             </p>
             <button
               onClick={handleRefine}
               disabled={refining}
-              className="px-5 py-2 bg-[var(--accent)] text-white text-sm font-medium rounded-lg hover:opacity-90 disabled:opacity-40 transition-opacity"
+              style={{ fontSize: 13, fontWeight: 500, padding: "10px 24px", borderRadius: 9999, border: 0, cursor: "pointer", background: "var(--accent)", color: "#fff", opacity: refining ? 0.4 : 1, transition: "opacity 200ms" }}
             >
               {refining ? "正在分析错误并修正模型..." : "修正模型，进入下一轮"}
             </button>
-            {error && <p className="text-sm text-red-400">{error}</p>}
+            {error && <p style={{ fontSize: 13, color: "var(--error)", marginTop: 8 }}>{error}</p>}
           </div>
         )}
 
         {refinement && (
-          <div className="bg-[var(--card)] border border-green-500/30 rounded-lg p-5 space-y-4">
-            <h3 className="text-sm font-medium">模型修正建议</h3>
-            <p className="text-sm text-[var(--muted)] leading-relaxed">{refinement.refinement_summary}</p>
+          <div style={{ border: "1px solid var(--card-border)", padding: 20 }}>
+            <p className="eyebrow" style={{ marginBottom: 8 }}>模型修正建议</p>
+            <p style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.65, margin: "0 0 16px" }}>{refinement.refinement_summary}</p>
 
-            <div className="space-y-3">
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {refinement.corrections.map((c, i) => (
-                <div key={i} className="border border-[var(--card-border)] rounded-lg p-3 space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">{c.dimension}</span>
-                    <span className={`text-xs px-1.5 py-0.5 rounded ${
-                      c.error_type === "过度理想化" ? "bg-orange-500/20 text-orange-300" :
-                      c.error_type === "认知架构错误" ? "bg-red-500/20 text-red-300" :
-                      c.error_type === "情境缺失" ? "bg-blue-500/20 text-blue-300" :
-                      "bg-purple-500/20 text-purple-300"
-                    }`}>{c.error_type}</span>
+                <div key={i} style={{ borderBottom: "1px solid var(--card-border)", paddingBottom: 12 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ fontSize: 14 }}>{c.dimension}</span>
+                    {(() => {
+                      const tone =
+                        c.error_type === "过度理想化" ? "#a86c3a" :
+                        c.error_type === "认知架构错误" ? "#b85c4a" :
+                        c.error_type === "情境缺失" ? "#5e7a8a" :
+                        "#9a5a6e";
+                      return (
+                        <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 9999, border: `1px solid ${tone}66`, background: `${tone}1a`, color: tone }}>
+                          {c.error_type}
+                        </span>
+                      );
+                    })()}
                   </div>
-                  <p className="text-xs text-[var(--muted)]">证据：{c.evidence}</p>
-                  <p className="text-xs text-green-400">修正：{c.corrected}</p>
+                  <p style={{ fontSize: 12, color: "var(--muted)", margin: "4px 0 0" }}>证据：{c.evidence}</p>
+                  <p style={{ fontSize: 12, color: "var(--success)", margin: "4px 0 0" }}>修正：{c.corrected}</p>
                 </div>
               ))}
             </div>
 
-            <div className="flex gap-3">
+            <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
               <button
                 onClick={handleApplyRefinement}
-                className="px-5 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
+                style={{ fontSize: 13, fontWeight: 500, padding: "10px 24px", borderRadius: 9999, border: 0, cursor: "pointer", background: "var(--accent)", color: "#fff", transition: "opacity 200ms" }}
               >
                 应用修正，开始第 {testRound + 1} 轮
               </button>
               <button
                 onClick={() => setRefinement(null)}
-                className="px-4 py-2 text-sm text-[var(--muted)] hover:text-white transition-colors"
+                style={{ fontSize: 12, color: "var(--muted-soft)", background: "transparent", border: 0, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 4, fontFamily: "inherit" }}
               >
                 取消
               </button>
@@ -916,9 +926,9 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
 
         {/* Deep conversation refinement */}
         {onRequestRefine && cognitiveModel && (
-          <div className="bg-[var(--card)] border border-orange-500/20 rounded-lg p-5 space-y-3">
-            <h3 className="text-sm font-medium">对话修正</h3>
-            <p className="text-xs text-[var(--muted)]">
+          <div style={{ borderTop: "1px solid var(--card-border)", paddingTop: 20 }}>
+            <p className="eyebrow" style={{ marginBottom: 8 }}>对话修正</p>
+            <p style={{ fontSize: 13, color: "var(--muted)", margin: "0 0 16px", lineHeight: 1.6 }}>
               通过深度对话修正不准的维度。AI 会针对预测错误最多的维度展开自然对话，获取更多行为证据来修正模型。
             </p>
             <button
@@ -968,7 +978,7 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
                   focusDimensions: uniqueDims,
                 });
               }}
-              className="px-5 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
+              style={{ fontSize: 13, padding: "9px 19px", borderRadius: 9999, border: "1px solid var(--card-border)", cursor: "pointer", background: "transparent", color: "var(--muted)", transition: "all 200ms" }}
             >
               开始对话修正（针对弱维度深聊）
             </button>
@@ -981,10 +991,16 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
   /* ── RENDER: Step 3 — Scoring ── */
   if (step === "scoring") {
     return (
-      <div className="max-w-md mx-auto text-center py-20 space-y-4">
-        <div className="w-10 h-10 mx-auto border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
-        <p className="text-sm text-[var(--muted)]">正在对比 AI 预测与你的实际回答...</p>
-        <p className="text-xs text-[var(--muted)]">大约需要 30 秒</p>
+      <div className="flex flex-col items-center justify-center" style={{ minHeight: "60vh" }}>
+        <div className="text-center">
+          <div style={{ width: 32, height: 32, margin: "0 auto 20px", border: "1.5px solid var(--accent)", borderTopColor: "transparent", borderRadius: 9999 }} className="animate-spin" />
+          <p style={{ fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 400, fontStyle: "italic", margin: "0 0 8px" }}>
+            正在评分
+          </p>
+          <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--muted-soft)", margin: 0 }}>
+            对比 AI 预测与你的实际回答
+          </p>
+        </div>
       </div>
     );
   }
@@ -992,10 +1008,16 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
   /* ── RENDER: Step 1 — Building ── */
   if (step === "building") {
     return (
-      <div className="max-w-md mx-auto text-center py-20 space-y-4">
-        <div className="w-10 h-10 mx-auto border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
-        <p className="text-sm text-[var(--muted)]">{buildProgress}</p>
-        <p className="text-xs text-[var(--muted)]">需要 30-60 秒（建模 + 生成预测题）</p>
+      <div className="flex flex-col items-center justify-center" style={{ minHeight: "60vh" }}>
+        <div className="text-center">
+          <div style={{ width: 32, height: 32, margin: "0 auto 20px", border: "1.5px solid var(--accent)", borderTopColor: "transparent", borderRadius: 9999 }} className="animate-spin" />
+          <p style={{ fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 400, fontStyle: "italic", margin: "0 0 8px" }}>
+            {buildProgress}
+          </p>
+          <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--muted-soft)", margin: 0 }}>
+            建模 + 生成预测题
+          </p>
+        </div>
       </div>
     );
   }
@@ -1008,13 +1030,13 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
         <div className="text-center space-y-2 pt-2">
           <button
             onClick={() => setStep("input")}
-            className="text-xs text-[var(--muted)] hover:text-[var(--foreground)] transition-colors mb-2"
+            style={{ fontSize: 12, color: "var(--muted-soft)", background: "transparent", border: 0, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 4, fontFamily: "inherit", marginBottom: 8 }}
           >
-            ← 返回
+            返回
           </button>
-          <h2 className="text-xl font-bold">AI 能预测你的行为吗？</h2>
-          <p className="text-sm text-[var(--muted)]">
-            共 {totalQ} 题（偏好+推理），凭直觉回答。盲区部分自动评估，无需作答。
+          <h2 style={{ fontFamily: "var(--font-display)", fontSize: 24, fontWeight: 400, margin: 0 }}>AI 能预测你的行为吗？</h2>
+          <p style={{ fontFamily: "var(--font-display)", fontSize: 13, fontStyle: "italic", color: "var(--muted)", margin: 0 }}>
+            共 {totalQ} 题，凭直觉回答。盲区部分自动评估。
           </p>
           <div className="flex items-center justify-center gap-3 pt-1">
             <div className="w-48 h-1.5 bg-[var(--card-border)] rounded-full overflow-hidden">
@@ -1033,26 +1055,50 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
           <QCard key={`t1_${q.id}`} num={i + 1}>
             <ContextTags context={q.context} />
             <p className="text-sm mb-4">{q.scenario}</p>
-            <div className="space-y-2">
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {q.options.map((opt, oi) => {
                 const sel = t1Answers[q.id] === opt;
+                const letter = String.fromCharCode(65 + oi);
                 return (
                   <label
                     key={oi}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-all border ${
-                      sel
-                        ? "border-blue-500 bg-blue-500/10"
-                        : "border-[var(--card-border)] hover:border-blue-500/40"
-                    }`}
+                    onClick={() => setT1Answers({ ...t1Answers, [q.id]: opt })}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 12,
+                      padding: "10px 16px",
+                      borderRadius: 12,
+                      border: sel ? "1px solid var(--accent)" : "1px solid var(--card-border)",
+                      background: sel ? "var(--accent-soft)" : "transparent",
+                      cursor: "pointer",
+                      transition: "all 150ms",
+                    }}
                   >
-                    <input
-                      type="radio"
-                      name={`t1_${q.id}`}
-                      checked={sel}
-                      onChange={() => setT1Answers({ ...t1Answers, [q.id]: opt })}
-                      className="accent-blue-500"
-                    />
-                    <span className="text-sm">{opt}</span>
+                    <span style={{
+                      width: 24,
+                      height: 24,
+                      borderRadius: 9999,
+                      border: sel ? "1px solid var(--accent)" : "1px solid var(--card-border)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 12,
+                      color: sel ? "var(--accent)" : "var(--muted-soft)",
+                      flexShrink: 0,
+                    }}>
+                      {letter}
+                    </span>
+                    <span style={{
+                      fontFamily: sel ? "var(--font-display)" : "inherit",
+                      fontSize: sel ? 15 : 14,
+                      fontStyle: sel ? "italic" : "normal",
+                      color: sel ? "var(--accent)" : "var(--foreground)",
+                    }}>
+                      {opt}
+                    </span>
+                    <input type="radio" name={`t1_${q.id}`} checked={sel} onChange={() => {}} className="sr-only" />
                   </label>
                 );
               })}
@@ -1066,23 +1112,52 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
           <QCard key={`t2_${q.id}`} num={predictions.tier_1.length + i + 1}>
             <ContextTags context={q.context} />
             <p className="text-sm mb-3">{q.scenario}</p>
-            <div className="space-y-1.5">
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {(q.options || []).map((opt, oi) => {
                 const sel = t2Answers[q.id] === opt;
+                const letter = String.fromCharCode(65 + oi);
                 return (
                   <label
                     key={oi}
-                    className={`flex items-start gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all ${
-                      sel ? "bg-orange-500/10 ring-1 ring-orange-500/40" : "hover:bg-white/5"
-                    }`}
+                    onClick={() => setT2Answers({ ...t2Answers, [q.id]: opt })}
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: 12,
+                      padding: "10px 16px",
+                      borderRadius: 12,
+                      border: sel ? "1px solid var(--accent)" : "1px solid var(--card-border)",
+                      background: sel ? "var(--accent-soft)" : "transparent",
+                      cursor: "pointer",
+                      transition: "all 150ms",
+                    }}
                   >
-                    <span className={`mt-0.5 w-4 h-4 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-colors ${
-                      sel ? "border-orange-400 bg-orange-400" : "border-[var(--muted)]"
-                    }`}>
-                      {sel && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
+                    <span style={{
+                      width: 24,
+                      height: 24,
+                      borderRadius: 9999,
+                      border: sel ? "1px solid var(--accent)" : "1px solid var(--card-border)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 12,
+                      color: sel ? "var(--accent)" : "var(--muted-soft)",
+                      flexShrink: 0,
+                      marginTop: 1,
+                    }}>
+                      {letter}
                     </span>
-                    <span className="text-sm leading-relaxed">{opt}</span>
-                    <input type="radio" name={q.id} checked={sel} onChange={() => setT2Answers({ ...t2Answers, [q.id]: opt })} className="sr-only" />
+                    <span style={{
+                      fontFamily: sel ? "var(--font-display)" : "inherit",
+                      fontSize: sel ? 15 : 14,
+                      fontStyle: sel ? "italic" : "normal",
+                      color: sel ? "var(--accent)" : "var(--foreground)",
+                      lineHeight: 1.6,
+                    }}>
+                      {opt}
+                    </span>
+                    <input type="radio" name={q.id} checked={sel} onChange={() => {}} className="sr-only" />
                   </label>
                 );
               })}
@@ -1094,29 +1169,29 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
         {(() => {
           const conflicts = getConflicts();
           return (
-            <div className="bg-[var(--card)] border border-purple-500/20 rounded-lg p-5 mt-6 space-y-3">
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-bold px-2.5 py-1 rounded bg-purple-500/20 text-purple-300">第3层</span>
+            <div style={{ borderTop: "2px solid #9a5a6e", paddingTop: 20, marginTop: 24 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 9999, border: "1px solid #9a5a6e66", background: "#9a5a6e1a", color: "#9a5a6e" }}>第3层</span>
                 <div>
-                  <span className="text-sm font-medium">认知盲区</span>
-                  <span className="text-xs text-[var(--muted)] ml-2">自动评估（无需作答）</span>
+                  <span style={{ fontSize: 14 }}>认知盲区</span>
+                  <span style={{ fontSize: 12, color: "var(--muted)", marginLeft: 8 }}>自动评估（无需作答）</span>
                 </div>
               </div>
-              <p className="text-sm text-[var(--muted)]">
+              <p style={{ fontSize: 14, color: "var(--muted)", margin: "0 0 12px", lineHeight: 1.65 }}>
                 盲区是你看不见的东西，自评没有意义。T3 会用认知访谈中检测到的「述行矛盾」自动比对模型预测的盲区。
               </p>
               {conflicts.length > 0 ? (
-                <p className="text-sm text-green-400">
+                <p style={{ fontSize: 14, color: "var(--success)", margin: "0 0 12px" }}>
                   已检测到 {conflicts.length} 条矛盾数据，提交后将自动评估 {predictions.tier_3.length} 个盲区预测。
                 </p>
               ) : (
-                <p className="text-sm text-yellow-400">
+                <p style={{ fontSize: 14, color: "var(--warning)", margin: "0 0 12px" }}>
                   未检测到矛盾数据。建议先完成「认知访谈」积累行为证据，T3 评分会更准确。当前将以模型推理的合理性评分。
                 </p>
               )}
-              <div className="text-xs text-[var(--muted)] space-y-1">
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                 {predictions.tier_3.map((q) => (
-                  <p key={`t3_${q.id}`} className="pl-3 border-l-2 border-purple-500/30">
+                  <p key={`t3_${q.id}`} style={{ fontSize: 12, color: "var(--muted)", margin: 0, paddingLeft: 12, borderLeft: "2px solid #9a5a6e4d" }}>
                     {q.predicted_blind_spot || q.statement}
                   </p>
                 ))}
@@ -1126,18 +1201,18 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
         })()}
 
         {/* Submit */}
-        <div className="flex flex-col items-center gap-3 pt-4 pb-8">
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, paddingTop: 16, paddingBottom: 32 }}>
           <button
             onClick={handleSubmit}
             disabled={answered < totalQ}
-            className="px-8 py-3 bg-[var(--accent)] text-white font-medium rounded-lg hover:opacity-90 disabled:opacity-40 transition-opacity"
+            style={{ fontSize: 14, fontWeight: 500, padding: "12px 32px", borderRadius: 9999, border: 0, cursor: "pointer", background: "var(--accent)", color: "#fff", opacity: answered < totalQ ? 0.4 : 1, transition: "opacity 200ms" }}
           >
             提交问卷
           </button>
           {answered < totalQ && (
-            <p className="text-xs text-[var(--muted)]">还有 {totalQ - answered} 题未作答</p>
+            <p style={{ fontSize: 12, color: "var(--muted)" }}>还有 {totalQ - answered} 题未作答</p>
           )}
-          {error && <p className="text-sm text-red-400">{error}</p>}
+          {error && <p style={{ fontSize: 13, color: "var(--error)" }}>{error}</p>}
         </div>
       </div>
     );
@@ -1146,27 +1221,27 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
   /* ── RENDER: Step 0 — Input ── */
   return (
     <div ref={topRef} className="max-w-2xl mx-auto space-y-6 pt-4">
-      <div className="text-center space-y-2">
-        <h2 className="text-xl font-bold">AI 能预测你的行为吗？</h2>
-        <p className="text-sm text-[var(--muted)]">
-          粘贴你与 AI 的对话记录或个人认知画像，系统会构建认知模型并生成个性化预测题。
+      <div className="text-center" style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <h2 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 400, margin: 0 }}>AI 能预测你的行为吗？</h2>
+        <p style={{ fontFamily: "var(--font-display)", fontSize: 14, fontStyle: "italic", color: "var(--muted)", margin: 0 }}>
+          粘贴对话记录或认知画像，系统会构建认知模型并生成个性化预测题
         </p>
       </div>
 
       {/* Quick actions when saved state exists */}
       {(hasSavedPredictions || hasSavedModel) && (
-        <div className="bg-[var(--card)] border border-[var(--accent)]/30 rounded-lg p-5 space-y-3">
-          <h3 className="text-sm font-medium">检测到已有数据</h3>
+        <div style={{ border: "1px solid var(--card-border)", padding: 20 }}>
+          <p className="eyebrow" style={{ marginBottom: 8 }}>检测到已有数据</p>
           {cognitiveModel && (
-            <p className="text-xs text-[var(--muted)]">
+            <p style={{ fontSize: 12, color: "var(--muted)", margin: "0 0 12px" }}>
               模型：{cognitiveModel.dimensions.length} 个维度 · {cognitiveModel.summary.slice(0, 60)}...
             </p>
           )}
-          <div className="flex flex-wrap gap-3">
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
             {hasSavedPredictions && hasSavedAnswers && (
               <button
                 onClick={handleResume}
-                className="px-4 py-2 bg-[var(--accent)] text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
+                style={{ fontSize: 13, fontWeight: 500, padding: "9px 20px", borderRadius: 9999, border: 0, cursor: "pointer", background: "var(--accent)", color: "#fff", transition: "opacity 200ms" }}
               >
                 继续上次的问卷
               </button>
@@ -1174,7 +1249,7 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
             {hasSavedPredictions && !hasSavedAnswers && (
               <button
                 onClick={handleResume}
-                className="px-4 py-2 bg-[var(--accent)] text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
+                style={{ fontSize: 13, fontWeight: 500, padding: "9px 20px", borderRadius: 9999, border: 0, cursor: "pointer", background: "var(--accent)", color: "#fff", transition: "opacity 200ms" }}
               >
                 开始答题
               </button>
@@ -1182,14 +1257,14 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
             {hasSavedModel && (
               <button
                 onClick={handleRegenerate}
-                className="px-4 py-2 bg-[var(--card)] border border-[var(--card-border)] text-sm font-medium rounded-lg hover:bg-white/5 transition-colors"
+                style={{ fontSize: 13, padding: "9px 19px", borderRadius: 9999, border: "1px solid var(--card-border)", cursor: "pointer", background: "transparent", color: "var(--muted)", transition: "all 200ms" }}
               >
                 已有模型，重新出题
               </button>
             )}
             <button
               onClick={handleReset}
-              className="px-4 py-2 text-sm text-[var(--muted)] hover:text-white transition-colors"
+              style={{ fontSize: 12, color: "var(--muted-soft)", background: "transparent", border: 0, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 4, fontFamily: "inherit" }}
             >
               重新开始
             </button>
@@ -1197,18 +1272,18 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
         </div>
       )}
 
-      <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-5 space-y-4">
+      <div style={{ border: "1px solid var(--card-border)", padding: 20 }}>
         {/* Mode tabs */}
-        <div className="flex gap-1 bg-[var(--background)] rounded-lg p-1">
+        <div style={{ display: "flex", gap: 0, borderBottom: "1px solid var(--card-border)", marginBottom: 20 }}>
           <button
             onClick={() => setInputMode("text")}
-            className={`flex-1 text-sm py-1.5 rounded-md transition-colors ${inputMode === "text" ? "bg-[var(--card)] font-medium" : "text-[var(--muted)] hover:text-white"}`}
+            style={{ flex: 1, fontSize: 13, padding: "8px 0", background: "transparent", border: "none", borderBottom: inputMode === "text" ? "2px solid var(--accent)" : "2px solid transparent", cursor: "pointer", color: inputMode === "text" ? "var(--foreground)" : "var(--muted)", transition: "all 150ms" }}
           >
             粘贴对话文本
           </button>
           <button
             onClick={() => setInputMode("model")}
-            className={`flex-1 text-sm py-1.5 rounded-md transition-colors ${inputMode === "model" ? "bg-[var(--card)] font-medium" : "text-[var(--muted)] hover:text-white"}`}
+            style={{ flex: 1, fontSize: 13, padding: "8px 0", background: "transparent", border: "none", borderBottom: inputMode === "model" ? "2px solid var(--accent)" : "2px solid transparent", cursor: "pointer", color: inputMode === "model" ? "var(--foreground)" : "var(--muted)", transition: "all 150ms" }}
           >
             导入认知模型
           </button>
@@ -1216,22 +1291,24 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
 
         {inputMode === "text" ? (
           <>
-            <textarea
-              value={profileText}
-              onChange={(e) => setProfileText(e.target.value)}
-              placeholder={"粘贴你与 AI 的对话记录、认知画像文本、或任何能反映你思维方式的文本...\n\n越丰富的文本 → 越精准的认知模型 → 越有区分度的预测题。\n\n建议至少 500 字。"}
-              rows={12}
-              className="w-full bg-[var(--background)] border border-[var(--card-border)] rounded-lg p-4 text-sm resize-y focus:outline-none focus:border-[var(--accent)] transition-colors leading-relaxed"
-            />
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-[var(--muted)]">
+            <div style={{ borderLeft: "2px solid var(--accent)", paddingLeft: 20, marginBottom: 16 }}>
+              <textarea
+                value={profileText}
+                onChange={(e) => setProfileText(e.target.value)}
+                placeholder={"粘贴你与 AI 的对话记录、认知画像文本、或任何能反映你思维方式的文本...\n\n越丰富的文本 → 越精准的认知模型 → 越有区分度的预测题。\n\n建议至少 500 字。"}
+                rows={12}
+                style={{ width: "100%", background: "transparent", border: "none", padding: 0, fontSize: 14, color: "var(--foreground)", fontFamily: "inherit", lineHeight: 1.75, outline: "none", resize: "vertical", boxSizing: "border-box" }}
+              />
+            </div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <span style={{ fontSize: 12, color: "var(--muted)" }}>
                 {profileText.trim().length} 字
                 {profileText.trim().length > 0 && profileText.trim().length < 50 && " (至少需要 50 字)"}
               </span>
               <button
                 onClick={handleBuild}
                 disabled={profileText.trim().length < 50}
-                className="px-6 py-2.5 bg-[var(--accent)] text-white font-medium rounded-lg hover:opacity-90 disabled:opacity-40 transition-opacity"
+                style={{ fontSize: 13, fontWeight: 500, padding: "10px 24px", borderRadius: 9999, border: 0, cursor: "pointer", background: "var(--accent)", color: "#fff", opacity: profileText.trim().length < 50 ? 0.4 : 1, transition: "opacity 200ms" }}
               >
                 开始建模
               </button>
@@ -1239,11 +1316,11 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
           </>
         ) : (
           <>
-            <p className="text-xs text-[var(--muted)]">
+            <p style={{ fontSize: 12, color: "var(--muted)", margin: "0 0 12px" }}>
               上传 cognitive_model JSON 文件，跳过建模直接生成预测题。
             </p>
             <div
-              className="border-2 border-dashed border-[var(--card-border)] rounded-lg p-8 text-center hover:border-[var(--accent)]/50 transition-colors cursor-pointer"
+              style={{ border: "2px dashed var(--card-border)", padding: 32, textAlign: "center", cursor: "pointer", transition: "border-color 150ms" }}
               onClick={() => fileInputRef.current?.click()}
               onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
               onDrop={(e) => {
@@ -1257,35 +1334,30 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
                 ref={fileInputRef}
                 type="file"
                 accept=".json"
-                className="hidden"
+                style={{ display: "none" }}
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) handleFileSelect(file);
                 }}
               />
               {modelJson ? (
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-green-400">已加载模型</p>
-                  <p className="text-xs text-[var(--muted)]">{modelFileName}</p>
-                  <p className="text-xs text-[var(--muted)]">点击重新选择文件</p>
+                <div>
+                  <p style={{ fontSize: 14, color: "var(--success)", margin: "0 0 4px" }}>已加载模型</p>
+                  <p style={{ fontSize: 12, color: "var(--muted)", margin: "0 0 4px" }}>{modelFileName}</p>
+                  <p style={{ fontSize: 12, color: "var(--muted)", margin: 0 }}>点击重新选择文件</p>
                 </div>
               ) : (
-                <div className="space-y-2">
-                  <div className="w-10 h-10 mx-auto rounded-full bg-[var(--accent)]/10 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                    </svg>
-                  </div>
-                  <p className="text-sm">点击选择文件或拖拽到这里</p>
-                  <p className="text-xs text-[var(--muted)]">支持 .json 格式</p>
+                <div>
+                  <p style={{ fontSize: 14, margin: "0 0 4px" }}>点击选择文件或拖拽到这里</p>
+                  <p style={{ fontSize: 12, color: "var(--muted)", margin: 0 }}>支持 .json 格式</p>
                 </div>
               )}
             </div>
-            <div className="flex justify-end">
+            <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
               <button
                 onClick={handleImportModel}
                 disabled={!modelJson.trim()}
-                className="px-6 py-2.5 bg-[var(--accent)] text-white font-medium rounded-lg hover:opacity-90 disabled:opacity-40 transition-opacity"
+                style={{ fontSize: 13, fontWeight: 500, padding: "10px 24px", borderRadius: 9999, border: 0, cursor: "pointer", background: "var(--accent)", color: "#fff", opacity: !modelJson.trim() ? 0.4 : 1, transition: "opacity 200ms" }}
               >
                 导入并出题
               </button>
@@ -1295,26 +1367,22 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
       </div>
 
       {error && (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
-          <p className="text-sm text-red-400">{error}</p>
-        </div>
+        <p style={{ fontSize: 13, color: "var(--error)" }}>{error}</p>
       )}
 
-      <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-5 space-y-3">
-        <h3 className="text-sm font-medium">流程说明</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+      <div style={{ borderTop: "1px solid var(--card-border)", paddingTop: 20 }}>
+        <p className="eyebrow" style={{ marginBottom: 12 }}>流程说明</p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
           {[
             { step: "1", label: "粘贴文本", desc: "对话记录或画像" },
             { step: "2", label: "AI 建模", desc: "~30-60 秒" },
             { step: "3", label: "回答问卷", desc: "14 题，凭直觉" },
             { step: "4", label: "查看报告", desc: "准确率 + 分析" },
           ].map((s) => (
-            <div key={s.step} className="text-center space-y-1">
-              <div className="w-8 h-8 mx-auto rounded-full bg-[var(--accent)]/20 flex items-center justify-center text-sm font-bold text-[var(--accent)]">
-                {s.step}
-              </div>
-              <p className="text-sm font-medium">{s.label}</p>
-              <p className="text-xs text-[var(--muted)]">{s.desc}</p>
+            <div key={s.step} style={{ textAlign: "center" }}>
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--accent)", marginBottom: 4 }}>{s.step}</div>
+              <p style={{ fontSize: 13, margin: "0 0 2px" }}>{s.label}</p>
+              <p style={{ fontSize: 11, color: "var(--muted)", margin: 0 }}>{s.desc}</p>
             </div>
           ))}
         </div>
@@ -1325,19 +1393,15 @@ export default function Predictor({ onRequestRefine, predictModel, onPredictMode
 
 /* ── Sub-components ── */
 
-function Section({ tier, title, desc, color }: { tier: number; title: string; desc: string; color: string }) {
-  const cls: Record<string, string> = {
-    blue: "bg-blue-500/20 text-blue-300",
-    orange: "bg-orange-500/20 text-orange-300",
-    purple: "bg-purple-500/20 text-purple-300",
-  };
+function Section({ tier, title, desc }: { tier: number; title: string; desc: string; color: string }) {
   return (
-    <div className="flex items-center gap-3 pt-4">
-      <span className={`text-xs font-bold px-2.5 py-1 rounded ${cls[color]}`}>第{tier}层</span>
-      <div>
-        <span className="text-sm font-medium">{title}</span>
-        <span className="text-xs text-[var(--muted)] ml-2">{desc}</span>
-      </div>
+    <div style={{ paddingTop: 16, borderTop: "1px solid var(--card-border)" }}>
+      <p className="eyebrow" style={{ marginBottom: 4 }}>
+        第{tier}层 · {title}
+      </p>
+      <p style={{ fontFamily: "var(--font-display)", fontSize: 13, fontStyle: "italic", color: "var(--muted-soft)", margin: 0 }}>
+        {desc}
+      </p>
     </div>
   );
 }
@@ -1348,21 +1412,14 @@ const CTX_LABELS: Record<string, Record<string, string>> = {
   caring_level: { low: "低关心度", medium: "中关心度", high: "高关心度" },
   energy_state: { rested: "精力充沛", normal: "正常状态", depleted: "疲惫" },
 };
-const CTX_COLORS: Record<string, string> = {
-  time_pressure: "bg-red-500/10 text-red-300",
-  social_pressure: "bg-yellow-500/10 text-yellow-300",
-  caring_level: "bg-green-500/10 text-green-300",
-  energy_state: "bg-cyan-500/10 text-cyan-300",
-};
-
 function ContextTags({ context }: { context?: SituationContext }) {
   if (!context) return null;
   const tags = Object.entries(context).filter(([, v]) => v && v !== "none" && v !== "normal");
   if (tags.length === 0) return null;
   return (
-    <div className="flex flex-wrap gap-1.5 mb-2">
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 8 }}>
       {tags.map(([key, val]) => (
-        <span key={key} className={`text-[10px] px-1.5 py-0.5 rounded ${CTX_COLORS[key] || "bg-white/10 text-white/60"}`}>
+        <span key={key} style={{ fontSize: 10, padding: "2px 8px", borderRadius: 9999, border: "1px solid var(--card-border)", color: "var(--muted-soft)" }}>
           {CTX_LABELS[key]?.[val] || val}
         </span>
       ))}
@@ -1372,31 +1429,43 @@ function ContextTags({ context }: { context?: SituationContext }) {
 
 function QCard({ num, children }: { num: number; children: React.ReactNode }) {
   return (
-    <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-5">
-      <span className="text-xs text-[var(--muted)] mb-2 block">Q{num}</span>
+    <div style={{ borderBottom: "1px solid var(--card-border)", padding: "20px 0" }}>
+      <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.05em", color: "var(--muted-soft)", display: "block", marginBottom: 8 }}>
+        Q{num}
+      </span>
       {children}
     </div>
   );
 }
 
 function TierBadge({ tier }: { tier: number }) {
-  const cls = tier === 1 ? "bg-blue-500/20 text-blue-300" : tier === 2 ? "bg-orange-500/20 text-orange-300" : "bg-purple-500/20 text-purple-300";
-  return <span className={`text-xs px-1.5 py-0.5 rounded ${cls}`}>{TIER_LABELS[tier]}</span>;
+  const tone = tier === 1 ? "#5e7a8a" : tier === 2 ? "#a86c3a" : "#9a5a6e";
+  return (
+    <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 9999, border: `1px solid ${tone}66`, background: `${tone}1a`, color: tone }}>
+      {TIER_LABELS[tier]}
+    </span>
+  );
 }
 
-function ScoreCard({ label, value, color }: { label: string; value: number; color: string }) {
+function ScoreCard({ label, value }: { label: string; value: number; color: string }) {
   return (
-    <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4 text-center">
-      <p className={`text-3xl font-bold ${color}`}>{(value * 100).toFixed(0)}%</p>
-      <p className="text-sm text-[var(--muted)] mt-1">{label}</p>
+    <div style={{ border: "1px solid var(--card-border)", padding: "16px 20px", textAlign: "center" }}>
+      <p style={{ fontFamily: "var(--font-display)", fontSize: 24, fontWeight: 400, margin: "0 0 4px" }}>
+        {(value * 100).toFixed(0)}%
+      </p>
+      <p style={{ fontSize: 12, color: "var(--muted)", margin: 0 }}>{label}</p>
     </div>
   );
 }
 
 function ScoreBadge({ score }: { score: number }) {
   const pct = Math.round(score * 100);
-  const cls = pct >= 80 ? "bg-green-500/20 text-green-300" : pct >= 50 ? "bg-yellow-500/20 text-yellow-300" : "bg-red-500/20 text-red-300";
-  return <span className={`text-xs px-1.5 py-0.5 rounded ${cls}`}>{pct}%</span>;
+  const tone = pct >= 80 ? "#4f7a4d" : pct >= 50 ? "#b07a2e" : "#a8453a";
+  return (
+    <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 9999, border: `1px solid ${tone}66`, background: `${tone}1a`, color: tone }}>
+      {pct}%
+    </span>
+  );
 }
 
 function GradientBar({ report }: { report: ScoreReport }) {
@@ -1404,22 +1473,22 @@ function GradientBar({ report }: { report: ScoreReport }) {
   const t2 = Math.round(report.tier_2_accuracy * 100);
   const t3 = Math.round(report.tier_3_accuracy * 100);
   const bars = [
-    { label: "偏好", pct: t1, color: "bg-blue-500", text: "text-blue-300" },
-    { label: "推理", pct: t2, color: "bg-orange-500", text: "text-orange-300" },
-    { label: "盲区", pct: t3, color: "bg-purple-500", text: "text-purple-300" },
+    { label: "偏好", pct: t1, tone: "#5e7a8a" },
+    { label: "推理", pct: t2, tone: "#a86c3a" },
+    { label: "盲区", pct: t3, tone: "#9a5a6e" },
   ];
   return (
-    <div className="space-y-3">
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       {bars.map((b) => (
-        <div key={b.label} className="flex items-center gap-3">
-          <span className={`text-xs w-10 ${b.text}`}>{b.label}</span>
-          <div className="flex-1 h-4 bg-[var(--background)] rounded-full overflow-hidden">
-            <div className={`h-full ${b.color} rounded-full transition-all duration-500`} style={{ width: `${b.pct}%` }} />
+        <div key={b.label} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <span style={{ fontSize: 12, width: 40, color: b.tone }}>{b.label}</span>
+          <div style={{ flex: 1, height: 4, background: "var(--card-border)", borderRadius: 9999, overflow: "hidden" }}>
+            <div style={{ height: "100%", width: `${b.pct}%`, background: b.tone, borderRadius: 9999, transition: "width 500ms" }} />
           </div>
-          <span className="text-sm font-medium w-12 text-right">{b.pct}%</span>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, width: 48, textAlign: "right" }}>{b.pct}%</span>
         </div>
       ))}
-      <p className="text-xs text-[var(--muted)] pt-1">
+      <p style={{ fontSize: 12, color: "var(--muted)", margin: 0 }}>
         梯度 {t1}% → {t3}% = {t1 - t3}pp —{" "}
         {t1 - t3 > 30 ? "AI 对深层认知理解显著弱于表面偏好" : t1 - t3 > 15 ? "存在明显的深浅理解差异" : "三层准确率相近，模型一致性较高"}
       </p>
@@ -1436,28 +1505,28 @@ function RoundHistoryChart({ history }: { history: RoundRecord[] }) {
     tooltip: { trigger: "axis" as const },
     legend: {
       data: ["综合", "偏好", "推理", "盲区"],
-      textStyle: { color: "#999", fontSize: 11 },
+      textStyle: { color: "#6b5f50", fontSize: 11 },
       bottom: 0,
     },
     grid: { top: 10, right: 20, bottom: 35, left: 40 },
     xAxis: {
       type: "category" as const,
       data: rounds,
-      axisLabel: { color: "#999", fontSize: 11 },
-      axisLine: { lineStyle: { color: "#333" } },
+      axisLabel: { color: "#948774", fontSize: 11 },
+      axisLine: { lineStyle: { color: "#e4dccb" } },
     },
     yAxis: {
       type: "value" as const,
       min: 0,
       max: 1,
-      axisLabel: { color: "#999", fontSize: 11, formatter: (v: number) => `${Math.round(v * 100)}%` },
-      splitLine: { lineStyle: { color: "#222" } },
+      axisLabel: { color: "#948774", fontSize: 11, formatter: (v: number) => `${Math.round(v * 100)}%` },
+      splitLine: { lineStyle: { color: "#e4dccb" } },
     },
     series: [
-      { name: "综合", type: "line" as const, data: sorted.map((r) => r.overall_accuracy), lineStyle: { width: 2, color: "#fff" }, itemStyle: { color: "#fff" } },
-      { name: "偏好", type: "line" as const, data: sorted.map((r) => r.tier_1_accuracy), lineStyle: { width: 1, color: "#3b82f6" }, itemStyle: { color: "#3b82f6" } },
-      { name: "推理", type: "line" as const, data: sorted.map((r) => r.tier_2_accuracy), lineStyle: { width: 1, color: "#f97316" }, itemStyle: { color: "#f97316" } },
-      { name: "盲区", type: "line" as const, data: sorted.map((r) => r.tier_3_accuracy), lineStyle: { width: 1, color: "#a855f7" }, itemStyle: { color: "#a855f7" } },
+      { name: "综合", type: "line" as const, data: sorted.map((r) => r.overall_accuracy), lineStyle: { width: 2, color: "#8a4a2a" }, itemStyle: { color: "#8a4a2a" } },
+      { name: "偏好", type: "line" as const, data: sorted.map((r) => r.tier_1_accuracy), lineStyle: { width: 1, color: "#5e7a8a" }, itemStyle: { color: "#5e7a8a" } },
+      { name: "推理", type: "line" as const, data: sorted.map((r) => r.tier_2_accuracy), lineStyle: { width: 1, color: "#a86c3a" }, itemStyle: { color: "#a86c3a" } },
+      { name: "盲区", type: "line" as const, data: sorted.map((r) => r.tier_3_accuracy), lineStyle: { width: 1, color: "#9a5a6e" }, itemStyle: { color: "#9a5a6e" } },
     ],
   };
   return <ReactEChartsSSR option={option} style={{ height: 220 }} />;
@@ -1472,18 +1541,18 @@ function AccuracyChart({ report }: { report: ScoreReport }) {
         { name: "推理", max: 1 },
         { name: "盲区", max: 1 },
       ],
-      axisName: { color: "#e5e5e5", fontSize: 13 },
+      axisName: { color: "#6b5f50", fontSize: 13, fontFamily: "var(--font-display)", fontStyle: "italic" },
       splitArea: { areaStyle: { color: ["transparent"] } },
-      splitLine: { lineStyle: { color: "#333" } },
-      axisLine: { lineStyle: { color: "#333" } },
+      splitLine: { lineStyle: { color: "#e4dccb" } },
+      axisLine: { lineStyle: { color: "#e4dccb" } },
     },
     series: [{
       type: "radar",
       data: [{
         value: [report.tier_1_accuracy, report.tier_2_accuracy, report.tier_3_accuracy],
-        areaStyle: { color: "rgba(59,130,246,0.15)" },
-        lineStyle: { color: "#3b82f6", width: 2 },
-        itemStyle: { color: "#3b82f6" },
+        areaStyle: { color: "rgba(138,74,42,0.1)" },
+        lineStyle: { color: "#8a4a2a", width: 2 },
+        itemStyle: { color: "#8a4a2a" },
       }],
     }],
   };

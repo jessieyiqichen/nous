@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Nous · Components · Stat Card</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:#171717; color:#e8e4df;
+    font-family: "Geist", "PingFang SC", sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { padding: 18px 26px; display:grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .card { background:#1e1e1e; border:1px solid #2a2a2a; border-radius: 8px; padding: 14px 16px; }
+  .num { font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 6px; }
+  .lbl { font-size: 12px; color:#8a8580; }
+  .sub { font-size: 11px; color:#6b6762; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card"><div class="num">30</div><div class="lbl">分析对话数</div></div>
+  <div class="card"><div class="num">134</div><div class="lbl">偏差实例总数</div><div class="sub">平均每段 4.5 个</div></div>
+  <div class="card"><div class="num">63%</div><div class="lbl">含偏差的对话</div><div class="sub">19 / 30</div></div>
+  <div class="card"><div class="num">17</div><div class="lbl">单段最多偏差</div><div class="sub">个偏差实例</div></div>
+</div>
+</body>
+</html>

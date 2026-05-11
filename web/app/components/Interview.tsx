@@ -565,7 +565,7 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
         <div className="text-center" style={{ maxWidth: 480 }}>
           {isRefineMode && focusDims.length > 0 ? (
             <>
-              <p style={{ fontSize: 20, fontWeight: 600, lineHeight: 1.5, margin: "0 0 16px" }}>
+              <p style={{ fontFamily: "var(--font-display)", fontSize: 24, fontWeight: 400, fontStyle: "italic", lineHeight: 1.5, margin: "0 0 16px" }}>
                 针对以下维度进行深度对话修正
               </p>
               <div className="flex flex-wrap gap-2 justify-center" style={{ marginBottom: 32 }}>
@@ -580,7 +580,7 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
               </div>
             </>
           ) : (
-            <p style={{ fontSize: 20, fontWeight: 600, lineHeight: 1.5, margin: "0 0 32px" }}>
+            <p style={{ fontFamily: "var(--font-display)", fontSize: 24, fontWeight: 400, fontStyle: "italic", lineHeight: 1.5, margin: "0 0 32px" }}>
               随便聊聊。聊到第几句，<br/>我就开始懂你怎么想了。
             </p>
           )}
@@ -610,7 +610,7 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
       <div className="flex flex-col items-center justify-center" style={{ minHeight: "60vh" }}>
         <div className="text-center">
           <div style={{ width: 32, height: 32, margin: "0 auto 20px", border: "1.5px solid var(--accent)", borderTopColor: "transparent", borderRadius: 9999 }} className="animate-spin" />
-          <p style={{ fontSize: 14, fontWeight: 500, margin: "0 0 4px" }}>
+          <p style={{ fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 400, fontStyle: "italic", margin: "0 0 4px" }}>
             {isRefineMode ? "正在修正认知模型" : "正在构建认知模型"}
           </p>
           <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--muted-soft)", letterSpacing: "0.02em", margin: 0 }}>
@@ -641,7 +641,7 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
           }}
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 }}>
-            <h3 style={{ fontSize: 14, fontWeight: 500, margin: 0 }}>
+            <h3 style={{ fontFamily: "var(--font-display)", fontSize: 15, fontWeight: 400, margin: 0 }}>
               {DIM_NAMES_ZH[dim.name] || dim.name}
             </h3>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.05em", textTransform: "uppercase" as const, color: "var(--muted-soft)" }}>
@@ -673,7 +673,7 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
             <p className="eyebrow" style={{ marginBottom: 8 }}>
               {isRefineMode ? "修正后的模型" : "认知模型"} · {turn} 轮对话
             </p>
-            <h2 style={{ fontSize: 18, fontWeight: 600, margin: "0 0 4px" }}>
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: 24, fontWeight: 400, margin: "0 0 4px" }}>
               {signals.length} 个信号，{conflicts.length} 个矛盾
             </h2>
           </div>
@@ -953,7 +953,7 @@ export default function Interview({ refineRequest, onRefineConsumed, onModelRead
                     <div style={{ height: 1, background: "var(--card-border)", position: "relative", marginBottom: 6 }}>
                       <div style={{ position: "absolute", top: 0, left: 0, height: "100%", background: fillColors[dim.confidence] || "transparent", width: fillWidths[dim.confidence] || "0%", transition: "width 500ms" }} />
                     </div>
-                    <span style={{ fontSize: 11, color: "var(--muted)", display: "block" }}>
+                    <span style={{ fontFamily: "var(--font-display)", fontSize: 11, fontStyle: "italic", color: "var(--muted)", display: "block" }}>
                       {DIM_NAMES_ZH[dim.name] || dim.name}
                     </span>
                   </div>

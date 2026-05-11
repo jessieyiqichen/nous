@@ -275,10 +275,10 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
 
   if (phase === "generating") {
     return (
-      <div className="text-center py-12 space-y-3">
-        <div className="w-8 h-8 mx-auto border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
-        <p className="text-sm text-[var(--muted)]">正在生成行为预测</p>
-        <p className="text-xs text-[var(--muted-soft)]">AI 正在分析 9 个认知维度</p>
+      <div style={{ textAlign: "center", padding: "48px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+        <div style={{ width: 32, height: 32, border: "2px solid var(--accent)", borderTopColor: "transparent", borderRadius: 9999 }} className="animate-spin" />
+        <p style={{ fontSize: 13, color: "var(--muted)", margin: 0 }}>正在生成行为预测</p>
+        <p style={{ fontSize: 12, color: "var(--muted-soft)", margin: 0 }}>AI 正在分析 9 个认知维度</p>
       </div>
     );
   }
@@ -287,9 +287,9 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
 
   if (phase === "updating") {
     return (
-      <div className="text-center py-12 space-y-3">
-        <div className="w-8 h-8 mx-auto border-2 border-[var(--success)] border-t-transparent rounded-full animate-spin" />
-        <p className="text-sm text-[var(--muted)]">正在修正模型</p>
+      <div style={{ textAlign: "center", padding: "48px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+        <div style={{ width: 32, height: 32, border: "2px solid var(--success)", borderTopColor: "transparent", borderRadius: 9999 }} className="animate-spin" />
+        <p style={{ fontSize: 13, color: "var(--muted)", margin: 0 }}>正在修正模型</p>
       </div>
     );
   }
@@ -297,59 +297,62 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
   // ── Render: Results ───────────────────────────────────────
 
   if (phase === "results") {
+    const accColor = accuracy >= 0.7 ? "var(--success)" : accuracy >= 0.4 ? "var(--accent)" : "var(--error)";
     return (
-      <div className="space-y-5">
+      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
         {/* Overall accuracy */}
-        <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-xl p-6 text-center">
-          <p className={`text-4xl font-bold ${accuracy >= 0.7 ? "text-[var(--success)]" : accuracy >= 0.4 ? "text-[var(--accent)]" : "text-[var(--error)]"}`}>
+        <div style={{ background: "var(--card)", border: "1px solid var(--card-border)", borderRadius: 12, padding: 24, textAlign: "center" }}>
+          <p style={{ fontSize: 36, fontWeight: 700, color: accColor, margin: 0 }}>
             {(accuracy * 100).toFixed(0)}%
           </p>
-          <p className="text-sm text-[var(--muted)] mt-1">整体理解准确率</p>
-          <div className="flex justify-center gap-5 mt-4 text-sm">
-            <span className="text-[var(--success)]">{correctCount} 正确</span>
-            <span className="text-[var(--accent)]">{partialCount} 部分对</span>
-            <span className="text-[var(--error)]">{wrongCount} 不对</span>
-            <span className="text-[var(--muted-soft)]">{totalPredictions - judgedCount} 跳过</span>
+          <p style={{ fontSize: 13, color: "var(--muted)", margin: "4px 0 0" }}>整体理解准确率</p>
+          <div style={{ display: "flex", justifyContent: "center", gap: 20, marginTop: 16, fontSize: 13 }}>
+            <span style={{ color: "var(--success)" }}>{correctCount} 正确</span>
+            <span style={{ color: "var(--accent)" }}>{partialCount} 部分对</span>
+            <span style={{ color: "var(--error)" }}>{wrongCount} 不对</span>
+            <span style={{ color: "var(--muted-soft)" }}>{totalPredictions - judgedCount} 跳过</span>
           </div>
         </div>
 
         {/* Per-dimension accuracy */}
-        <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-xl p-5 space-y-3">
-          <h3 className="text-sm font-medium text-[var(--muted)]">按维度准确率</h3>
-          <div className="space-y-2.5">
-            {dimAccuracy.filter((d) => d.total > 0).map((d) => (
-              <div key={d.dimension} className="space-y-1">
-                <div className="flex items-center justify-between text-sm">
-                  <span>{d.dimension_zh}</span>
-                  <span className={`font-mono text-xs ${d.accuracy >= 0.7 ? "text-[var(--success)]" : d.accuracy >= 0.4 ? "text-[var(--accent)]" : "text-[var(--error)]"}`}>
-                    {(d.accuracy * 100).toFixed(0)}%
-                  </span>
+        <div style={{ background: "var(--card)", border: "1px solid var(--card-border)", borderRadius: 12, padding: 20, display: "flex", flexDirection: "column", gap: 12 }}>
+          <h3 style={{ fontSize: 13, fontWeight: 500, color: "var(--muted)", margin: 0 }}>按维度准确率</h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {dimAccuracy.filter((d) => d.total > 0).map((d) => {
+              const dColor = d.accuracy >= 0.7 ? "var(--success)" : d.accuracy >= 0.4 ? "var(--accent)" : "var(--error)";
+              return (
+                <div key={d.dimension} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 13 }}>
+                    <span>{d.dimension_zh}</span>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: dColor }}>
+                      {(d.accuracy * 100).toFixed(0)}%
+                    </span>
+                  </div>
+                  <div style={{ height: 6, background: "var(--background)", borderRadius: 9999, overflow: "hidden" }}>
+                    <div
+                      style={{ height: "100%", borderRadius: 9999, transition: "all 500ms", background: dColor, width: `${Math.max(d.accuracy * 100, 2)}%` }}
+                    />
+                  </div>
                 </div>
-                <div className="h-1.5 bg-[var(--background)] rounded-full overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all duration-500 ${d.accuracy >= 0.7 ? "bg-[var(--success)]" : d.accuracy >= 0.4 ? "bg-[var(--accent)]" : "bg-[var(--error)]"}`}
-                    style={{ width: `${Math.max(d.accuracy * 100, 2)}%` }}
-                  />
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
         {/* Changes summary */}
         {changesSummary && (
-          <div className="bg-[var(--success)]/5 border border-[var(--success)]/15 rounded-xl p-5 space-y-1">
-            <h3 className="text-sm font-medium text-[var(--success)]">模型已修正</h3>
-            <p className="text-sm text-[var(--muted)] leading-relaxed">{changesSummary}</p>
+          <div style={{ background: "rgba(79,122,77,0.05)", border: "1px solid rgba(79,122,77,0.15)", borderRadius: 12, padding: 20, display: "flex", flexDirection: "column", gap: 4 }}>
+            <h3 style={{ fontSize: 13, fontWeight: 500, color: "var(--success)", margin: 0 }}>模型已修正</h3>
+            <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.65, margin: 0 }}>{changesSummary}</p>
           </div>
         )}
 
         {/* Action buttons */}
-        <div className="flex flex-wrap gap-2">
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
           {!correctedModel && (wrongCount > 0 || partialCount > 0) && (
             <button
               onClick={handleUpdateModel}
-              className="px-5 py-2 bg-[var(--success)] text-white text-sm font-medium rounded-full hover:opacity-90 transition-opacity"
+              style={{ fontSize: 13, fontWeight: 500, padding: "10px 20px", borderRadius: 9999, border: 0, cursor: "pointer", background: "var(--success)", color: "#fff", transition: "opacity 200ms" }}
             >
               用修正更新模型
             </button>
@@ -363,28 +366,28 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
                 setPhase(null);
                 generatePredictions(correctedModel);
               }}
-              className="px-5 py-2 border border-[var(--card-border)] text-sm rounded-full text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[var(--muted)] transition-colors"
+              style={{ fontSize: 13, fontWeight: 500, padding: "9px 19px", borderRadius: 9999, border: "1px solid var(--card-border)", cursor: "pointer", background: "transparent", color: "var(--muted)", transition: "all 200ms" }}
             >
               重新验证
             </button>
           )}
           <button
             onClick={() => onGoPredict(correctedModel || model)}
-            className="px-5 py-2 bg-[var(--accent)] text-white text-sm font-medium rounded-full hover:opacity-90 transition-opacity"
+            style={{ fontSize: 13, fontWeight: 500, padding: "10px 20px", borderRadius: 9999, border: 0, cursor: "pointer", background: "var(--accent)", color: "#fff", transition: "opacity 200ms" }}
           >
             出题
           </button>
           <button
             onClick={handleDownload}
-            className="px-5 py-2 border border-[var(--card-border)] text-sm rounded-full text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[var(--muted)] transition-colors"
+            style={{ fontSize: 13, fontWeight: 500, padding: "9px 19px", borderRadius: 9999, border: "1px solid var(--card-border)", cursor: "pointer", background: "transparent", color: "var(--muted)", transition: "all 200ms" }}
           >
             下载 JSON
           </button>
         </div>
 
         {error && (
-          <div className="rounded-xl p-4 bg-[var(--error)]/5 border border-[var(--error)]/15">
-            <p className="text-sm text-[var(--error)]">{error}</p>
+          <div style={{ borderRadius: 12, padding: 16, background: "rgba(168,69,58,0.05)", border: "1px solid rgba(168,69,58,0.15)" }}>
+            <p style={{ fontSize: 13, color: "var(--error)", margin: 0 }}>{error}</p>
           </div>
         )}
       </div>
@@ -394,20 +397,45 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
   // ── Render: Judging ───────────────────────────────────────
 
   if (phase === "judging") {
+    const verdictStyles = (v: Verdict | undefined, target: Verdict) => {
+      const active = v === target;
+      const colors: Record<Verdict, string> = { correct: "var(--success)", wrong: "var(--error)", partial: "var(--accent)" };
+      const c = colors[target];
+      return {
+        flex: 1, padding: "8px 0", fontSize: 13, borderRadius: 8, border: 0, cursor: "pointer",
+        transition: "all 200ms", fontFamily: "inherit",
+        background: active ? `color-mix(in srgb, ${c} 15%, transparent)` : "var(--background)",
+        color: active ? c : "var(--muted)",
+        boxShadow: active ? `inset 0 0 0 1px color-mix(in srgb, ${c} 30%, transparent)` : "none",
+      } as const;
+    };
+
+    const predCardBorder = (v: Verdict | undefined) => {
+      if (v === "correct") return "1px solid rgba(79,122,77,0.25)";
+      if (v === "wrong") return "1px solid rgba(168,69,58,0.25)";
+      if (v === "partial") return "1px solid rgba(138,74,42,0.25)";
+      return "1px solid var(--card-border)";
+    };
+    const predCardBg = (v: Verdict | undefined) => {
+      if (v === "correct") return "rgba(79,122,77,0.05)";
+      if (v === "wrong") return "rgba(168,69,58,0.05)";
+      if (v === "partial") return "var(--accent-soft)";
+      return "transparent";
+    };
+
     return (
-      <div className="space-y-5">
+      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
         {/* Progress bar */}
-        <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-xl p-4">
-          <div className="flex items-center justify-between text-sm mb-2">
-            <span className="text-[var(--muted)]">已判断 {judgedCount} / {totalPredictions}</span>
-            <span className={`font-mono text-xs ${accuracy >= 0.7 ? "text-[var(--success)]" : accuracy >= 0.4 ? "text-[var(--accent)]" : "text-[var(--error)]"}`}>
+        <div style={{ background: "var(--card)", border: "1px solid var(--card-border)", borderRadius: 12, padding: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 13, marginBottom: 8 }}>
+            <span style={{ color: "var(--muted)" }}>已判断 {judgedCount} / {totalPredictions}</span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: judgedCount > 0 ? (accuracy >= 0.7 ? "var(--success)" : accuracy >= 0.4 ? "var(--accent)" : "var(--error)") : "var(--muted-soft)" }}>
               {judgedCount > 0 ? `${(accuracy * 100).toFixed(0)}%` : "-"}
             </span>
           </div>
-          <div className="h-1.5 bg-[var(--background)] rounded-full overflow-hidden">
+          <div style={{ height: 6, background: "var(--background)", borderRadius: 9999, overflow: "hidden" }}>
             <div
-              className="h-full bg-[var(--accent)] rounded-full transition-all duration-300"
-              style={{ width: `${totalPredictions > 0 ? (judgedCount / totalPredictions) * 100 : 0}%` }}
+              style={{ height: "100%", background: "var(--accent)", borderRadius: 9999, transition: "all 300ms", width: `${totalPredictions > 0 ? (judgedCount / totalPredictions) * 100 : 0}%` }}
             />
           </div>
         </div>
@@ -419,34 +447,32 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
           const dimTotal = dp.predictions.length;
 
           return (
-            <div key={dp.dimension} className="bg-[var(--card)] border border-[var(--card-border)] rounded-xl overflow-hidden">
+            <div key={dp.dimension} style={{ background: "var(--card)", border: "1px solid var(--card-border)", borderRadius: 12, overflow: "hidden" }}>
               <button
                 onClick={() => toggleDim(dp.dimension)}
-                className="w-full flex items-center justify-between p-4 hover:bg-white/[0.02] transition-colors text-left"
+                style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: 16, background: "transparent", border: 0, cursor: "pointer", fontFamily: "inherit", textAlign: "left", transition: "background 200ms" }}
               >
-                <div className="flex items-center gap-2.5">
-                  <span className="text-sm font-medium">{dp.dimension_zh}</span>
-                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--background)] text-[var(--muted)]">
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontSize: 13, fontWeight: 500 }}>{dp.dimension_zh}</span>
+                  <span style={{ fontSize: 11, fontWeight: 500, padding: "3px 9px", borderRadius: 9999, background: "var(--background)", color: "var(--muted)" }}>
                     {dimJudgedCount}/{dimTotal}
                   </span>
                 </div>
                 <svg
-                  className={`w-4 h-4 text-[var(--muted-soft)] transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+                  width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="var(--muted-soft)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+                  style={{ transition: "transform 200ms", transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)" }}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <path d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
 
               {isExpanded && (
-                <div className="border-t border-[var(--card-border)]">
-                  <div className="px-4 py-2.5 bg-white/[0.01]">
-                    <p className="text-xs text-[var(--muted-soft)] leading-relaxed">{dp.description}</p>
+                <div style={{ borderTop: "1px solid var(--card-border)" }}>
+                  <div style={{ padding: "10px 16px", background: "rgba(255,255,255,0.01)" }}>
+                    <p style={{ fontSize: 12, color: "var(--muted-soft)", lineHeight: 1.65, margin: 0 }}>{dp.description}</p>
                   </div>
 
-                  <div className="p-4 space-y-3">
+                  <div style={{ padding: 16, display: "flex", flexDirection: "column", gap: 12 }}>
                     {dp.predictions.map((pred) => {
                       const verdict = judgments[pred.id];
                       const showCorrection = verdict === "wrong" || verdict === "partial";
@@ -454,68 +480,39 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
                       return (
                         <div
                           key={pred.id}
-                          className={`border rounded-xl p-4 transition-colors ${
-                            verdict === "correct"
-                              ? "border-[var(--success)]/25 bg-[var(--success)]/5"
-                              : verdict === "wrong"
-                                ? "border-[var(--error)]/25 bg-[var(--error)]/5"
-                                : verdict === "partial"
-                                  ? "border-[var(--accent)]/25 bg-[var(--accent-soft)]"
-                                  : "border-[var(--card-border)]"
-                          }`}
+                          style={{ border: predCardBorder(verdict), borderRadius: 12, padding: 16, background: predCardBg(verdict), transition: "all 200ms" }}
                         >
-                          <p className="text-sm leading-relaxed mb-3">{pred.statement}</p>
+                          <p style={{ fontSize: 13, lineHeight: 1.65, margin: "0 0 12px" }}>{pred.statement}</p>
 
-                          <details className="mb-3">
-                            <summary className="text-xs text-[var(--muted-soft)] cursor-pointer hover:text-[var(--muted)] transition-colors">
+                          <details style={{ marginBottom: 12 }}>
+                            <summary style={{ fontSize: 12, color: "var(--muted-soft)", cursor: "pointer", transition: "color 200ms" }}>
                               推理依据
                             </summary>
-                            <p className="text-xs text-[var(--muted-soft)] mt-1.5 pl-3 border-l-2 border-[var(--card-border)]">
+                            <p style={{ fontSize: 12, color: "var(--muted-soft)", marginTop: 6, paddingLeft: 12, borderLeft: "2px solid var(--card-border)", margin: "6px 0 0" }}>
                               {pred.reasoning}
                             </p>
                           </details>
 
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => setVerdict(pred.id, "correct")}
-                              className={`flex-1 py-2 text-sm rounded-lg transition-all ${
-                                verdict === "correct"
-                                  ? "bg-[var(--success)]/15 text-[var(--success)] ring-1 ring-[var(--success)]/30"
-                                  : "bg-[var(--background)] text-[var(--muted)] hover:text-[var(--success)]"
-                              }`}
-                            >
+                          <div style={{ display: "flex", gap: 8 }}>
+                            <button onClick={() => setVerdict(pred.id, "correct")} style={verdictStyles(verdict, "correct")}>
                               对
                             </button>
-                            <button
-                              onClick={() => setVerdict(pred.id, "wrong")}
-                              className={`flex-1 py-2 text-sm rounded-lg transition-all ${
-                                verdict === "wrong"
-                                  ? "bg-[var(--error)]/15 text-[var(--error)] ring-1 ring-[var(--error)]/30"
-                                  : "bg-[var(--background)] text-[var(--muted)] hover:text-[var(--error)]"
-                              }`}
-                            >
+                            <button onClick={() => setVerdict(pred.id, "wrong")} style={verdictStyles(verdict, "wrong")}>
                               不对
                             </button>
-                            <button
-                              onClick={() => setVerdict(pred.id, "partial")}
-                              className={`flex-1 py-2 text-sm rounded-lg transition-all ${
-                                verdict === "partial"
-                                  ? "bg-[var(--accent-soft)] text-[var(--accent)] ring-1 ring-[var(--accent)]/30"
-                                  : "bg-[var(--background)] text-[var(--muted)] hover:text-[var(--accent)]"
-                              }`}
-                            >
+                            <button onClick={() => setVerdict(pred.id, "partial")} style={verdictStyles(verdict, "partial")}>
                               部分对
                             </button>
                           </div>
 
                           {showCorrection && (
-                            <div className="mt-3">
+                            <div style={{ marginTop: 12 }}>
                               <textarea
                                 value={corrections[pred.id] || ""}
                                 onChange={(e) => setCorrection(pred.id, e.target.value)}
                                 placeholder="实际情况是...（可选）"
                                 rows={2}
-                                className="w-full bg-[var(--background)] border border-[var(--card-border)] rounded-xl px-3 py-2.5 text-sm resize-none focus:outline-none focus:border-[var(--accent)]/50 transition-colors"
+                                style={{ width: "100%", background: "var(--background)", border: "1px solid var(--card-border)", borderRadius: 12, padding: "10px 12px", fontSize: 13, resize: "none", outline: "none", fontFamily: "inherit", color: "var(--foreground)", transition: "border-color 200ms", boxSizing: "border-box" }}
                               />
                             </div>
                           )}
@@ -530,12 +527,12 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
         })}
 
         {/* Bottom actions */}
-        <div className="flex flex-col items-center gap-3 pt-2 pb-4">
-          <div className="flex gap-2">
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "8px 0 16px" }}>
+          <div style={{ display: "flex", gap: 8 }}>
             {(wrongCount > 0 || partialCount > 0) && (
               <button
                 onClick={handleUpdateModel}
-                className="px-6 py-2.5 bg-[var(--success)] text-white font-medium rounded-full hover:opacity-90 transition-opacity"
+                style={{ fontSize: 13, fontWeight: 500, padding: "10px 20px", borderRadius: 9999, border: 0, cursor: "pointer", background: "var(--success)", color: "#fff", transition: "opacity 200ms" }}
               >
                 用修正更新模型
               </button>
@@ -543,17 +540,17 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
             <button
               onClick={handleViewResults}
               disabled={judgedCount === 0}
-              className="px-6 py-2.5 bg-[var(--accent)] text-white font-medium rounded-full hover:opacity-90 disabled:opacity-40 transition-opacity"
+              style={{ fontSize: 13, fontWeight: 500, padding: "10px 20px", borderRadius: 9999, border: 0, cursor: "pointer", background: "var(--accent)", color: "#fff", opacity: judgedCount === 0 ? 0.4 : 1, transition: "opacity 200ms" }}
             >
               查看结果
             </button>
           </div>
           {judgedCount < totalPredictions && (
-            <p className="text-xs text-[var(--muted-soft)]">
+            <p style={{ fontSize: 12, color: "var(--muted-soft)", margin: 0 }}>
               还有 {totalPredictions - judgedCount} 条未判断（可以跳过）
             </p>
           )}
-          {error && <p className="text-sm text-[var(--error)]">{error}</p>}
+          {error && <p style={{ fontSize: 13, color: "var(--error)", margin: 0 }}>{error}</p>}
         </div>
       </div>
     );
@@ -562,8 +559,8 @@ export default function InlineValidator({ model, onModelCorrected, onGoPredict }
   // ── Render: Not started yet (waiting for hydration) ───────
 
   return (
-    <div className="text-center py-10">
-      <p className="text-sm text-[var(--muted-soft)]">准备验证...</p>
+    <div style={{ textAlign: "center", padding: "40px 0" }}>
+      <p style={{ fontSize: 13, color: "var(--muted-soft)", margin: 0 }}>准备验证...</p>
     </div>
   );
 }

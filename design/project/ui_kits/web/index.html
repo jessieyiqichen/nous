@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN" data-screen-label="Nous web app">
+<head>
+<meta charset="utf-8">
+<title>Nous · Web UI Kit</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../colors_and_type.css">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; min-height: 100vh;
+    background: var(--background); color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased; }
+  h1, h2, h3 { font-family: var(--font-display);
+    font-weight: var(--h-weight, 400) !important;
+    font-style: var(--h-style, normal) !important;
+    font-variation-settings: "opsz" var(--h-opsz, 96) !important; }
+  body { font-size: var(--body-fs, 14px); line-height: var(--body-lh, 1.65); }
+  .content { padding: var(--content-pad, 32px 24px) !important; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 3px; }
+  main { min-height: 100vh; display: flex; flex-direction: column; }
+  .content { flex: 1; max-width: 896px; width: 100%; margin: 0 auto;
+    padding: 32px 24px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="chrome.jsx"></script>
+<script src="data.js"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="Header.jsx"></script>
+<script type="text/babel" src="InterviewView.jsx"></script>
+<script type="text/babel" src="AnalyzerView.jsx"></script>
+<script type="text/babel" src="ResearchView.jsx"></script>
+<script type="text/babel" src="ValidatorView.jsx"></script>
+<script type="text/babel" src="PredictorView.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "atmosphere": "canvas",
+  "voice": "firm",
+  "density": "regular"
+}/*EDITMODE-END*/;
+
+// Atmosphere — reshapes background, card surface, borders, accent hue
+const ATMOSPHERES = {
+  paper:   { bg: "#f6f1e7", card: "#fbf7ee", border: "#e4dccb",
+             ink: "#2b2620", muted: "#6b5f50", soft: "#948774",
+             accent: "#8a4a2a", accentSoft: "rgba(138,74,42,0.08)" },
+  canvas:  { bg: "#ece4d3", card: "#f4ecda", border: "#cdc1a6",
+             ink: "#3a2f22", muted: "#75674f", soft: "#9c8d70",
+             accent: "#7c4022", accentSoft: "rgba(124,64,34,0.10)" },
+  archive: { bg: "#1d1812", card: "#26201a", border: "#3c342b",
+             ink: "#ece4d3", muted: "#9a8f7e", soft: "#6b6256",
+             accent: "#d49870", accentSoft: "rgba(212,152,112,0.14)" },
+};
+
+// Voice — saturation of accent + heading weight + italic emphasis
+const VOICES = {
+  quiet: { accentBoost: 0.7, hWeight: 300, hStyle: "normal",  hOpsz: 144 },
+  firm:  { accentBoost: 1.0, hWeight: 400, hStyle: "normal",  hOpsz: 96  },
+  bold:  { accentBoost: 1.3, hWeight: 600, hStyle: "italic", hOpsz: 24  },
+};
+
+// Density — body font size + line height + section gap rhythm
+const DENSITIES = {
+  airy:    { fs: 16, lh: 1.85, gap: 40, contentPad: "56px 32px" },
+  regular: { fs: 14, lh: 1.65, gap: 32, contentPad: "32px 24px" },
+  compact: { fs: 13, lh: 1.5,  gap: 22, contentPad: "22px 24px" },
+};
+
+function mix(hex, factor) {
+  // Boost or dampen saturation by lerping accent toward/from grey
+  const r = parseInt(hex.slice(1,3), 16),
+        g = parseInt(hex.slice(3,5), 16),
+        b = parseInt(hex.slice(5,7), 16);
+  const grey = (r + g + b) / 3;
+  const lerp = (c) => Math.round(grey + (c - grey) * factor);
+  const hex2 = (n) => Math.max(0, Math.min(255, n)).toString(16).padStart(2, "0");
+  return "#" + hex2(lerp(r)) + hex2(lerp(g)) + hex2(lerp(b));
+}
+
+function App() {
+  const [tab, setTab] = useState("interview");
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+  const atm = ATMOSPHERES[t.atmosphere];
+  const voice = VOICES[t.voice];
+  const dens = DENSITIES[t.density];
+  const accent = mix(atm.accent, voice.accentBoost);
+
+  useEffect(() => {
+    const r = document.documentElement.style;
+    r.setProperty("--background", atm.bg);
+    r.setProperty("--card", atm.card);
+    r.setProperty("--card-border", atm.border);
+    r.setProperty("--foreground", atm.ink);
+    r.setProperty("--muted", atm.muted);
+    r.setProperty("--muted-soft", atm.soft);
+    r.setProperty("--accent", accent);
+    r.setProperty("--accent-soft", atm.accentSoft);
+    r.setProperty("--body-fs", dens.fs + "px");
+    r.setProperty("--body-lh", String(dens.lh));
+    r.setProperty("--section-gap", dens.gap + "px");
+    r.setProperty("--content-pad", dens.contentPad);
+    r.setProperty("--h-weight", String(voice.hWeight));
+    r.setProperty("--h-style", voice.hStyle);
+    r.setProperty("--h-opsz", String(voice.hOpsz));
+  }, [t.atmosphere, t.voice, t.density]);
+
+  return (
+    <main>
+      <Header tab={tab} setTab={setTab} />
+      <div className="content" data-screen-label={`Nous \u00b7 ${tab}`}>
+        {tab === "interview" && <InterviewView />}
+        {tab === "validate"  && <ValidatorView />}
+        {tab === "analyze"   && <AnalyzerView />}
+        {tab === "predict"   && <PredictorView />}
+        {tab === "research"  && <ResearchView />}
+      </div>
+      <TweaksPanel title="Tweaks">
+        <TweakRadio label="氛围 Atmosphere" value={t.atmosphere}
+          options={["paper", "canvas", "archive"]}
+          onChange={(v) => setTweak("atmosphere", v)} />
+        <TweakRadio label="声音 Voice" value={t.voice}
+          options={["quiet", "firm", "bold"]}
+          onChange={(v) => setTweak("voice", v)} />
+        <TweakRadio label="节奏 Density" value={t.density}
+          options={["airy", "regular", "compact"]}
+          onChange={(v) => setTweak("density", v)} />
+      </TweaksPanel>
+    </main>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("app")).render(<App />);
+</script>
+</body>
+</html>

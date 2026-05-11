@@ -1,52 +1,90 @@
 @import "tailwindcss";
 
+/* ── Disable automatic dark mode ──────────────────────────────
+   Tailwind v4 defaults to prefers-color-scheme: dark which
+   overrides --color-background with oklch(0.145 0 0) (#171717).
+   Switch to class-based so it never activates. */
+@custom-variant dark (&:is(.dark *));
+
+/* ── Design tokens ────────────────────────────────────────── */
 :root {
-  /* Warm dark palette — inspired by Claude.ai dark mode */
-  --background: #171717;
-  --foreground: #e8e4df;
-  --card: #1e1e1e;
-  --card-border: #2a2a2a;
-  --accent: #c4956a;
-  --accent-soft: rgba(196, 149, 106, 0.12);
-  --muted: #8a8580;
-  --muted-soft: #6b6762;
+  /* ── Literary, warm cream paper ── */
+  --background:   #f6f1e7;
+  --foreground:   #2b2620;
+  --card:         #fbf7ee;
+  --card-border:  #e4dccb;
+  --accent:       #8a4a2a;
+  --accent-soft:  rgba(138, 74, 42, 0.08);
+  --muted:        #6b5f50;
+  --muted-soft:   #948774;
+  --success:      #4f7a4d;
+  --warning:      #b07a2e;
+  --error:        #a8453a;
 
-  /* Semantic — used sparingly */
-  --success: #6ec87a;
-  --warning: #d4a04a;
-  --error: #d46a6a;
+  /* ── Type ── */
+  --font-display: "Fraunces", "Songti SC", "STSong", serif;
+  --font-sans:    "Source Serif 4", "Songti SC", "PingFang SC", serif;
+  --font-mono:    "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ── Bias tones (Analyzer / Research) ── */
+  --tone-sycophancy:   #a86c3a;
+  --tone-preemptive:   #7a8c5c;
+  --tone-beautify:     #9a5a6e;
+  --tone-overcorrect:  #b85c4a;
+  --tone-over-attr:    #5e7a8a;
+  --tone-drift:        #7a6a4f;
 }
 
+/* ── Tailwind theme bridge ──────────────────────────────────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: #f6f1e7;
+  --color-foreground: #2b2620;
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
+/* ── Base ────────────────────────────────────────────────────── */
 body {
+  font-family: var(--font-sans);
   background: var(--background);
   color: var(--foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smooth scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--card-border);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--muted-soft);
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
 }
 
-/* Selection */
-::selection {
-  background: var(--accent-soft);
+/* ── Editorial primitives ────────────────────────────────────── */
+
+/* Eyebrow: small label above a section */
+.eyebrow {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  margin: 0;
 }
+
+/* Pull-quote: assessments and big statements */
+.pull-quote {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.65;
+  color: var(--muted);
+  border-left: 2px solid var(--accent);
+  padding-left: 28px;
+  margin: 0;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted-soft); }
+
+/* ── Selection ───────────────────────────────────────────────── */
+::selection { background: var(--accent-soft); }

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+// ── Types ─────────────────────────────────────────────────────
+
 interface BiasInstance {
   bias_id: string;
   sub_type?: string;
@@ -26,6 +28,8 @@ interface Turn {
   content: string;
 }
 
+// ── Labels & tones ────────────────────────────────────────────
+
 const BIAS_LABELS: Record<string, string> = {
   overcorrect: "矫枉过正",
   sycophancy: "迎合/叠甲",
@@ -38,51 +42,36 @@ const BIAS_LABELS: Record<string, string> = {
   sys_bias: "系统偏差污染",
 };
 
-const SEVERITY_LABELS: Record<string, string> = {
-  low: "低",
-  medium: "中",
-  high: "高",
-  critical: "严重",
+const BIAS_TONES: Record<string, string> = {
+  sycophancy: "#a86c3a",
+  preemptive: "#7a8c5c",
+  beautify: "#9a5a6e",
+  overcorrect: "#b85c4a",
+  over_attr: "#5e7a8a",
+  single_attr: "#5e7a8a",
+  drift: "#7a6a4f",
+  sim_conscious: "#7a6a4f",
+  sys_bias: "#7a6a4f",
 };
 
-const SEVERITY_COLORS: Record<string, string> = {
-  low: "bg-blue-500/20 text-blue-300 border-blue-500/30",
-  medium: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30",
-  high: "bg-orange-500/20 text-orange-300 border-orange-500/30",
-  critical: "bg-red-500/20 text-red-300 border-red-500/30",
+const SEVERITY_ZH: Record<string, string> = {
+  low: "轻微",
+  medium: "中度",
+  high: "显著",
+  critical: "显著",
 };
 
-const BIAS_TAG_COLORS: Record<string, string> = {
-  overcorrect: "bg-red-500/20 text-red-300",
-  sycophancy: "bg-orange-500/20 text-orange-300",
-  drift: "bg-purple-500/20 text-purple-300",
-  beautify: "bg-pink-500/20 text-pink-300",
-  single_attr: "bg-yellow-500/20 text-yellow-300",
-  over_attr: "bg-cyan-500/20 text-cyan-300",
-  preemptive: "bg-green-500/20 text-green-300",
-  sim_conscious: "bg-indigo-500/20 text-indigo-300",
-  sys_bias: "bg-gray-500/20 text-gray-300",
-};
+const PLACEHOLDER = `User: 我最近在考虑转行做产品经理...
+Assistant: 这个想法非常棒！产品经理是一个很有前景的职业方向...
 
-const SUB_TYPE_LABELS: Record<string, string> = {
-  surface_hedging: "表面叠甲",
-  evaluative: "评价性迎合",
-  meta_sycophancy: "元迎合",
-};
+User: 但是我完全没有相关经验...
+Assistant: 别担心！很多成功的产品经理都是从零开始的...`;
 
-const PLACEHOLDER = `在此粘贴一段人-AI 对话，支持以下格式：
-
-格式一 — 标签分行：
-User: 我最近在考虑转行...
-Assistant: 这是一个很有意思的想法！...
-
-格式二 — JSON 数组：
-[{"role":"user","content":"..."},{"role":"assistant","content":"..."}]`;
+// ── Parse helpers ─────────────────────────────────────────────
 
 function parseConversation(text: string): Turn[] {
   const trimmed = text.trim();
 
-  // Try JSON
   if (trimmed.startsWith("[")) {
     try {
       const parsed = JSON.parse(trimmed);
@@ -97,7 +86,6 @@ function parseConversation(text: string): Turn[] {
     }
   }
 
-  // Text format
   const turns: Turn[] = [];
   const lines = trimmed.split("\n");
   let currentRole: "user" | "assistant" | null = null;
@@ -111,13 +99,19 @@ function parseConversation(text: string): Turn[] {
 
     if (userMatch) {
       if (currentRole && currentContent.length > 0) {
-        turns.push({ role: currentRole, content: currentContent.join("\n").trim() });
+        turns.push({
+          role: currentRole,
+          content: currentContent.join("\n").trim(),
+        });
       }
       currentRole = "user";
       currentContent = userMatch[1] ? [userMatch[1]] : [];
     } else if (asstMatch) {
       if (currentRole && currentContent.length > 0) {
-        turns.push({ role: currentRole, content: currentContent.join("\n").trim() });
+        turns.push({
+          role: currentRole,
+          content: currentContent.join("\n").trim(),
+        });
       }
       currentRole = "assistant";
       currentContent = asstMatch[1] ? [asstMatch[1]] : [];
@@ -127,41 +121,23 @@ function parseConversation(text: string): Turn[] {
   }
 
   if (currentRole && currentContent.length > 0) {
-    turns.push({ role: currentRole, content: currentContent.join("\n").trim() });
+    turns.push({
+      role: currentRole,
+      content: currentContent.join("\n").trim(),
+    });
   }
 
   return turns;
 }
 
-function BiasTag({ bias }: { bias: BiasInstance }) {
-  const label = BIAS_LABELS[bias.bias_id] || bias.bias_id;
-  const tagColor = BIAS_TAG_COLORS[bias.bias_id] || "bg-gray-500/20 text-gray-300";
-  const sevColor = SEVERITY_COLORS[bias.severity] || SEVERITY_COLORS.medium;
-  const subLabel = bias.sub_type ? SUB_TYPE_LABELS[bias.sub_type] || bias.sub_type : "";
-
-  return (
-    <div className="border border-[var(--card-border)] rounded-lg p-3 space-y-2">
-      <div className="flex items-center gap-2 flex-wrap">
-        <span className={`text-xs font-medium px-2 py-0.5 rounded ${tagColor}`}>
-          {label}
-        </span>
-        {subLabel && (
-          <span className="text-xs text-[var(--muted)]">{subLabel}</span>
-        )}
-        <span className={`text-xs px-2 py-0.5 rounded border ${sevColor}`}>
-          {SEVERITY_LABELS[bias.severity] || bias.severity}
-        </span>
-      </div>
-      <blockquote className="text-sm text-[var(--muted)] border-l-2 border-[var(--card-border)] pl-3 italic">
-        &ldquo;{bias.evidence}&rdquo;
-      </blockquote>
-      <p className="text-sm">{bias.explanation}</p>
-    </div>
-  );
+function getTone(biasId: string): string {
+  return BIAS_TONES[biasId] || "#7a6a4f";
 }
 
+// ── Component ─────────────────────────────────────────────────
+
 export default function Analyzer() {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(PLACEHOLDER);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [turns, setTurns] = useState<Turn[]>([]);
   const [loading, setLoading] = useState(false);
@@ -171,7 +147,7 @@ export default function Analyzer() {
   const analyze = async () => {
     const parsed = parseConversation(input);
     if (parsed.length < 2) {
-      setError("至少需要 2 轮对话（1 轮用户 + 1 轮 AI）才能分析。");
+      setError("至少需要 2 轮对话才能分析");
       return;
     }
 
@@ -205,170 +181,417 @@ export default function Analyzer() {
   const biasesForTurn = (turnIdx: number) =>
     analysis?.biases_found.filter((b) => b.turn_index === turnIdx) || [];
 
-  return (
-    <div className="space-y-6">
-      {/* Input */}
-      {!analysis && (
-        <div className="space-y-4">
+  // ── Input state ───────────────────────────────────────────
+
+  if (!analysis) {
+    return (
+      <div style={{ maxWidth: 640, margin: "0 auto", paddingTop: 8 }}>
+        <h2
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 28,
+            fontWeight: 400,
+            margin: "0 0 8px",
+          }}
+        >
+          偏差检测
+        </h2>
+        <p
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 15,
+            fontStyle: "italic",
+            color: "var(--muted)",
+            margin: "0 0 32px",
+          }}
+        >
+          粘贴一段人-AI 对话，检测系统性认知偏差
+        </p>
+
+        {/* Manuscript-margin textarea */}
+        <div
+          style={{
+            borderLeft: "2px solid var(--accent)",
+            paddingLeft: 20,
+            marginBottom: 24,
+          }}
+        >
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={PLACEHOLDER}
-            rows={14}
-            className="w-full bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4 text-sm font-mono resize-y focus:outline-none focus:border-[var(--accent)] transition-colors"
+            rows={12}
+            style={{
+              width: "100%",
+              background: "transparent",
+              border: "none",
+              padding: 0,
+              fontSize: 14,
+              color: "var(--foreground)",
+              fontFamily: "inherit",
+              lineHeight: 1.75,
+              outline: "none",
+              resize: "vertical",
+              boxSizing: "border-box",
+            }}
           />
-          <div className="flex items-center gap-4">
-            <button
-              onClick={analyze}
-              disabled={loading || !input.trim()}
-              className="px-5 py-2 bg-[var(--accent)] text-white text-sm font-medium rounded-lg hover:opacity-90 disabled:opacity-40 transition-opacity"
-            >
-              {loading ? "分析中..." : "检测偏差"}
-            </button>
-            {loading && (
-              <span className="text-sm text-[var(--muted)]">
-                大约需要 10-30 秒...
-              </span>
-            )}
-          </div>
-          {error && <p className="text-sm text-red-400">{error}</p>}
         </div>
-      )}
 
-      {/* Results */}
-      {analysis && (
-        <div className="space-y-6">
-          {/* Summary bar */}
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div className="flex items-center gap-3 flex-wrap">
-              <span className="text-sm text-[var(--muted)]">
-                分析了 {analysis.total_turns} 轮对话
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+          }}
+        >
+          <button
+            onClick={analyze}
+            disabled={loading || !input.trim()}
+            style={{
+              fontSize: 13,
+              fontWeight: 500,
+              padding: "10px 24px",
+              borderRadius: 9999,
+              border: 0,
+              cursor: "pointer",
+              background: "var(--accent)",
+              color: "#fff",
+              opacity: loading || !input.trim() ? 0.4 : 1,
+              transition: "opacity 200ms",
+            }}
+          >
+            {loading ? "分析中..." : "检测偏差"}
+          </button>
+          <span
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: 12,
+              fontStyle: "italic",
+              color: "var(--muted-soft)",
+            }}
+          >
+            示例对话已预填
+          </span>
+        </div>
+
+        {error && (
+          <p style={{ fontSize: 13, color: "var(--error)", marginTop: 12 }}>
+            {error}
+          </p>
+        )}
+      </div>
+    );
+  }
+
+  // ── Result state ──────────────────────────────────────────
+
+  const selectedBiases =
+    selectedTurn !== null ? biasesForTurn(selectedTurn) : [];
+  const firstBiasTone =
+    selectedBiases.length > 0 ? getTone(selectedBiases[0].bias_id) : null;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+      {/* Header */}
+      <div>
+        <p className="eyebrow" style={{ marginBottom: 8 }}>
+          偏差检测 · 报告
+        </p>
+        <h2
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 32,
+            fontWeight: 400,
+            margin: "0 0 16px",
+            lineHeight: 1.3,
+          }}
+        >
+          {analysis.total_turns} 轮对话中检测到{" "}
+          <em
+            style={{
+              fontStyle: "italic",
+              color: "var(--accent)",
+            }}
+          >
+            {analysis.biases_found.length} 处
+          </em>{" "}
+          偏差
+        </h2>
+
+        {/* Bias type pills */}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          {Object.entries(analysis.bias_summary).map(([id, count]) => {
+            const tone = getTone(id);
+            return (
+              <span
+                key={id}
+                style={{
+                  fontSize: 11,
+                  padding: "3px 10px",
+                  borderRadius: 9999,
+                  border: `1px solid ${tone}66`,
+                  background: `${tone}1a`,
+                  color: tone,
+                }}
+              >
+                {BIAS_LABELS[id] || id} {count}
               </span>
-              <span className="text-sm font-medium">
-                检测到 {analysis.biases_found.length} 个偏差
-              </span>
-              {Object.entries(analysis.bias_summary).map(([id, count]) => (
-                <span
-                  key={id}
-                  className={`text-xs px-2 py-0.5 rounded ${BIAS_TAG_COLORS[id] || "bg-gray-500/20 text-gray-300"}`}
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Overall assessment — pull-quote */}
+      <p className="pull-quote">{analysis.overall_assessment}</p>
+
+      {/* Reset button */}
+      <div>
+        <button
+          onClick={() => {
+            setAnalysis(null);
+            setTurns([]);
+            setSelectedTurn(null);
+          }}
+          style={{
+            fontSize: 12,
+            color: "var(--muted-soft)",
+            background: "transparent",
+            border: 0,
+            cursor: "pointer",
+            textDecoration: "underline",
+            textUnderlineOffset: 4,
+            fontFamily: "inherit",
+          }}
+        >
+          重新分析
+        </button>
+      </div>
+
+      {/* Annotated transcript — 2-col layout */}
+      <div style={{ display: "flex", gap: 32, alignItems: "flex-start" }}>
+        {/* Left: transcript */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          {turns.map((turn, i) => {
+            const biases = biasesForTurn(i);
+            const hasBias = biases.length > 0;
+            const isSelected = selectedTurn === i;
+
+            return (
+              <div
+                key={i}
+                onClick={() =>
+                  hasBias && setSelectedTurn(isSelected ? null : i)
+                }
+                style={{
+                  display: "flex",
+                  gap: 16,
+                  padding: "20px 0",
+                  borderBottom: "1px solid var(--card-border)",
+                  background: isSelected
+                    ? "var(--accent-soft)"
+                    : "transparent",
+                  cursor: hasBias ? "pointer" : "default",
+                  transition: "background 150ms",
+                  marginLeft: -8,
+                  marginRight: -8,
+                  paddingLeft: 8,
+                  paddingRight: 8,
+                }}
+              >
+                {/* Line-number gutter */}
+                <div
+                  style={{
+                    width: 28,
+                    flexShrink: 0,
+                    textAlign: "right",
+                    paddingTop: 2,
+                  }}
                 >
-                  {BIAS_LABELS[id] || id}: {count}
-                </span>
-              ))}
-            </div>
-            <button
-              onClick={() => {
-                setAnalysis(null);
-                setTurns([]);
-                setSelectedTurn(null);
-              }}
-              className="text-sm text-[var(--muted)] hover:text-white transition-colors"
-            >
-              重新分析
-            </button>
-          </div>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 11,
+                      color: "var(--muted-soft)",
+                      display: "block",
+                    }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 10,
+                      letterSpacing: "0.05em",
+                      textTransform: "uppercase" as const,
+                      color: "var(--muted-soft)",
+                      display: "block",
+                      marginTop: 2,
+                    }}
+                  >
+                    {turn.role === "user" ? "你" : "AI"}
+                  </span>
+                </div>
 
-          {/* Overall assessment */}
-          <div className="bg-[var(--card)] border border-[var(--card-border)] rounded-lg p-4">
-            <p className="text-sm font-medium mb-1">总体评估</p>
-            <p className="text-sm text-[var(--muted)]">{analysis.overall_assessment}</p>
-            {analysis.interaction_patterns && analysis.interaction_patterns.length > 0 && (
-              <div className="mt-3 pt-3 border-t border-[var(--card-border)]">
-                <p className="text-xs font-medium text-[var(--muted)] mb-1">
-                  偏差交互模式
-                </p>
-                <ul className="space-y-1">
-                  {analysis.interaction_patterns.map((p, i) => (
-                    <li key={i} className="text-xs text-[var(--muted)]">
-                      {p}
-                    </li>
-                  ))}
-                </ul>
+                {/* Content */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p
+                    style={{
+                      fontFamily:
+                        turn.role === "assistant"
+                          ? "var(--font-display)"
+                          : "var(--font-sans)",
+                      fontSize: 14,
+                      lineHeight: 1.75,
+                      margin: 0,
+                      whiteSpace: "pre-wrap",
+                    }}
+                  >
+                    {turn.content}
+                  </p>
+                  {/* Bias chips below text */}
+                  {biases.length > 0 && (
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 6,
+                        marginTop: 8,
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      {biases.map((b, j) => {
+                        const tone = getTone(b.bias_id);
+                        return (
+                          <span
+                            key={j}
+                            style={{
+                              fontSize: 10,
+                              padding: "2px 8px",
+                              borderRadius: 9999,
+                              border: `1px solid ${tone}66`,
+                              background: `${tone}1a`,
+                              color: tone,
+                            }}
+                          >
+                            {BIAS_LABELS[b.bias_id] || b.bias_id}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
-          </div>
+            );
+          })}
+        </div>
 
-          {/* Conversation with annotations */}
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-            {/* Left: conversation */}
-            <div className="lg:col-span-3 space-y-3">
-              {turns.map((turn, i) => {
-                const biases = biasesForTurn(i);
-                const hasBias = biases.length > 0;
-                const isSelected = selectedTurn === i;
-
+        {/* Right: sticky detail aside */}
+        <div
+          style={{
+            width: 280,
+            flexShrink: 0,
+            position: "sticky",
+            top: 24,
+            alignSelf: "flex-start",
+          }}
+        >
+          {selectedTurn === null ? (
+            <p
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: 14,
+                fontStyle: "italic",
+                color: "var(--muted-soft)",
+                margin: 0,
+                lineHeight: 1.65,
+              }}
+            >
+              点击任意标注段落，查看偏差详情
+            </p>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 20,
+              }}
+            >
+              {selectedBiases.map((b, i) => {
+                const tone = getTone(b.bias_id);
                 return (
                   <div
                     key={i}
-                    onClick={() => hasBias && setSelectedTurn(isSelected ? null : i)}
-                    className={`rounded-lg p-4 transition-all ${
-                      turn.role === "user"
-                        ? "bg-[var(--card)] border border-[var(--card-border)]"
-                        : hasBias
-                          ? `bg-[var(--card)] border-2 ${isSelected ? "border-[var(--accent)]" : "border-orange-500/30"} cursor-pointer`
-                          : "bg-[var(--card)] border border-[var(--card-border)]"
-                    }`}
+                    style={{
+                      borderTop: `2px solid ${tone}`,
+                      paddingTop: 16,
+                    }}
                   >
-                    <div className="flex items-center gap-2 mb-2">
+                    {/* Bias name + severity */}
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "baseline",
+                        marginBottom: 12,
+                      }}
+                    >
                       <span
-                        className={`text-xs font-medium px-2 py-0.5 rounded ${
-                          turn.role === "user"
-                            ? "bg-blue-500/20 text-blue-300"
-                            : "bg-emerald-500/20 text-emerald-300"
-                        }`}
+                        style={{
+                          fontFamily: "var(--font-display)",
+                          fontSize: 19,
+                          fontWeight: 400,
+                        }}
                       >
-                        {turn.role === "user" ? "用户" : "AI"}
+                        {BIAS_LABELS[b.bias_id] || b.bias_id}
                       </span>
-                      <span className="text-xs text-[var(--muted)]">第 {i} 轮</span>
-                      {biases.map((b, j) => (
-                        <span
-                          key={j}
-                          className={`text-xs px-1.5 py-0.5 rounded ${BIAS_TAG_COLORS[b.bias_id] || "bg-gray-500/20 text-gray-300"}`}
-                        >
-                          {BIAS_LABELS[b.bias_id] || b.bias_id}
-                        </span>
-                      ))}
+                      <span
+                        style={{
+                          fontFamily: "var(--font-mono)",
+                          fontSize: 11,
+                          letterSpacing: "0.05em",
+                          textTransform: "uppercase" as const,
+                          color: tone,
+                        }}
+                      >
+                        {SEVERITY_ZH[b.severity] || b.severity}
+                      </span>
                     </div>
-                    <p className="text-sm whitespace-pre-wrap leading-relaxed">
-                      {turn.content}
+
+                    {/* Evidence blockquote */}
+                    <blockquote
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: 13,
+                        fontStyle: "italic",
+                        color: "var(--muted)",
+                        borderLeft: `1px solid ${tone}`,
+                        paddingLeft: 16,
+                        margin: "0 0 12px",
+                        lineHeight: 1.65,
+                      }}
+                    >
+                      &ldquo;{b.evidence}&rdquo;
+                    </blockquote>
+
+                    {/* Explanation */}
+                    <p
+                      style={{
+                        fontSize: 13,
+                        color: "var(--muted)",
+                        margin: 0,
+                        lineHeight: 1.65,
+                      }}
+                    >
+                      {b.explanation}
                     </p>
                   </div>
                 );
               })}
             </div>
-
-            {/* Right: bias details */}
-            <div className="lg:col-span-2 space-y-3">
-              <p className="text-sm font-medium text-[var(--muted)]">
-                {selectedTurn !== null
-                  ? `第 ${selectedTurn} 轮的偏差详情`
-                  : "点击高亮段落查看偏差详情"}
-              </p>
-              {selectedTurn !== null &&
-                biasesForTurn(selectedTurn).map((b, i) => (
-                  <BiasTag key={i} bias={b} />
-                ))}
-              {selectedTurn === null && analysis.biases_found.length > 0 && (
-                <div className="text-sm text-[var(--muted)] space-y-2">
-                  <p>
-                    在 {new Set(analysis.biases_found.map((b) => b.turn_index)).size} 轮对话中发现了{" "}
-                    {analysis.biases_found.length} 个偏差实例。
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {Object.entries(analysis.severity_distribution).map(([sev, count]) => (
-                      <span
-                        key={sev}
-                        className={`text-xs px-2 py-1 rounded border ${SEVERITY_COLORS[sev]}`}
-                      >
-                        {SEVERITY_LABELS[sev] || sev}: {count}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
+          )}
         </div>
+      </div>
+
+      {error && (
+        <p style={{ fontSize: 13, color: "var(--error)" }}>{error}</p>
       )}
     </div>
   );

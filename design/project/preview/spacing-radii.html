@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Nous · Spacing · Radii</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:#171717; color:#e8e4df;
+    font-family: "Geist", sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { padding: 22px 26px; display:flex; gap: 22px; align-items:flex-end; }
+  .item { display:flex; flex-direction:column; align-items:center; gap: 8px; }
+  .box { width: 64px; height: 64px; background:#1e1e1e; border:1px solid #2a2a2a; }
+  .lbl { font-size: 11px; color:#e8e4df; font-weight: 500; }
+  .meta { font-size: 10px; color:#6b6762; font-family:"Geist Mono", ui-monospace, monospace; }
+  .pill { width: 110px; height: 32px; background: rgba(196,149,106,0.12);
+          color:#c4956a; border-radius: 9999px; display:flex; align-items:center; justify-content:center;
+          font-size: 11px; font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="item"><div class="box" style="border-radius:6px"></div><div class="lbl">sm</div><div class="meta">6px</div></div>
+  <div class="item"><div class="box" style="border-radius:8px"></div><div class="lbl">md</div><div class="meta">8px · inputs</div></div>
+  <div class="item"><div class="box" style="border-radius:12px"></div><div class="lbl">lg</div><div class="meta">12px · cards</div></div>
+  <div class="item"><div class="box" style="border-radius:16px"></div><div class="lbl">xl</div><div class="meta">16px · bubbles</div></div>
+  <div class="item"><div class="pill">full · pill</div><div class="meta">9999px · buttons</div></div>
+</div>
+</body>
+</html>

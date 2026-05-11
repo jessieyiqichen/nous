@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Nous · Components · Card</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:#171717; color:#e8e4df;
+    font-family: "Geist", "PingFang SC", sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { padding: 18px 26px; }
+  .card { background:#1e1e1e; border:1px solid #2a2a2a; border-radius: 12px; padding: 18px; }
+  .head { display:flex; align-items:center; justify-content:space-between; margin-bottom: 10px; }
+  .h3 { font-size: 14px; font-weight: 500; margin: 0; }
+  .pill { font-size: 11px; padding: 3px 9px; border-radius: 9999px; font-weight: 500;
+          background: rgba(110,200,122,0.15); color:#6ec87a; }
+  .desc { font-size: 13px; line-height: 1.65; color:#8a8580; margin: 0 0 10px; }
+  .pred { font-size: 12px; color:#6b6762; padding-left: 12px; border-left: 2px solid #2a2a2a;
+          line-height: 1.6; margin: 4px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="head">
+      <h3 class="h3">决策架构 · Decision Architecture</h3>
+      <span class="pill">high</span>
+    </div>
+    <p class="desc">直觉触发，分析验证。在熟悉的领域里跳过显式推演，在陌生场景才会展开权衡——速度优先于穷尽。</p>
+    <div class="pred">面对短决策时，会先给出方向再寻找支持理由</div>
+    <div class="pred">遇到不熟悉的领域，会主动列出 2–3 个对照点</div>
+  </div>
+</div>
+</body>
+</html>
