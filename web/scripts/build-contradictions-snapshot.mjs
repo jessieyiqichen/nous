@@ -18,13 +18,10 @@ async function main() {
   try {
     raw = await readFile(HISTORY_PATH, "utf-8");
   } catch (err) {
-    console.error(`[snapshot] Cannot read ${HISTORY_PATH}: ${err.message}`);
-    console.error("[snapshot] Writing empty snapshot.");
-    await writeFile(
-      OUTPUT_PATH,
-      JSON.stringify({ total: 0, contradictions: [] }, null, 2),
-      "utf-8"
-    );
+    // Source file is in .gitignore — absent on Vercel and any non-local build.
+    // Skip regeneration and keep the snapshot that was committed to the repo.
+    console.warn(`[snapshot] Source not found: ${HISTORY_PATH}`);
+    console.warn(`[snapshot] Skipping regeneration; preserving committed snapshot at ${OUTPUT_PATH}`);
     return;
   }
 
