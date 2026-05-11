@@ -14,6 +14,8 @@ ml/data/wildchat*.jsonl
 
 # Large/generated data files
 data/signals_history.json
+data/collector.log
+data/processed_sessions.json
 data/conversation_session_current.md
 data/conversation_claude_ai_raw.md
 interview_transcript_*.json
