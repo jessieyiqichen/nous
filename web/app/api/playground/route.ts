@@ -62,7 +62,9 @@ const RESULT_SCHEMA = {
 };
 
 async function loadCognitiveModel(): Promise<Record<string, unknown>> {
-  const modelPath = join(process.cwd(), "..", "data", "subjects", "jessie", "cognitive_model_v2.json");
+  // Read from the prebuild snapshot bundled in web/data/ (see comment in
+  // app/api/model/route.ts for why cwd + ".." fails on Vercel serverless).
+  const modelPath = join(process.cwd(), "data", "cognitive-model-snapshot.json");
   const raw = await readFile(modelPath, "utf-8");
   return JSON.parse(raw);
 }
