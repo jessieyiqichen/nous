@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nous · 设计思路与 Eval 方法论</title>
+<style>
+  :root{
+    --bg:#f6f8fd; --bg2:#ffffff; --panel:#ffffff; --panel2:#eef2fb;
+    --ink:#1a2233; --ink-dim:#54607a; --ink-faint:#8b94a8;
+    --line:#e4e9f3; --line2:#d4dcec;
+    --accent:#4f6ef7; --accent2:#8b5cf6; --good:#0ea371; --warn:#d97706; --bad:#e5484d;
+    --grad:linear-gradient(135deg,#4f6ef7 0%,#8b5cf6 58%,# e0529b 100%);
+    --grad:linear-gradient(135deg,#4f6ef7 0%,#8b5cf6 58%,#e0529b 100%);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:radial-gradient(1100px 700px at 85% -12%,#eef1fe 0%,#f6f8fd 52%) fixed,var(--bg);
+    color:var(--ink);
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,system-ui,sans-serif;
+    line-height:1.7; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+  a{color:var(--accent);text-decoration:none}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+    background:rgba(246,248,253,.8);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:8px;height:56px;flex-wrap:wrap}
+  nav .logo{font-weight:800;letter-spacing:.5px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-size:18px;margin-right:auto}
+  nav a{color:var(--ink-dim);font-size:13.5px;padding:6px 10px;border-radius:8px;transition:.2s}
+  nav a:hover{color:var(--ink);background:var(--panel2)}
+
+  /* hero */
+  header.hero{padding:84px 0 56px;text-align:center;position:relative}
+  .kicker{display:inline-block;font-size:12.5px;letter-spacing:2px;color:var(--accent2);
+    border:1px solid var(--line2);padding:5px 14px;border-radius:999px;margin-bottom:22px;text-transform:uppercase}
+  h1{font-size:clamp(34px,6vw,58px);line-height:1.12;font-weight:850;letter-spacing:-.5px}
+  h1 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{margin:22px auto 0;max-width:680px;font-size:18px;color:var(--ink-dim)}
+  .oneliner{margin:30px auto 0;max-width:760px;font-size:15px;color:var(--ink-faint);
+    border-left:3px solid var(--accent);padding:10px 18px;text-align:left;background:var(--panel);border-radius:0 10px 10px 0}
+
+  /* section */
+  section{padding:54px 0;border-top:1px solid var(--line)}
+  .sec-tag{font-size:13px;letter-spacing:3px;color:var(--accent);text-transform:uppercase;font-weight:700}
+  h2{font-size:clamp(24px,4vw,34px);font-weight:800;margin:10px 0 8px;letter-spacing:-.3px}
+  .lead{color:var(--ink-dim);font-size:16px;max-width:760px;margin-bottom:30px}
+
+  /* cards */
+  .grid{display:grid;gap:16px}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:720px){.g2,.g3{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 1px 3px rgba(30,41,80,.04),0 8px 24px rgba(30,41,80,.05)}
+  .card h3{font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:9px}
+  .card p{color:var(--ink-dim);font-size:14.5px}
+  .num{font-variant-numeric:tabular-nums}
+  .pill{display:inline-block;font-size:11.5px;padding:2px 9px;border-radius:999px;border:1px solid var(--line2);color:var(--ink-faint)}
+
+  /* problem split */
+  .vs{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:stretch}
+  @media(max-width:720px){.vs{grid-template-columns:1fr}.vs .mid{display:none}}
+  .vs .mid{display:flex;align-items:center;justify-content:center;color:var(--ink-faint);font-weight:800;font-size:20px}
+  .vs .col{padding:22px;border-radius:16px;border:1px solid var(--line)}
+  .vs .old{background:#f4f5f8;border-color:#e6e3ea}
+  .vs .new{background:linear-gradient(160deg,#f1f4ff,#f7f1ff);border-color:var(--line2)}
+  .vs .col .t{font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px}
+  .vs .col .h{font-size:19px;font-weight:800;margin-bottom:10px}
+  .vs .new .h{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .vs ul{list-style:none;margin-top:10px}
+  .vs li{font-size:14px;color:var(--ink-dim);padding:6px 0 6px 22px;position:relative}
+  .vs li::before{content:"";position:absolute;left:0;top:13px;width:8px;height:8px;border-radius:50%;background:var(--line2)}
+  .vs .new li::before{background:var(--accent)}
+
+  /* layer stack */
+  .stack{display:flex;flex-direction:column;gap:10px}
+  .layer{position:relative;border-radius:14px;padding:18px 20px;border:1px solid var(--line);
+    background:var(--panel);display:grid;grid-template-columns:140px 1fr auto;gap:16px;align-items:center;box-shadow:0 6px 18px rgba(30,41,80,.05)}
+  @media(max-width:720px){.layer{grid-template-columns:1fr}}
+  .layer .lv{font-weight:800;font-size:16px}
+  .layer .desc{color:var(--ink-dim);font-size:14px}
+  .layer .mem{font-size:12px;color:var(--ink-faint);white-space:nowrap}
+  .layer.l3{background:linear-gradient(120deg,#eef2ff,#f5eeff);border-color:var(--line2)}
+  .layer.l3 .lv{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .layer.l1{opacity:.92}
+  .arrow{text-align:center;color:var(--ink-faint);font-size:13px;letter-spacing:1px;padding:2px}
+  .contra{margin-top:14px;border:1px dashed var(--accent2);border-radius:14px;padding:16px 20px;
+    background:rgba(139,92,246,.07)}
+  .contra b{color:var(--accent2)}
+
+  /* dimensions */
+  .dims{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  @media(max-width:720px){.dims{grid-template-columns:1fr 1fr}}
+  .dim{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:13.5px}
+  .dim span{display:block;color:var(--ink-faint);font-size:11.5px;margin-top:2px}
+
+  /* eval highlight */
+  .eval-hero{background:linear-gradient(160deg,#eef2ff,#f6eefe);border:1px solid var(--line2);
+    border-radius:20px;padding:30px;margin-bottom:24px}
+  .compare{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:center;margin-top:8px}
+  @media(max-width:720px){.compare{grid-template-columns:1fr}}
+  .metric{text-align:center;padding:22px;border-radius:16px;border:1px solid var(--line)}
+  .metric .big{font-size:54px;font-weight:850;line-height:1;font-variant-numeric:tabular-nums}
+  .metric .lbl{margin-top:8px;font-size:13px;color:var(--ink-dim)}
+  .metric{background:#fff}
+  .metric.fake{background:#fdf0f0;border-color:#f3d6d7}
+  .metric.fake .big{color:var(--bad)}
+  .metric.real{background:#ecfaf4;border-color:#c8ecdd}
+  .metric.real .big{color:var(--good)}
+  .compare .ar{font-size:26px;color:var(--ink-faint);text-align:center;font-weight:800}
+  .insight{margin-top:18px;font-size:15px;color:var(--ink);background:rgba(79,110,247,.08);
+    border-left:3px solid var(--accent);padding:12px 16px;border-radius:0 10px 10px 0}
+
+  .principle{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .principle:last-child{border-bottom:0}
+  .principle .n{flex:0 0 34px;height:34px;border-radius:10px;background:var(--panel2);
+    display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--accent)}
+  .principle .b{flex:1}
+  .principle .b h4{font-size:15.5px;margin-bottom:3px}
+  .principle .b p{color:var(--ink-dim);font-size:14px}
+
+  /* stat row */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:720px){.stats{grid-template-columns:1fr 1fr}}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center;box-shadow:0 6px 18px rgba(30,41,80,.05)}
+  .stat .v{font-size:30px;font-weight:850;font-variant-numeric:tabular-nums;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat .k{font-size:12.5px;color:var(--ink-dim);margin-top:4px}
+
+  /* tech */
+  .tline{display:grid;gap:12px}
+  .trow{display:grid;grid-template-columns:170px 1fr;gap:16px;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+  @media(max-width:720px){.trow{grid-template-columns:1fr}}
+  .trow .lab{font-weight:700;font-size:14.5px;color:var(--ink)}
+  .trow .val{color:var(--ink-dim);font-size:14px}
+  code{background:#eef2fb;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:12.5px;color:#3b53c4;font-family:"SF Mono",Menlo,Consolas,monospace}
+
+  /* competitive comparison */
+  .cmp{width:100%;border-collapse:separate;border-spacing:0;background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 6px 18px rgba(30,41,80,.05);font-size:14px}
+  .cmp th,.cmp td{padding:13px 15px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+  .cmp thead th{background:var(--panel2);font-size:12px;color:var(--ink-faint);font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+  .cmp tbody tr:last-child td{border-bottom:none}
+  .cmp td.me{background:rgba(79,110,247,.07);color:var(--ink)}
+  .cmp td.me b{color:var(--accent)}
+  .cmp .who{font-weight:700;color:var(--ink)}
+  @media(max-width:720px){.cmp{font-size:12.5px}.cmp th,.cmp td{padding:9px 10px}}
+
+  footer{padding:40px 0 60px;text-align:center;color:var(--ink-faint);font-size:13px;border-top:1px solid var(--line)}
+  .reveal{opacity:0;transform:translateY(16px);transition:.6s cubic-bezier(.2,.7,.2,1)}
+  .reveal.on{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <div class="logo">NOUS</div>
+  <a href="#problem">问题</a>
+  <a href="#market">竞品</a>
+  <a href="#arch">三层架构</a>
+  <a href="#contra">矛盾检出</a>
+  <a href="#memory">Memory System</a>
+  <a href="#tech">技术</a>
+  <a href="#eval">Eval 方法论</a>
+  <a href="#results">成果</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="kicker">认知层 AI 建模</span>
+  <h1>不只模仿你<span class="g">怎么说话</span><br>而是理解你<span class="g">怎么思考</span></h1>
+  <p class="sub">Nous 通过自然对话构建用户的认知模型，并能在<b>没见过的新场景</b>下预测行为——还能检测出你自己都没意识到的认知盲区。</p>
+  <div class="oneliner"><b>一句话定位：</b>现有 AI 分身在「行为层」模仿表达风格，Nous 在「认知层」建模决策逻辑。我做的不是更像你的分身，是知道分身<b>什么时候会出错</b>的检测器——行为层的质检员。</div>
+</div></header>
+
+<!-- PROBLEM -->
+<section id="problem"><div class="wrap reveal">
+  <span class="sec-tag">The Problem</span>
+  <h2>为什么"说话像你"还不够</h2>
+  <p class="lead">行为层模仿能快速做到 80 分的"像"，但它只记住了表面模式。换一个没见过的场景，它不知道"你会怎么选"——因为它从没理解过你<b>为什么</b>这么选。</p>
+  <div class="vs">
+    <div class="col old">
+      <div class="t">现有 AI 分身</div>
+      <div class="h">行为层模仿</div>
+      <p style="color:var(--ink-dim);font-size:14px">统计你的表达习惯、语言风格、口头禅。</p>
+      <ul>
+        <li>说话像你 ✓</li>
+        <li>新场景下替你决策 ✗</li>
+        <li>不知道哪里会出错 ✗</li>
+      </ul>
+    </div>
+    <div class="mid">VS</div>
+    <div class="col new">
+      <div class="t">Nous</div>
+      <div class="h">认知层建模</div>
+      <p style="color:var(--ink-dim);font-size:14px">建模你的决策架构、推理风格、价值层级。</p>
+      <ul>
+        <li>理解你为什么这么想 ✓</li>
+        <li>未见场景下预测行为 ✓</li>
+        <li>客观检出认知盲区 ✓</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<!-- 产品思考 / 竞品 -->
+<section id="market"><div class="wrap reveal">
+  <span class="sec-tag">Product · Positioning</span>
+  <h2>跟同类比，Nous 站在哪一层</h2>
+  <p class="lead">记忆和 AI 分身是个热门赛道。区别不在「谁记得多」，在<b>「在哪个抽象层次建模用户」</b>——这决定了能不能预测用户没说过的场景。</p>
+
+  <table class="cmp">
+    <thead><tr><th>同类</th><th>代表</th><th>他们建模到哪一层</th><th>Nous 的不同</th></tr></thead>
+    <tbody>
+      <tr><td class="who">通用记忆基础设施</td><td>Mem0 / Letta</td><td>存事实 + 向量检索，free-form，记「你说过什么」</td><td class="me">9 维认知 schema 建模<b>「你怎么想」</b>，不只存事实</td></tr>
+      <tr><td class="who">大模型自带记忆</td><td>ChatGPT Memory</td><td>记住偏好和事实，跨会话调用</td><td class="me">认知层 + <b>矛盾检测</b>，能推断没说过的场景</td></tr>
+      <tr><td class="who">AI 分身 / 陪伴</td><td>character.ai / Replika 类</td><td>模仿表达风格——行为层，「说话像你」</td><td class="me">建<b>认知层</b>（决策架构 / 推理风格），新场景也按你的逻辑判断</td></tr>
+    </tbody>
+  </table>
+
+  <div class="insight" style="margin-top:18px"><b>一句话定位：</b>别人记「你说过什么」（事实层 / 行为层），Nous 建「你怎么想」（认知层），再用矛盾检测做质检。差异不在数据量，在<b>抽象层次</b>。</div>
+
+  <div class="contra" style="margin-top:16px">
+    <b>关于市场，诚实说：</b>我没有精确的市场份额数据，上面是定性的定位对比、不是市场规模测算。记忆 / AI 分身是拥挤赛道，我验证的是一个具体判断——<b>建到「认知层」+ 矛盾检测</b>，是不是比停在行为层更能预测真实的人。
+  </div>
+</div></section>
+
+<!-- ARCHITECTURE -->
+<section id="arch"><div class="wrap reveal">
+  <span class="sec-tag">Design · Architecture</span>
+  <h2>三层记忆，对应三种抽象</h2>
+  <p class="lead">普通产品的记忆是平的——存对话、检索对话。Nous 是分层的：每一层是对用户的不同抽象层次，向上「归纳压缩」，向下「加载到新对话」。</p>
+
+  <div class="stack">
+    <div class="layer l3">
+      <div class="lv">认知层 ↑</div>
+      <div class="desc"><b>9 维度结构化认知模型</b>——把成百上千条信号归纳压缩成"你怎么思考"的判断。让 AI 能在新场景推断行为。</div>
+      <div class="mem">语义记忆 Semantic</div>
+    </div>
+    <div class="arrow">▲ 归纳 / 压缩　　▼ 加载 / refine</div>
+    <div class="layer l2">
+      <div class="lv">记忆层</div>
+      <div class="desc"><b>离散认知信号（101 条）</b>——"用户在 X 场景表现出 Y 行为" + 维度标签 + 置信度 + 时间戳。原始、未归纳的行为证据。</div>
+      <div class="mem">情景记忆 Episodic</div>
+    </div>
+    <div class="arrow">▲ 提取信号</div>
+    <div class="layer l1">
+      <div class="lv">行为层</div>
+      <div class="desc">怎么说话、用什么词、什么语气——表面表达模式。<span class="pill">其他 AI 分身只做到这一层</span></div>
+      <div class="mem">表面模式 Surface</div>
+    </div>
+  </div>
+
+  <div class="contra">
+    <b>⚡ 横切三层的第四个机制 · 矛盾库（20 条）</b>
+    <p style="color:var(--ink-dim);font-size:14px;margin-top:6px">别人只存正向"你是什么样"，Nous 额外存负向"你哪里没意识到"——记录"说的(stated) ≠ 做的(behavioral)"的冲突，作为盲区证据。这是认知建模最有区分度的部分。</p>
+  </div>
+
+  <h3 style="margin:34px 0 14px;font-size:18px">9 个认知维度</h3>
+  <div class="dims">
+    <div class="dim">决策架构<span>直觉先行还是分析先行</span></div>
+    <div class="dim">注意力分配<span>什么抓住注意，什么被忽略</span></div>
+    <div class="dim">推理风格<span>线性 / 跳跃，抽象 / 具体</span></div>
+    <div class="dim">情感处理<span>情绪何时突破分析层</span></div>
+    <div class="dim">社会认知<span>怎么建模和适应他人</span></div>
+    <div class="dim">盲区<span>系统性忽视或低估什么</span></div>
+    <div class="dim">价值层级<span>真正优化什么（revealed）</span></div>
+    <div class="dim">面对不确定性<span>如何处理模糊与未知</span></div>
+    <div class="dim">执行层弹性<span>stated vs revealed 行为差</span></div>
+  </div>
+</div></section>
+
+<!-- CONTRADICTION -->
+<section id="contra"><div class="wrap reveal">
+  <span class="sec-tag">Core Innovation</span>
+  <h2>矛盾检出：盲区无法自评，只能客观对比</h2>
+  <p class="lead">盲区的定义就是"你自己看不见的东西"，所以靠自我评价天然失效。Nous 的解法：做双轨信号分析，把用户"声称的自己"和"实际表现的自己"放在一起比对，不一致处即客观盲区证据。</p>
+  <div class="grid g2">
+    <div class="card">
+      <h3>🗣️ Stated（说的）</h3>
+      <p>用户在对话里声称的自我描述——"我做事很随性""我追求自由"。这是用户<b>想成为</b>或<b>以为自己是</b>的样子。</p>
+    </div>
+    <div class="card">
+      <h3>🎯 Behavioral（做的）</h3>
+      <p>用户在具体场景选择中<b>实际展现</b>的行为——两次选择都偏谨慎求稳。revealed preference，不是 stated。</p>
+    </div>
+  </div>
+  <div class="insight" style="margin-top:18px">
+    <b>示例矛盾：</b>"你说你随性，但刚才两个选择都很谨慎" → 一条 stated-behavioral 矛盾 = 一次客观盲区证据，也是用户的 <b>Aha Moment</b>（"它说中了我没告诉它、但确实是我的东西"）。
+  </div>
+</div></section>
+
+<!-- MEMORY SYSTEM 视角 -->
+<section id="memory"><div class="wrap reveal">
+  <span class="sec-tag">Memory System 视角</span>
+  <h2>另一种看 Nous 的方式：一个 user memory system</h2>
+  <p class="lead">前面讲了三层架构 + 矛盾检出。这一节换个视角——Nous 其实就是一个垂直在认知建模场景的 user memory system。这个视角更清楚它解决的工程问题。</p>
+
+  <div class="contra" style="border-style:solid;border-color:var(--line2);background:linear-gradient(160deg,#f1f4ff,#f7f1ff);margin-bottom:24px">
+    <b>什么是 user memory system</b>
+    <p style="color:var(--ink-dim);font-size:14px;margin-top:6px">一个跨 session 持久化、可检索、能持续校正的用户上下文存储 + 推理系统。Memory 不是数据库——它要能记下来、能找到、能在恰当的时候校正。</p>
+  </div>
+
+  <h3 style="margin:24px 0 14px;font-size:18px">Nous 的 Memory 工程实现</h3>
+  <div class="grid g2">
+    <div class="card">
+      <h3>🗄️ 分层存储</h3>
+      <p>认知层（9 维 schema）+ 记忆层（101 条离散信号）+ 行为层（surface pattern）——<b>不同抽象层次分别存储</b>，向上归纳压缩，向下加载到新对话。</p>
+    </div>
+    <div class="card">
+      <h3>🔄 跨 session 持久化</h3>
+      <p>用户的认知画像不在单次对话里，而是<b>多次对话累积归纳</b>而成。每次新对话开始，从 memory 加载用户认知模型作为推理上下文。</p>
+    </div>
+    <div class="card">
+      <h3>🔍 Hybrid Retrieval</h3>
+      <p>高频信号用本地 <b>DistilBERT</b> 推理（语义匹配，免费），低频信号 fallback 到 Claude API（深度推断）。<b>API 调用降 60%+</b>——这是 hybrid（语义 + LLM）retrieval 的成本优化。</p>
+    </div>
+    <div class="card">
+      <h3>♻️ 持续校正</h3>
+      <p>"预测 → 验证 → 矛盾反馈"三层闭环 = <b>背景跑的 memory consolidation</b>。memory 质量不是 ingest 那一刻定的，是不断 distill 出来的。</p>
+    </div>
+  </div>
+
+  <div class="contra" style="border-style:solid;border-color:var(--line2);margin-top:24px">
+    <b>关键洞察：Memory 不只是存储，是"懂用户的引擎"</b>
+    <p style="color:var(--ink-dim);font-size:14px;margin-top:6px">普通 storage 只解决"记下来"。一个完整的 memory system 还要解决：记多久、记哪些、怎么检索、何时校正、如何脱敏、谁能访问——这一整套工程才是真正的 memory system。Nous 解决了其中一部分，重点放在"矛盾检出"这件事上——把 memory 的质量控制内化到引擎里。</p>
+  </div>
+
+  <div class="insight" style="margin-top:18px">
+    现阶段 Nous 还没做的几样工程：写入前的自动脱敏（避免存秘密）、可追溯的检索来源（每条结果回到源文件 + 行号）、长会话的上下文压缩。这些是任何成熟 memory system 都需要的事，是这版 Nous 的明确差距。
+  </div>
+</div></section>
+
+<!-- TECH -->
+<section id="tech"><div class="wrap reveal">
+  <span class="sec-tag">Engineering</span>
+  <h2>支撑设计的工程决策</h2>
+  <p class="lead">每个技术选择都服务于"可验证"这个核心目标——不是为了用技术而用。</p>
+  <div class="tline">
+    <div class="trow"><div class="lab">结构化输出</div><div class="val">用 Claude 的 <code>tool_choice</code> 强制按 JSON Schema 返回认知模型，<b>100% 可解析、可入库</b>。这是整个验证闭环能跑起来的前提，不是锦上添花。</div></div>
+    <div class="trow"><div class="lab">反偏差指令</div><div class="val">不假设模型听话，而是假设它有<b>已知偏差</b>（讨好、美化、单一归因），在 prompt 层显式对冲：多因归因、人类化语言、解读深度匹配证据强度。</div></div>
+    <div class="trow"><div class="lab">混合信号提取</div><div class="val">高频信号用本地 <b>DistilBERT</b> 推理（免费），低频信号 fallback 到 Claude API，<b>API 调用降 60%+</b>。证明"分类任务该训、开放推断该用 prompt"的边界判断。</div></div>
+    <div class="trow"><div class="lab">被动采集器</div><div class="val">常驻后台 agent，从用户日常 AI 对话自动提信号，本地关键词预过滤跳过低信号 session（<b>零 API 成本</b>），认知模型持续进化。</div></div>
+    <div class="trow"><div class="lab">闭环验证</div><div class="val">模型生成行为预测 → 用户验证 → 矛盾数据回流修正模型，形成自我改进循环。</div></div>
+  </div>
+</div></section>
+
+<!-- EVAL -->
+<section id="eval"><div class="wrap reveal">
+  <span class="sec-tag">★ Eval Methodology</span>
+  <h2>如何评估一个 AI 产品的质量</h2>
+  <p class="lead">核心原则一句话：<b>绝不让模型评估它自己。</b>好的 eval 是消除评估者偏差，不是把分数做高。下面这个发现，重塑了我对 AI 产品评估的整个理解。</p>
+
+  <!-- 测试集说明（先讲清楚再讲发现） -->
+  <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin-bottom:18px;box-shadow:0 6px 18px rgba(30,41,80,.05)">
+    <div style="font-size:12.5px;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;font-weight:700;margin-bottom:10px">测试集长什么样</div>
+    <p style="color:var(--ink-dim);font-size:14.5px;margin-bottom:10px">
+      模型从用户认知画像里生成 <b>21 道四选一情境题</b>——比如「周末突然没事，你会 A 在家 / B 朋友聚 / C 一个人出门 / D 工作」。用户答完后，<b>用户的答案就是 ground truth</b>。
+    </p>
+    <p style="color:var(--ink-dim);font-size:14.5px;margin-bottom:14px">
+      然后让 LLM 基于建好的 <b>9 维认知模型</b>预测同样的题（但不让它看到用户的答案）。比对一致性，就是模型质量。
+    </p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--ink-dim)">
+      <span style="background:var(--panel2);padding:5px 12px;border-radius:8px"><b style="color:var(--accent)">T1 · 偏好预测</b>　用户喜欢什么</span>
+      <span style="background:var(--panel2);padding:5px 12px;border-radius:8px"><b style="color:var(--accent)">T2 · 推理预测</b>　用户在新场景怎么推</span>
+      <span style="background:var(--panel2);padding:5px 12px;border-radius:8px"><b style="color:var(--accent2)">T3 · 盲区维度</b>　用户自己看不见的</span>
+    </div>
+  </div>
+
+  <div class="eval-hero">
+    <div style="font-size:13px;letter-spacing:2px;color:var(--accent2);text-transform:uppercase;margin-bottom:6px">同一个模型 · 同一批预测 · 只换了评分方式</div>
+    <div class="compare">
+      <div class="metric fake">
+        <div class="big">71%</div>
+        <div class="lbl">让 <b>LLM 给自己</b>的预测打分</div>
+      </div>
+      <div class="ar">→</div>
+      <div class="metric real">
+        <div class="big">26%</div>
+        <div class="lbl"><b>确定性评分</b>（拿用户真实选择对答案）</div>
+      </div>
+    </div>
+    <div class="insight">
+      LLM 在<b>系统性地给自己打高分</b>。换成确定性评分（选对 1.0 / 选错 0.0，用户本人选择是 ground truth）后，真实水平才暴露。<b>这就是为什么 AI 产品的 eval 绝对不能让模型自评自己。</b>
+    </div>
+  </div>
+
+  <h3 style="margin:6px 0 16px;font-size:18px">四条评估设计原则</h3>
+  <div class="principle">
+    <div class="n">1</div><div class="b">
+      <h4>确定性评分，不走 LLM 打分</h4>
+      <p>预测题有标准答案（用户本人作答）。选对 1.0、选错 0.0。消除 LLM 评分的自我迎合偏差。</p>
+    </div>
+  </div>
+  <div class="principle">
+    <div class="n">2</div><div class="b">
+      <h4>永远对照随机基线</h4>
+      <p>4 选 1 的随机基线是 25%。模型 T1/T2 到 71% = 高出基线 <b>46 个百分点</b>——有了基线，71% 才有意义。</p>
+    </div>
+  </div>
+  <div class="principle">
+    <div class="n">3</div><div class="b">
+      <h4>不同能力用不同评估方法</h4>
+      <p>盲区维度（T3）连预测都不能自评——自评越修越差（<b>49% → 33%</b>），因为盲区就是看不见的东西。改用客观的<b>矛盾检出</b>评估。</p>
+    </div>
+  </div>
+  <div class="principle">
+    <div class="n">4</div><div class="b">
+      <h4>主动对冲建模偏差</h4>
+      <p>发现 AI 建模会系统性<b>美化用户</b>，于是加反美化校准指令；发现会过度理想化、忽略执行层弹性，于是在 prompt 里强制追问 stated vs revealed 的 gap。</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- RESULTS -->
+<section id="results"><div class="wrap reveal">
+  <span class="sec-tag">Results</span>
+  <h2>关键成果</h2>
+  <div class="stats">
+    <div class="stat"><div class="v">99%</div><div class="k">模型理解准确度</div></div>
+    <div class="stat"><div class="v">71%</div><div class="k">行为预测 T1/T2<br>（随机基线 25%）</div></div>
+    <div class="stat"><div class="v">101</div><div class="k">累积认知信号</div></div>
+    <div class="stat"><div class="v">−60%</div><div class="k">API 调用量<br>（混合提取）</div></div>
+  </div>
+  <div class="grid g2" style="margin-top:20px">
+    <div class="card">
+      <h3>🔭 设计哲学</h3>
+      <p>模型可以不完美，但<b>必须知道自己在哪里不可靠</b>。Nous 的价值不在"更准的认知模型"，而在"知道行为层什么时候会出错的检测器"。</p>
+    </div>
+    <div class="card">
+      <h3>🧪 评估哲学</h3>
+      <p>好的 eval 是<b>消除评估者偏差</b>，不是把分数做高；不同类型的能力要用不同的评估方法——事实预测用确定性评分，盲区用矛盾检出。</p>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  Nous · 认知层 AI 建模　|　Python · Next.js · Claude API · DistilBERT<br>
+  <span style="opacity:.6">设计思路与 Eval 方法论展示页</span>
+</div></footer>
+
+<script>
+  // scroll reveal
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
