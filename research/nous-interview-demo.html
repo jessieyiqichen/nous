@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nous · 认知访谈现场 Demo</title>
+<style>
+  :root{
+    --bg:#f6f8fd; --panel:#ffffff; --panel2:#eef2fb;
+    --ink:#1a2233; --ink-dim:#54607a; --ink-faint:#8b94a8;
+    --line:#e4e9f3; --line2:#d4dcec;
+    --accent:#4f6ef7; --accent2:#8b5cf6; --good:#0ea371; --warn:#d97706; --bad:#e5484d;
+    --grad:linear-gradient(135deg,#4f6ef7 0%,#8b5cf6 58%,#e0529b 100%);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:radial-gradient(1100px 700px at 85% -12%,#eef1fe 0%,#f6f8fd 52%) fixed,var(--bg);
+    color:var(--ink);font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,system-ui,sans-serif;
+    line-height:1.7;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+  a{color:var(--accent);text-decoration:none}
+
+  nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:rgba(246,248,253,.82);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:10px;height:56px}
+  nav .logo{font-weight:800;letter-spacing:.5px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-size:18px;margin-right:auto}
+  nav a{color:var(--ink-dim);font-size:13.5px;padding:6px 10px;border-radius:8px}
+  nav a:hover{color:var(--ink);background:var(--panel2)}
+
+  header.hero{padding:64px 0 30px;text-align:center}
+  .kicker{display:inline-block;font-size:12.5px;letter-spacing:2px;color:var(--accent2);border:1px solid var(--line2);padding:5px 14px;border-radius:999px;margin-bottom:20px;text-transform:uppercase}
+  h1{font-size:clamp(30px,5vw,46px);line-height:1.15;font-weight:850;letter-spacing:-.5px}
+  h1 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{margin:20px auto 0;max-width:680px;font-size:17px;color:var(--ink-dim)}
+
+  section{padding:46px 0;border-top:1px solid var(--line)}
+  .sec-tag{font-size:13px;letter-spacing:3px;color:var(--accent);text-transform:uppercase;font-weight:700}
+  h2{font-size:clamp(22px,3.4vw,30px);font-weight:800;margin:10px 0 8px;letter-spacing:-.3px}
+  .lead{color:var(--ink-dim);font-size:15.5px;max-width:760px;margin-bottom:24px}
+
+  /* demo layout */
+  .demo{display:grid;grid-template-columns:1.35fr .85fr;gap:20px;align-items:start}
+  @media(max-width:820px){.demo{grid-template-columns:1fr}}
+
+  .chat{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 8px 28px rgba(30,41,80,.06);min-height:320px}
+  .chat .head{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ink-faint);border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--good)}
+  .msgs{display:flex;flex-direction:column;gap:12px}
+  .bubble{max-width:86%;padding:11px 15px;border-radius:14px;font-size:14.5px;line-height:1.6;animation:pop .35s ease}
+  .bubble.ai{align-self:flex-start;background:var(--panel2);color:var(--ink);border-bottom-left-radius:5px}
+  .bubble.me{align-self:flex-end;background:var(--grad);color:#fff;border-bottom-right-radius:5px}
+  .bubble .role{font-size:11px;opacity:.7;margin-bottom:3px;letter-spacing:.5px}
+  @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .ctrl{margin-top:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .btn{border:none;cursor:pointer;font-size:14.5px;font-weight:700;padding:11px 22px;border-radius:999px;background:var(--grad);color:#fff;box-shadow:0 6px 18px rgba(79,110,247,.3);transition:.2s}
+  .btn:hover{transform:translateY(-1px)}
+  .btn:disabled{opacity:.45;cursor:default;transform:none;box-shadow:none}
+  .btn.ghost{background:var(--panel);color:var(--accent);border:1px solid var(--line2);box-shadow:none}
+  .turn-n{font-size:13px;color:var(--ink-faint)}
+
+  /* coverage panel */
+  .cov{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 8px 28px rgba(30,41,80,.06);position:sticky;top:72px}
+  .cov h3{font-size:14px;margin-bottom:4px}
+  .cov .meta{font-size:12px;color:var(--ink-faint);margin-bottom:14px}
+  .covbar{height:7px;border-radius:999px;background:var(--panel2);overflow:hidden;margin-bottom:16px}
+  .covbar i{display:block;height:100%;width:0;background:var(--grad);transition:width .5s cubic-bezier(.2,.7,.2,1)}
+  .dimlist{display:flex;flex-direction:column;gap:7px}
+  .diml{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ink-faint);transition:.3s}
+  .diml .tick{flex:none;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent}
+  .diml.on{color:var(--ink)}
+  .diml.on .tick{background:var(--good);border-color:var(--good);color:#fff}
+
+  /* model cards */
+  .grid{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}}
+  .mcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:0 6px 18px rgba(30,41,80,.05)}
+  .mcard .nm{font-weight:800;font-size:15px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:6px}
+  .mcard p{font-size:13.5px;color:var(--ink-dim)}
+  .summary{background:linear-gradient(160deg,#eef2ff,#f6eefe);border:1px solid var(--line2);border-radius:16px;padding:20px 22px;margin-bottom:20px;font-size:15px;color:var(--ink)}
+  .summary b{color:var(--accent2)}
+
+  .hidden{display:none}
+
+  /* contradiction */
+  .contra{border:1px dashed var(--accent2);border-radius:16px;padding:18px 20px;background:rgba(139,92,246,.06);margin-bottom:14px}
+  .contra .row{display:grid;grid-template-columns:64px 1fr;gap:12px;font-size:14px;padding:5px 0}
+  .contra .tag{font-size:11.5px;font-weight:800;padding:3px 8px;border-radius:7px;height:fit-content;text-align:center}
+  .contra .t-say{background:#fef3f2;color:var(--bad)}
+  .contra .t-do{background:#ecfaf4;color:var(--good)}
+  .contra .blind{margin-top:8px;font-size:13px;color:var(--accent2);border-top:1px solid var(--line2);padding-top:9px}
+  .contra .blind b{color:var(--accent2)}
+
+  /* predict */
+  .pq{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:0 6px 18px rgba(30,41,80,.05);margin-bottom:16px}
+  .opt{display:flex;gap:10px;align-items:center;padding:9px 12px;border:1px solid var(--line);border-radius:10px;margin-top:8px;font-size:14px}
+  .opt.pick{border-color:var(--good);background:#ecfaf4}
+  .opt .lt{flex:none;width:22px;height:22px;border-radius:6px;background:var(--panel2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--ink-dim)}
+  .opt.pick .lt{background:var(--good);color:#fff}
+  .metrics{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+  @media(max-width:560px){.metrics{grid-template-columns:1fr}}
+  .metric{text-align:center;padding:20px;border-radius:14px;border:1px solid var(--line);background:#fff}
+  .metric .big{font-size:42px;font-weight:850;line-height:1;font-variant-numeric:tabular-nums}
+  .metric.fake{background:#fdf0f0;border-color:#f3d6d7}.metric.fake .big{color:var(--bad)}
+  .metric.real{background:#ecfaf4;border-color:#c8ecdd}.metric.real .big{color:var(--good)}
+  .metric .lbl{margin-top:8px;font-size:12.5px;color:var(--ink-dim)}
+
+  .note{margin-top:16px;font-size:13px;color:var(--ink-faint);background:var(--panel2);border-radius:12px;padding:13px 16px}
+  footer{padding:36px 0 56px;text-align:center;color:var(--ink-faint);font-size:13px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <span class="logo">Nous</span>
+  <a href="#demo">现场访谈</a>
+  <a href="#model">认知模型</a>
+  <a href="#contra">矛盾检出</a>
+  <a href="#predict">行为预测</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="kicker">Live Demo · 离线可跑</span>
+  <h1>认知访谈：<span class="g">边聊边建模</span><br>把"你怎么想"结构化</h1>
+  <p class="sub">下面是 Nous 访谈的可交互演示——点「下一轮」，看 AI 访谈如何逐轮覆盖 9 个认知维度，最后压缩成一个结构化模型。对话为代表性示例，<b>认知模型与矛盾为真实输出</b>（在我自己身上跑出来的）。</p>
+</div></header>
+
+<!-- 现场访谈 -->
+<section id="demo"><div class="wrap">
+  <div class="sec-tag">STEP 1 · 访谈</div>
+  <h2>一边对话，一边追踪维度覆盖</h2>
+  <p class="lead">访谈引擎不是按固定问卷问，而是看哪个维度证据最弱，就设计下一个问题去补——这是一个 ReAct 式的「看覆盖度 → 选下一问」循环。</p>
+
+  <div class="demo">
+    <div>
+      <div class="chat">
+        <div class="head"><span class="dot"></span> Nous 访谈引擎 · 认知科学家视角</div>
+        <div class="msgs" id="msgs"></div>
+      </div>
+      <div class="ctrl">
+        <button class="btn" id="next">开始访谈 →</button>
+        <button class="btn ghost hidden" id="reset">重来</button>
+        <span class="turn-n" id="turnN"></span>
+      </div>
+    </div>
+
+    <div class="cov">
+      <h3>9 维认知覆盖度</h3>
+      <div class="meta" id="covMeta">0 / 9 已覆盖</div>
+      <div class="covbar"><i id="covFill"></i></div>
+      <div class="dimlist" id="dimlist"></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 认知模型 -->
+<section id="model" class="hidden"><div class="wrap">
+  <div class="sec-tag">STEP 2 · 建模</div>
+  <h2>访谈结束 → 压缩成结构化认知模型</h2>
+  <p class="lead">对话结束后，用 Claude 的 <code style="background:#eef2fb;padding:1px 5px;border-radius:5px">tool_choice</code> 强制按 JSON Schema 输出，把几十轮对话压成一个 9 维模型——100% 可解析、能直接入库。</p>
+
+  <div class="summary" id="summary"></div>
+  <div class="grid" id="dims"></div>
+</div></section>
+
+<!-- 矛盾检出 -->
+<section id="contra" class="hidden"><div class="wrap">
+  <div class="sec-tag">STEP 3 · 质检</div>
+  <h2>矛盾检出：盲区无法自评，只能客观对比</h2>
+  <p class="lead">把用户「说的」(stated) 和「做的」(behavioral) 双轨对比，不一致处就是客观的盲区证据——这是别的 AI 分身没有的质检层。系统在我身上检出 20 条，这里挑两条专业向的。</p>
+  <div id="contraList"></div>
+</div></section>
+
+<!-- 行为预测 -->
+<section id="predict" class="hidden"><div class="wrap">
+  <div class="sec-tag">STEP 4 · 验证</div>
+  <h2>行为预测：模型准不准，用数据说话</h2>
+  <p class="lead">模型生成行为预测题，用户实选当 ground truth。关键：判分用确定性评分，不让模型自评——因为 LLM 给自己打分会系统性虚高。</p>
+
+  <div class="pq">
+    <div style="font-weight:700;font-size:15px;margin-bottom:4px">预测题示例</div>
+    <p style="font-size:14px;color:var(--ink-dim)">给你两个机会二选一：A 高薪但你不感兴趣；B 低薪但能让你做"系统性有价值的东西"。模型基于你的价值排序预测你会选——</p>
+    <div class="opt"><span class="lt">A</span> 高薪、不感兴趣的岗</div>
+    <div class="opt pick"><span class="lt">✓</span> B 低薪、能做系统性有价值的东西 <span style="margin-left:auto;font-size:12px;color:var(--good);font-weight:700">模型预测 · 命中</span></div>
+    <p style="font-size:12.5px;color:var(--ink-faint);margin-top:10px">依据：价值排序中「智识连贯/自主/系统性价值」高于「钱」。</p>
+  </div>
+
+  <div class="metrics">
+    <div class="metric real"><div class="big">71%</div><div class="lbl">确定性评分 · 真实预测准确率<br>(随机基线 25%，高出 46pp)</div></div>
+    <div class="metric fake"><div class="big">26%</div><div class="lbl">同一批题、换确定性真值后，<br>LLM 自评虚高 71% → 真实仅 26%</div></div>
+  </div>
+  <div class="note"><b>所以：AI 产品的 eval 绝不能让模型自己评自己。</b>我用「预测 → 用户验证 → 矛盾反馈」三层闭环，让真实信号反过来校正模型。</div>
+</div></section>
+
+<footer><div class="wrap">
+  Nous · 认知层 AI 建模 · 现场 Demo &nbsp;|&nbsp; 对话为示例，模型与矛盾为真实输出 &nbsp;|&nbsp; github.com/jessieyiqichen/nous
+</div></footer>
+
+<script>
+const DIMS = [
+  {k:"decision", n:"决策架构", d:"直觉先行，分析在后台并行验证。不是「快或慢」，而是「系统在脑中收敛、方向感觉对了」才动手。分析有时会（且常常错误地）盖过直觉。"},
+  {k:"attention", n:"注意力分配", d:"完全由「在不在乎」驱动——在乎的满负荷，不在乎的近乎零，没有稳定基线。自动被结构性模式、系统级异常、概念缺口抓住。"},
+  {k:"reasoning", n:"推理风格", d:"跨领域快速建立系统级理解。发散 + 自主收敛，外显为跳跃、内部有暗线。先建模型再行动，结构化而非线性。"},
+  {k:"emotion", n:"情绪处理", d:"原始情绪强度高，被理性层重度遮蔽。情绪与认知争夺处理资源，而非作为输入。情绪表达需要特定的安全条件。"},
+  {k:"social", n:"社会认知", d:"自动按对方接收能力校准表达深度；追踪他人思维里的认知缺口与逻辑弱点；有很强的精准重构说服力，但对使用它有顾虑（觉得像操纵）。"},
+  {k:"blind", n:"盲区", d:"系统性低估：(1) 情绪一致性作为决策输入——分析会盖过情绪警告；(2) 社会约定俗成的推理——缺少「大家都这么做」的默认基线。"},
+  {k:"value", n:"价值排序", d:"显示偏好：智识连贯与深度 > 自主/自我导向 > 做系统性有价值的东西 > 真正被理解。原则是「在乎才适用」而非普适。"},
+  {k:"uncertain", n:"对不确定性的反应", d:"有把握的领域（系统级理解）高度容忍模糊；没框架的执行上低容忍。靠建框架/模型应对，不靠多收集数据或纯凭直觉。"},
+  {k:"exec", n:"执行层弹性", d:"关键 gap：在乎的领域会牺牲 deadline、社交期待甚至健康也要保质量；不在乎的领域反过来，能糊就糊。"},
+];
+
+const TURNS = [
+  {dims:["decision"], q:"最近有没有一个需要你做选择的事？大小都行。", a:"我一般凭直觉先有方向，但分析在后台同时验证。只有当整个框架在脑子里「收敛」、方向感觉对了，我才动手。"},
+  {dims:["attention"], q:"那什么最容易抓住你的注意力，什么会被你直接忽略？", a:"完全看「在不在乎」。在乎的满负荷扑上去，不在乎的几乎是零——我没有匀速运转的基线。"},
+  {dims:["reasoning"], q:"解决一个新问题时，你是一步步线性推，还是别的方式？", a:"更像先快速建一个系统级模型，跳跃式理解，中间线索其实藏在里面，外人看像跳步。"},
+  {dims:["emotion","blind"], q:"情绪在你的决策里扮演什么角色？", a:"情绪强度其实很高，但被理性层盖住。有时分析会盖过情绪发出的警告——我事后才发现那是个盲区。"},
+  {dims:["value"], q:"如果让你排，你真正在优化的是什么？", a:"智识的连贯和深度第一，然后是自主、做出系统性有价值的东西、被真正理解。"},
+  {dims:["social","uncertain"], q:"面对别人、面对不确定性时呢？", a:"对人我会自动调整表达深度去匹配对方；面对不确定，我靠建框架/模型应对，不是靠多收集数据或纯凭直觉。"},
+  {dims:["exec"], q:"压力之下，你会牺牲什么来保住什么？", a:"在我在乎的领域，会牺牲 deadline、社交期待甚至健康也要保住质量；不在乎的领域反过来，能糊就糊。"},
+];
+
+const SUMMARY = "双模认知架构——在能激活「在乎」的领域全力投入，其余近乎零，<b>没有稳定基线</b>。核心引擎是快速的系统级模式识别 + 直觉先行（分析层有时会错误地盖过）。高情绪强度被理性层重度遮蔽，情绪与认知争夺处理资源。";
+
+const CONTRAS = [
+  {say:"自己「想法冒得太快、需要慢下来」，像是点子很散的人", do:"实际高度结构化、预先规划：「不是做着做着发现方向的，你是先在脑子里搭好结构、确认说得通然后才动手」", blind:"口头接受别人「你点子太散」的评价，行为上却恰恰相反——系统化的预执行框架构建。自我认知与真实行为反了。"},
+  {say:"强调自己「完全在乎驱动」，不在乎的领域监控系统休眠", do:"在明确不在乎的计量作业上，仍然「检查到我觉得没什么可查的了」，维持独立于在乎程度的质量标准", blind:"自我模型里只有一套「在乎驱动的能量分配」系统，漏看了第二套「独立的质量兜底机制」——标准比自己以为的高，但自动运行，自己看不见。"},
+];
+
+// ---- state ----
+const dimEl = {};
+let turnIdx = 0;
+const msgs = document.getElementById('msgs');
+const dimlist = document.getElementById('dimlist');
+const covMeta = document.getElementById('covMeta');
+const covFill = document.getElementById('covFill');
+const nextBtn = document.getElementById('next');
+const resetBtn = document.getElementById('reset');
+const turnN = document.getElementById('turnN');
+const covered = new Set();
+
+// build dim list
+DIMS.forEach(d=>{
+  const row=document.createElement('div'); row.className='diml'; row.id='dl-'+d.k;
+  row.innerHTML='<span class="tick">✓</span>'+d.n;
+  dimlist.appendChild(row); dimEl[d.k]=row;
+});
+
+function updateCov(){
+  covMeta.textContent = covered.size+' / 9 已覆盖';
+  covFill.style.width = (covered.size/9*100)+'%';
+}
+
+function addBubble(role, label, text){
+  const b=document.createElement('div'); b.className='bubble '+(role==='ai'?'ai':'me');
+  b.innerHTML='<div class="role">'+label+'</div>'+text;
+  msgs.appendChild(b); b.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function step(){
+  if(turnIdx===0) resetBtn.classList.remove('hidden');
+  if(turnIdx < TURNS.length){
+    const t=TURNS[turnIdx];
+    addBubble('ai','访谈引擎', t.q);
+    setTimeout(()=>{
+      addBubble('me','我', t.a);
+      t.dims.forEach(k=>{ covered.add(k); dimEl[k].classList.add('on'); });
+      updateCov();
+      turnIdx++;
+      turnN.textContent='第 '+turnIdx+' / '+TURNS.length+' 轮';
+      if(turnIdx===TURNS.length){ nextBtn.textContent='9 维已覆盖 · 生成认知模型 →'; }
+      else { nextBtn.textContent='下一轮 →'; }
+    }, 420);
+  } else {
+    // build model
+    document.getElementById('model').classList.remove('hidden');
+    document.getElementById('contra').classList.remove('hidden');
+    document.getElementById('predict').classList.remove('hidden');
+    document.getElementById('summary').innerHTML='<b>总览：</b>'+SUMMARY;
+    const dimsBox=document.getElementById('dims'); dimsBox.innerHTML='';
+    DIMS.forEach(d=>{ const c=document.createElement('div'); c.className='mcard';
+      c.innerHTML='<div class="nm">'+d.n+'</div><p>'+d.d+'</p>'; dimsBox.appendChild(c); });
+    const cl=document.getElementById('contraList'); cl.innerHTML='';
+    CONTRAS.forEach(x=>{ const c=document.createElement('div'); c.className='contra';
+      c.innerHTML='<div class="row"><span class="tag t-say">说</span><span>'+x.say+'</span></div>'+
+                  '<div class="row"><span class="tag t-do">做</span><span>'+x.do+'</span></div>'+
+                  '<div class="blind"><b>盲区证据：</b>'+x.blind+'</div>';
+      cl.appendChild(c); });
+    nextBtn.disabled=true; nextBtn.textContent='✓ 已生成模型（往下看）';
+    document.getElementById('model').scrollIntoView({behavior:'smooth'});
+  }
+}
+
+nextBtn.addEventListener('click', step);
+resetBtn.addEventListener('click', ()=>{
+  turnIdx=0; covered.clear(); msgs.innerHTML=''; updateCov();
+  DIMS.forEach(d=>dimEl[d.k].classList.remove('on'));
+  ['model','contra','predict'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  nextBtn.disabled=false; nextBtn.textContent='开始访谈 →'; turnN.textContent=''; resetBtn.classList.add('hidden');
+});
+updateCov();
+</script>
+</body>
+</html>
