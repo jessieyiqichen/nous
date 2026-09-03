@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Nous · Components · Buttons</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:#171717; color:#e8e4df;
+    font-family: "Geist", sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { padding: 22px 26px; display:flex; flex-direction:column; gap: 16px; }
+  .row { display:flex; gap: 10px; align-items:center; flex-wrap: wrap; }
+  .lbl { font-family:"Geist Mono", ui-monospace, monospace; font-size: 10px; color:#6b6762; min-width: 70px; }
+  .btn-primary {
+    background:#c4956a; color:#fff; border:0; border-radius: 9999px;
+    padding: 10px 20px; font-size: 13px; font-weight: 500; font-family:inherit;
+    cursor: pointer; transition: opacity 200ms;
+  }
+  .btn-primary:hover { opacity: .9; }
+  .btn-secondary {
+    background: transparent; color:#8a8580; border:1px solid #2a2a2a; border-radius: 9999px;
+    padding: 9px 19px; font-size: 13px; font-weight: 400; font-family:inherit;
+    cursor: pointer; transition: all 200ms;
+  }
+  .btn-secondary:hover { color:#e8e4df; border-color:#8a8580; }
+  .btn-tab-active {
+    background: rgba(196,149,106,0.12); color:#c4956a; border:0; border-radius: 6px;
+    padding: 6px 13px; font-size: 13px; font-weight: 500; font-family:inherit;
+  }
+  .btn-tab {
+    background: transparent; color:#8a8580; border:0; border-radius: 6px;
+    padding: 6px 13px; font-size: 13px; font-family:inherit;
+  }
+  .send {
+    width: 32px; height: 32px; background:#c4956a; color:#fff; border:0; border-radius: 12px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="row">
+    <span class="lbl">primary</span>
+    <button class="btn-primary">开始对话</button>
+    <button class="btn-primary">开始验证</button>
+  </div>
+  <div class="row">
+    <span class="lbl">secondary</span>
+    <button class="btn-secondary">下载</button>
+    <button class="btn-secondary">重来</button>
+    <button class="btn-secondary">直接出题</button>
+  </div>
+  <div class="row">
+    <span class="lbl">tab</span>
+    <button class="btn-tab-active">认知访谈</button>
+    <button class="btn-tab">模型验证</button>
+    <button class="btn-tab">偏差检测</button>
+  </div>
+  <div class="row">
+    <span class="lbl">icon</span>
+    <button class="send" aria-label="send">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
+</div>
+</body>
+</html>

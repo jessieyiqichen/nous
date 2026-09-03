@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Nous · Color · Semantic</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:#171717; color:#e8e4df;
+    font-family: "Geist", -apple-system, "PingFang SC", sans-serif;
+    -webkit-font-smoothing: antialiased; }
+  .wrap { padding: 22px 26px; display:flex; flex-direction:column; gap:14px; }
+  .row { display:flex; gap:10px; align-items:center; }
+  .chip { width: 28px; height: 28px; border-radius: 8px; flex-shrink:0; }
+  .label { font-size: 13px; font-weight:500; min-width: 86px; }
+  .hex { font-family: "Geist Mono", ui-monospace, monospace; font-size: 12px; color:#8a8580; min-width: 70px; }
+  .pill { font-size: 11px; padding: 3px 9px; border-radius: 9999px; font-weight: 500; }
+  .desc { font-size: 12px; color:#6b6762; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="row">
+    <div class="chip" style="background:#6ec87a"></div>
+    <div class="label">success</div>
+    <div class="hex">#6ec87a</div>
+    <span class="pill" style="background: rgba(110,200,122,0.15); color:#6ec87a">high</span>
+    <span class="desc">— used for high-confidence dimension labels</span>
+  </div>
+  <div class="row">
+    <div class="chip" style="background:#c4956a"></div>
+    <div class="label">accent</div>
+    <div class="hex">#c4956a</div>
+    <span class="pill" style="background: rgba(196,149,106,0.15); color:#c4956a">medium</span>
+    <span class="desc">— medium-confidence; primary CTA</span>
+  </div>
+  <div class="row">
+    <div class="chip" style="background:#d4a04a"></div>
+    <div class="label">warning</div>
+    <div class="hex">#d4a04a</div>
+    <span class="pill" style="background: rgba(212,160,74,0.15); color:#d4a04a">warn</span>
+    <span class="desc">— soft caution; rarely used</span>
+  </div>
+  <div class="row">
+    <div class="chip" style="background:#d46a6a"></div>
+    <div class="label">error</div>
+    <div class="hex">#d46a6a</div>
+    <span class="pill" style="background: rgba(212,106,106,0.15); color:#d46a6a">error</span>
+    <span class="desc">— validation + API errors</span>
+  </div>
+  <div class="row">
+    <div class="chip" style="background:#8a8580"></div>
+    <div class="label">muted</div>
+    <div class="hex">#8a8580</div>
+    <span class="pill" style="background: rgba(138,133,128,0.15); color:#8a8580">low</span>
+    <span class="desc">— low-confidence; secondary text</span>
+  </div>
+</div>
+</body>
+</html>

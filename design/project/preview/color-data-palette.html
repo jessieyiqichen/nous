@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Nous · Color · Data palette</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:#171717; color:#e8e4df;
+    font-family: "Geist", -apple-system, "PingFang SC", sans-serif;
+    -webkit-font-smoothing: antialiased; }
+  .wrap { padding: 18px 26px 22px; }
+  .note { font-size: 11px; color:#6b6762; margin-bottom: 12px; }
+  .grid { display:grid; grid-template-columns: repeat(5, 1fr); gap:10px; }
+  .item { display:flex; align-items:center; gap:8px; }
+  .dot { width:14px; height:14px; border-radius: 4px; flex-shrink:0; }
+  .lbl { font-size: 11px; color:#e8e4df; }
+  .hex { font-family: "Geist Mono", ui-monospace, monospace; font-size: 10px; color:#8a8580; }
+  .pair { display:flex; flex-direction:column; line-height: 1.3; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="note">Research charts only — never used as brand color.</div>
+  <div class="grid">
+    <div class="item"><div class="dot" style="background:#f87171"></div><div class="pair"><span class="lbl">red</span><span class="hex">#f87171</span></div></div>
+    <div class="item"><div class="dot" style="background:#fb923c"></div><div class="pair"><span class="lbl">orange</span><span class="hex">#fb923c</span></div></div>
+    <div class="item"><div class="dot" style="background:#facc15"></div><div class="pair"><span class="lbl">yellow</span><span class="hex">#facc15</span></div></div>
+    <div class="item"><div class="dot" style="background:#4ade80"></div><div class="pair"><span class="lbl">green</span><span class="hex">#4ade80</span></div></div>
+    <div class="item"><div class="dot" style="background:#22d3ee"></div><div class="pair"><span class="lbl">cyan</span><span class="hex">#22d3ee</span></div></div>
+    <div class="item"><div class="dot" style="background:#60a5fa"></div><div class="pair"><span class="lbl">blue</span><span class="hex">#60a5fa</span></div></div>
+    <div class="item"><div class="dot" style="background:#818cf8"></div><div class="pair"><span class="lbl">indigo</span><span class="hex">#818cf8</span></div></div>
+    <div class="item"><div class="dot" style="background:#c084fc"></div><div class="pair"><span class="lbl">purple</span><span class="hex">#c084fc</span></div></div>
+    <div class="item"><div class="dot" style="background:#f472b6"></div><div class="pair"><span class="lbl">pink</span><span class="hex">#f472b6</span></div></div>
+    <div class="item"><div class="dot" style="background:#9ca3af"></div><div class="pair"><span class="lbl">gray</span><span class="hex">#9ca3af</span></div></div>
+  </div>
+</div>
+</body>
+</html>

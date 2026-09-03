@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "properties": {
+    "time_pressure": { "type": "string", "enum": ["none", "low", "high"] },
+    "social_pressure": { "type": "string", "enum": ["none", "low", "high"] },
+    "caring_level": { "type": "string", "enum": ["low", "medium", "high"] },
+    "energy_state": { "type": "string", "enum": ["rested", "normal", "depleted"] }
+  },
+  "required": ["time_pressure", "social_pressure", "caring_level", "energy_state"]
+}

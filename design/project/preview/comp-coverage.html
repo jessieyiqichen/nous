@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Nous · Components · Coverage Bar</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:#171717; color:#e8e4df;
+    font-family: "Geist", "PingFang SC", sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { padding: 16px 26px; }
+  .panel { background:#1e1e1e; border:1px solid #2a2a2a; border-radius: 12px; padding: 14px 16px;
+           max-width: 240px; }
+  .h { font-size: 11px; font-weight:500; color:#8a8580; margin: 0 0 12px; }
+  .row { margin-bottom: 10px; }
+  .row-label { display:flex; justify-content:space-between; font-size: 11px; margin-bottom: 4px; }
+  .name { color:#8a8580; }
+  .conf-high { color:#6ec87a; }
+  .conf-med  { color:#c4956a; }
+  .conf-low  { color:#6b6762; }
+  .track { height: 4px; background:#171717; border-radius: 9999px; overflow:hidden; }
+  .fill { height:100%; border-radius: 9999px; transition: all 500ms; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="panel">
+    <h3 class="h">维度覆盖</h3>
+    <div class="row">
+      <div class="row-label"><span class="name">决策架构</span><span class="conf-high">high</span></div>
+      <div class="track"><div class="fill" style="width:100%; background:#6ec87a"></div></div>
+    </div>
+    <div class="row">
+      <div class="row-label"><span class="name">推理风格</span><span class="conf-med">medium</span></div>
+      <div class="track"><div class="fill" style="width:66%; background:#c4956a"></div></div>
+    </div>
+    <div class="row">
+      <div class="row-label"><span class="name">盲区</span><span class="conf-low">low</span></div>
+      <div class="track"><div class="fill" style="width:33%; background:#8a8580"></div></div>
+    </div>
+    <div class="row" style="margin-bottom: 0;">
+      <div class="row-label"><span class="name">价值层级</span><span class="conf-low" style="opacity:.6">none</span></div>
+      <div class="track"><div class="fill" style="width:0%; background:#2a2a2a"></div></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "properties": {
+    "dimensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "behavioral_predictions": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+        },
+        "required": ["name", "description", "behavioral_predictions", "confidence"]
+      }
+    },
+    "summary": { "type": "string" }
+  },
+  "required": ["dimensions", "summary"]
+}

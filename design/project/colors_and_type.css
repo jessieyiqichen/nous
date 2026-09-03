@@ -1,0 +1,221 @@
+/* ─────────────────────────────────────────────────────────────
+   Nous Design System — Colors & Typography
+   Source of truth: web/app/globals.css from the Nous codebase
+   ───────────────────────────────────────────────────────────── */
+
+/* Geist Sans + Geist Mono (bundled in /fonts) */
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./fonts/Geist-Variable.woff2") format("woff2-variations");
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./fonts/GeistMono-Variable.woff2") format("woff2-variations");
+}
+
+:root {
+  /* ── Base palette — literary, warm cream paper ──────────── */
+  --background:   #f6f1e7;  /* page surface — cream paper */
+  --foreground:   #2b2620;  /* primary text — deep ink   */
+  --card:         #fbf7ee;  /* card surface              */
+  --card-border:  #e4dccb;  /* hairline border           */
+  --accent:       #8a4a2a;  /* burnt sienna — ink accent */
+  --accent-soft:  rgba(138, 74, 42, 0.08); /* wash               */
+  --muted:        #6b5f50;  /* secondary text            */
+  --muted-soft:   #948774;  /* tertiary / hint text      */
+
+  /* ── Semantic — used sparingly ──────────────────────────── */
+  --success:      #4f7a4d;
+  --warning:      #b07a2e;
+  --error:        #a8453a;
+
+  /* ── Data palette — Research tab charts only ────────────── */
+  --data-red:     #f87171;
+  --data-orange:  #fb923c;
+  --data-pink:    #f472b6;
+  --data-purple:  #c084fc;
+  --data-yellow:  #facc15;
+  --data-cyan:    #22d3ee;
+  --data-green:   #4ade80;
+  --data-indigo:  #818cf8;
+  --data-gray:    #9ca3af;
+  --data-blue:    #60a5fa;
+
+  /* ── Type families ──────────────────────────────────────── */
+  --font-display: "Fraunces", "Songti SC", "STSong", serif;
+  --font-sans: "Source Serif 4", "Source Serif Pro", "Songti SC",
+               "Hiragino Mincho ProN", "PingFang SC", "Microsoft YaHei", serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo,
+               Monaco, Consolas, "Liberation Mono", monospace;
+
+  /* ── Type scale — narrow on purpose ─────────────────────── */
+  --fs-11: 11px;  /* tags, dimension labels in side panel    */
+  --fs-12: 12px;  /* metadata, captions                      */
+  --fs-13: 13px;  /* tab nav                                 */
+  --fs-14: 14px;  /* body, chat messages, primary buttons    */
+  --fs-16: 16px;  /* card body                               */
+  --fs-18: 18px;  /* h1 (brand wordmark)                     */
+  --fs-20: 20px;  /* h2 (largest heading in the product)     */
+  --fs-24: 24px;  /* stat numbers in Research                */
+
+  /* ── Weights ────────────────────────────────────────────── */
+  --fw-normal:   400;
+  --fw-medium:   500;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+
+  /* ── Line heights ───────────────────────────────────────── */
+  --lh-tight:    1.2;
+  --lh-snug:     1.35;
+  --lh-normal:   1.5;
+  --lh-relaxed:  1.65;   /* default for Chinese body         */
+
+  /* ── Tracking ───────────────────────────────────────────── */
+  --tracking-tight:  -0.011em;
+  --tracking-normal: 0;
+
+  /* ── Radii ──────────────────────────────────────────────── */
+  --radius-sm:   6px;   /* small chips                       */
+  --radius-md:   8px;   /* inputs, code blocks               */
+  --radius-lg:  12px;   /* cards (rounded-xl)                */
+  --radius-xl:  16px;   /* chat bubbles, "N" mark wrapper    */
+  --radius-full: 9999px;
+
+  /* ── Spacing scale (4-px grid) ──────────────────────────── */
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 40px;
+  --s-12: 48px;
+
+  /* ── Layout ─────────────────────────────────────────────── */
+  --container-max: 896px;   /* max-w-4xl                      */
+  --side-padding:   24px;   /* px-6                           */
+
+  /* ── Borders ────────────────────────────────────────────── */
+  --border-hair: 1px solid var(--card-border);
+  --border-focus: 1px solid rgba(196, 149, 106, 0.5);
+
+  /* ── Transitions ────────────────────────────────────────── */
+  --t-fast:    150ms ease;
+  --t-base:    200ms ease;
+  --t-slow:    500ms ease;
+}
+
+/* ─── Light variant (extrapolated; not in original product) ─
+   Flag for review before using.                              */
+[data-theme="dark"] {
+  --background:   #1a1612;
+  --foreground:   #ece4d3;
+  --card:         #221d17;
+  --card-border:  #3a322a;
+  --accent:       #c89770;
+  --accent-soft:  rgba(200, 151, 112, 0.14);
+  --muted:        #9a8f7e;
+  --muted-soft:   #6b6256;
+}
+
+/* ─── Semantic type roles ───────────────────────────────── */
+
+html, body {
+  font-family: var(--font-sans);
+  background: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.h-brand {
+  /* The product's "Nous" wordmark — top-left of the header */
+  font-size: var(--fs-18);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-tight);
+  color: var(--foreground);
+}
+
+.h1 {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: var(--fw-normal);
+  font-variation-settings: "opsz" 144;
+  letter-spacing: -0.02em;
+  line-height: var(--lh-tight);
+}
+
+.h2 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: var(--fw-normal);
+  font-variation-settings: "opsz" 96;
+  letter-spacing: -0.012em;
+  line-height: var(--lh-snug);
+}
+
+.h3 {
+  /* Card title or in-card heading */
+  font-size: var(--fs-14);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-snug);
+}
+
+.eyebrow {
+  /* Small uppercase-ish label above a cluster — e.g. "下一步" */
+  font-size: var(--fs-12);
+  font-weight: var(--fw-medium);
+  color: var(--accent);
+}
+
+p, .body {
+  font-size: var(--fs-14);
+  line-height: var(--lh-relaxed);
+  color: var(--foreground);
+}
+
+.body-sm {
+  font-size: var(--fs-13);
+  line-height: var(--lh-relaxed);
+  color: var(--muted);
+}
+
+.caption {
+  font-size: var(--fs-12);
+  line-height: var(--lh-normal);
+  color: var(--muted);
+}
+
+.tag {
+  /* lowercase metadata pill — "high", "behavioral", "stated" */
+  font-size: var(--fs-11);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0;
+}
+
+.code, code, pre {
+  font-family: var(--font-mono);
+  font-size: var(--fs-13);
+  color: var(--foreground);
+}
+
+.stat-num {
+  /* Big number in Research stat cards */
+  font-size: var(--fs-24);
+  font-weight: var(--fw-bold);
+  line-height: 1;
+}
+
+::selection { background: var(--accent-soft); }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted-soft); }

@@ -1,0 +1,6 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Nous">
+  <rect width="64" height="64" rx="14" fill="#171717"></rect>
+  <rect x="8" y="8" width="48" height="48" rx="12" fill="rgba(196,149,106,0.14)"></rect>
+  <text x="32" y="42" text-anchor="middle" font-family="Geist, -apple-system, BlinkMacSystemFont, &#39;Helvetica Neue&#39;, sans-serif" font-size="28" font-weight="500" fill="#c4956a" letter-spacing="-0.011em">N</text>
+</svg>

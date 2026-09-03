@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Nous · Components · Input</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:#171717; color:#e8e4df;
+    font-family: "Geist", "PingFang SC", sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { padding: 22px 26px; display:flex; flex-direction:column; gap: 14px; }
+  .field { position: relative; }
+  .input { width: 100%; background:#1e1e1e; border:1px solid #2a2a2a; border-radius: 16px;
+           padding: 12px 52px 12px 16px; font-size: 14px; color:#e8e4df; font-family:inherit;
+           resize: none; outline: none; transition: border-color 200ms; }
+  .input:focus { border-color: rgba(196,149,106,0.5); }
+  .input::placeholder { color:#6b6762; }
+  .send { position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+          width: 32px; height: 32px; background:#c4956a; color:#fff; border:0; border-radius: 12px;
+          display:flex; align-items:center; justify-content:center; cursor:pointer; }
+  .ta { width: 100%; background:#1e1e1e; border:1px solid #2a2a2a; border-radius: 8px;
+        padding: 14px 16px; font-size: 13px; color:#e8e4df; font-family:"Geist Mono", ui-monospace, monospace;
+        resize: none; outline: none; line-height: 1.5; }
+  .ta::placeholder { color:#6b6762; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="field">
+    <input class="input" placeholder="说点什么..." value="昨晚突然想清楚一件事——"/>
+    <button class="send" aria-label="send">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
+  <textarea class="ta" rows="3" placeholder="在此粘贴一段人-AI 对话...">User: 我最近在考虑转行...
+Assistant: 这是一个很有意思的想法！...</textarea>
+</div>
+</body>
+</html>

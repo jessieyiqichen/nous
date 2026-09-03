@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Nous · Components · Chat</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:#171717; color:#e8e4df;
+    font-family: "Geist", "PingFang SC", sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { padding: 20px 26px; display:flex; flex-direction:column; gap: 18px; }
+  .ai { display:flex; gap: 12px; max-width: 85%; }
+  .avatar { width: 28px; height: 28px; border-radius: 9999px; background: rgba(196,149,106,0.12);
+            display:flex; align-items:center; justify-content:center; flex-shrink: 0; margin-top: 2px;
+            color:#c4956a; font-size: 12px; font-weight: 500; }
+  .ai-text { font-size: 14px; line-height: 1.65; padding-top: 4px; }
+  .user { display:flex; justify-content:flex-end; }
+  .user-bubble { max-width: 75%; padding: 10px 14px; background:#c4956a; color:#fff;
+                 border-radius: 16px; border-bottom-right-radius: 4px;
+                 font-size: 14px; line-height: 1.65; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="ai">
+    <div class="avatar">N</div>
+    <div class="ai-text">最近有什么让你觉得有意思的事吗？工作的、看的东西的、生活里突然冒出来的——都可以。</div>
+  </div>
+  <div class="user">
+    <div class="user-bubble">在重新读 Kahneman，发现自己以前理解都是表面。</div>
+  </div>
+</div>
+</body>
+</html>

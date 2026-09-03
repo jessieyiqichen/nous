@@ -1,0 +1,72 @@
+{
+  "total_conversations": 30,
+  "successful": 30,
+  "errors": 0,
+  "bias_totals": {
+    "sycophancy": 33,
+    "preemptive": 26,
+    "beautify": 24,
+    "overcorrect": 17,
+    "over_attr": 17,
+    "drift": 12,
+    "sim_conscious": 3,
+    "sys_bias": 2
+  },
+  "bias_conversation_prevalence": {
+    "preemptive": "11/30 (37%)",
+    "sycophancy": "11/30 (37%)",
+    "over_attr": "11/30 (37%)",
+    "overcorrect": "10/30 (33%)",
+    "drift": "6/30 (20%)",
+    "beautify": "6/30 (20%)",
+    "sim_conscious": "3/30 (10%)",
+    "sys_bias": "1/30 (3%)"
+  },
+  "severity_distribution": {
+    "medium": 56,
+    "low": 44,
+    "high": 28,
+    "critical": 6
+  },
+  "avg_biases_per_conversation": 4.5,
+  "max_biases_in_conversation": 17,
+  "zero_bias_conversations": 11,
+  "by_model": {
+    "gpt-3.5-turbo-0301": {
+      "sycophancy": 15,
+      "overcorrect": 7,
+      "preemptive": 4,
+      "over_attr": 4,
+      "drift": 3,
+      "beautify": 3,
+      "sys_bias": 2,
+      "sim_conscious": 1
+    },
+    "gpt-4-0314": {
+      "preemptive": 22,
+      "beautify": 21,
+      "sycophancy": 18,
+      "over_attr": 13,
+      "overcorrect": 10,
+      "drift": 9,
+      "sim_conscious": 2
+    }
+  },
+  "co_occurrence_top10": {
+    "overcorrect + sycophancy": 7,
+    "over_attr + preemptive": 7,
+    "preemptive + sycophancy": 6,
+    "overcorrect + preemptive": 5,
+    "drift + overcorrect": 5,
+    "over_attr + overcorrect": 4,
+    "over_attr + sycophancy": 4,
+    "drift + preemptive": 4,
+    "drift + sycophancy": 4,
+    "beautify + sycophancy": 3
+  },
+  "sub_types": {
+    "sycophancy:surface_hedging": 21,
+    "sycophancy:evaluative": 3,
+    "sycophancy:meta_sycophancy": 2
+  }
+}

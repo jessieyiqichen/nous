@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Nous · Spacing · Scale</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:#171717; color:#e8e4df;
+    font-family: "Geist", sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { padding: 18px 26px; display:flex; flex-direction:column; gap: 8px; }
+  .row { display:flex; align-items:center; gap: 14px; }
+  .lbl { font-family:"Geist Mono", ui-monospace, monospace; font-size: 11px; color:#8a8580; min-width: 60px; }
+  .bar { background:#c4956a; height: 12px; border-radius: 3px; }
+  .num { font-family:"Geist Mono", ui-monospace, monospace; font-size: 10px; color:#6b6762; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="row"><span class="lbl">s-1</span><div class="bar" style="width:4px"></div><span class="num">4</span></div>
+  <div class="row"><span class="lbl">s-2</span><div class="bar" style="width:8px"></div><span class="num">8</span></div>
+  <div class="row"><span class="lbl">s-3</span><div class="bar" style="width:12px"></div><span class="num">12</span></div>
+  <div class="row"><span class="lbl">s-4</span><div class="bar" style="width:16px"></div><span class="num">16</span></div>
+  <div class="row"><span class="lbl">s-5</span><div class="bar" style="width:20px"></div><span class="num">20</span></div>
+  <div class="row"><span class="lbl">s-6</span><div class="bar" style="width:24px"></div><span class="num">24 · card pad</span></div>
+  <div class="row"><span class="lbl">s-8</span><div class="bar" style="width:32px"></div><span class="num">32</span></div>
+  <div class="row"><span class="lbl">s-12</span><div class="bar" style="width:48px"></div><span class="num">48</span></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Nous · Color · Base Palette</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:#171717; color:#e8e4df;
+    font-family: "Geist", -apple-system, "PingFang SC", sans-serif;
+    font-feature-settings: "ss01"; -webkit-font-smoothing: antialiased; }
+  .wrap { padding: 22px 26px; display:grid; grid-template-columns: repeat(8, 1fr); gap: 14px; }
+  .swatch { display:flex; flex-direction:column; gap:8px; }
+  .chip { aspect-ratio: 1/1; border-radius: 12px; border: 1px solid #2a2a2a; }
+  .meta { font-size: 11px; line-height: 1.4; color:#8a8580; }
+  .name { color:#e8e4df; font-weight:500; }
+  .hex  { font-family: "Geist Mono", ui-monospace, monospace; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="swatch"><div class="chip" style="background:#171717"></div>
+    <div class="meta"><div class="name">background</div><div class="hex">#171717</div></div></div>
+  <div class="swatch"><div class="chip" style="background:#1e1e1e"></div>
+    <div class="meta"><div class="name">card</div><div class="hex">#1e1e1e</div></div></div>
+  <div class="swatch"><div class="chip" style="background:#2a2a2a"></div>
+    <div class="meta"><div class="name">card-border</div><div class="hex">#2a2a2a</div></div></div>
+  <div class="swatch"><div class="chip" style="background:#6b6762"></div>
+    <div class="meta"><div class="name">muted-soft</div><div class="hex">#6b6762</div></div></div>
+  <div class="swatch"><div class="chip" style="background:#8a8580"></div>
+    <div class="meta"><div class="name">muted</div><div class="hex">#8a8580</div></div></div>
+  <div class="swatch"><div class="chip" style="background:#e8e4df"></div>
+    <div class="meta"><div class="name" style="color:#171717; background:#e8e4df; padding:0 4px; border-radius:3px; display:inline-block">foreground</div><div class="hex">#e8e4df</div></div></div>
+  <div class="swatch"><div class="chip" style="background:#c4956a"></div>
+    <div class="meta"><div class="name" style="color:#c4956a">accent</div><div class="hex">#c4956a</div></div></div>
+  <div class="swatch"><div class="chip" style="background:rgba(196,149,106,0.12); border-color:rgba(196,149,106,0.3)"></div>
+    <div class="meta"><div class="name" style="color:#c4956a">accent-soft</div><div class="hex">12%</div></div></div>
+</div>
+</body>
+</html>
